@@ -1,0 +1,31 @@
+
+#!/bin/sh
+
+# Server-side demuxing by default
+IIOD_OPTS=/etc/udhcpd.conf
+
+case "$1" in
+	start)
+		echo "Starting dhcpd Server Daemon"
+		ifconfig usb0 192.168.2.1 up
+		start-stop-daemon -S -b -q -m -p /var/run/udhcpd.pid -x /usr/sbin/udhcpd -- $IIOD_OPTS
+		exit $?
+		;;
+
+	stop)
+		echo "Stopping dhcpd Server Daemon"
+		start-stop-daemon -K -q -p /var/run/udhcpd.pid 2>/dev/null
+		ifconfig usb0 192.168.2.1 down
+		exit $?
+		;;
+
+	restart)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac

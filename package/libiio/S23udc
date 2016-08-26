@@ -1,0 +1,93 @@
+#!/bin/sh
+
+CONFIGFS=/sys/kernel/config/usb_gadget
+GADGET=$CONFIGFS/my_c_gadget
+
+case "$1" in
+  start)
+ 	echo "Starting UDC Gadgets"
+	mount configfs -t configfs /sys/kernel/config
+	dd if=/dev/zero of=/mass.img bs=4k count=2k
+
+	(echo n; echo p;echo 1;echo 0;echo w;) | fdisk /mass.img
+
+	mkfs.vfat -n PlutoSDR /mass.img
+
+	mkdir $GADGET
+
+	echo 0x0456 > $GADGET/idVendor
+	echo 0xb673 > $GADGET/idProduct
+
+	mkdir $GADGET/strings/0x409
+	echo "Analog Devices Inc." > $GADGET/strings/0x409/manufacturer
+	echo "PLUTO" > $GADGET/strings/0x409/product
+	echo 00000001 > $GADGET/strings/0x409/serialnumber
+
+	#mkdir $GADGET/functions/ffs.pluto_ffs
+	mkdir $GADGET/functions/acm.usb0
+	mkdir $GADGET/functions/rndis.0
+	mkdir $GADGET/functions/mass_storage.0
+
+	echo /mass.img > $GADGET/functions/mass_storage.0/lun.0/file
+
+	mkdir $GADGET/configs/c.1
+	mkdir $GADGET/configs/c.1/strings/0x409
+	echo "PLUTO SDR" > $GADGET/configs/c.1/strings/0x409/configuration
+
+	mkdir $GADGET/configs/c.2
+	mkdir $GADGET/configs/c.2/strings/0x409
+	echo "PLUTO SDR" > $GADGET/configs/c.2/strings/0x409/configuration
+
+	ln -s $GADGET/functions/rndis.0 $GADGET/configs/c.1
+	ln -s $GADGET/functions/mass_storage.0 $GADGET/configs/c.1
+
+	ln -s $GADGET/functions/rndis.0 $GADGET/configs/c.2
+	ln -s $GADGET/functions/acm.usb0 $GADGET/configs/c.2
+	ln -s $GADGET/functions/mass_storage.0 $GADGET/configs/c.2
+	#ln -s $GADGET/functions/ffs.pluto_ffs $GADGET/configs/c.2/ffs.pluto_ffs
+
+	#mkdir /dev/pluto_ffs
+	#mount pluto_ffs -t functionfs /dev/pluto_ffs
+
+	echo ci_hdrc.0 > $GADGET/UDC
+	;;
+  stop)
+	echo -n "Stopping UDC Gadgets ..."
+	echo "" > $GADGET/UDC
+	rm $GADGET/configs/c.1/rndis.0
+	rm $GADGET/configs/c.2/acm.usb0
+	rm $GADGET/configs/c.2/mass_storage.1
+	#rm $GADGET/configs/c.2/ffs.pluto_ffs
+
+	rmdir $GADGET/strings/0x409
+	rmdir $GADGET/configs/c.1/strings/0x409
+	rmdir $GADGET/configs/c.1
+
+	rmdir $GADGET/configs/c.2/strings/0x409
+	rmdir $GADGET/configs/c.2
+
+	#rmdir $GADGET/functions/ffs.pluto_ffs
+	rmdir $GADGET/functions/acm.usb0
+	rmdir $GADGET/functions/rndis.0
+	rmdir $GADGET/functions/mass_storage.1
+
+	rmdir $GADGET
+	rm /mass.img
+
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+
+
+
+
+
+
