@@ -34,6 +34,7 @@ config BR2_PACKAGE_LIBIIO_USB_BACKEND
 	depends on BR2_TOOLCHAIN_HAS_THREADS # from libusb
 	depends on BR2_PACKAGE_LIBIIO_XML_BACKEND
 	select BR2_PACKAGE_LIBUSB
+	select BR2_PACKAGE_LIBAIO
 	default y
 	help
 	  Enable the USB backend of the library.

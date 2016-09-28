@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-LIBIIO_VERSION = 0.7
+LIBIIO_VERSION = 0.8
 LIBIIO_SITE = $(call github,analogdevicesinc,libiio,v$(LIBIIO_VERSION))
 LIBIIO_INSTALL_STAGING = YES
 LIBIIO_LICENSE = LGPLv2.1+
@@ -38,8 +38,8 @@ LIBIIO_CONF_OPTS += -DWITH_SERIAL_BACKEND=OFF
 endif
 
 ifeq ($(BR2_PACKAGE_LIBIIO_IIOD),y)
-LIBIIO_DEPENDENCIES += host-flex host-bison
-LIBIIO_CONF_OPTS += -DWITH_IIOD=ON
+LIBIIO_DEPENDENCIES += host-flex host-bison libaio
+LIBIIO_CONF_OPTS += -DWITH_IIOD=ON -DWITH_AIO=ON
 else
 LIBIIO_CONF_OPTS += -DWITH_IIOD=OFF
 endif
@@ -82,6 +82,8 @@ define LIBIIO_INSTALL_INIT_SYSV
 		$(TARGET_DIR)/etc/init.d/S23udc
 	$(INSTALL) -D -m 0755 package/libiio/S41network \
 		$(TARGET_DIR)/etc/init.d/S41network
+	$(INSTALL) -D -m 0755 package/libiio/S15watchdog \
+		$(TARGET_DIR)/etc/init.d/S15watchdog
 endef
 define LIBIIO_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -d $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
