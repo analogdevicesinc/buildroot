@@ -1,7 +1,7 @@
 #!/bin/sh
 
 CONFIGFS=/sys/kernel/config/usb_gadget
-GADGET=$CONFIGFS/my_c_gadget
+GADGET=$CONFIGFS/pluto_comp_gadget
 USBD_OPTS="/dev/pluto_ffs/ep0 /usr/sbin/iiod -i -a"
 
 case "$1" in
@@ -10,14 +10,17 @@ case "$1" in
 	mount configfs -t configfs /sys/kernel/config >> /dev/null
 
 	mkdir $GADGET
+	serial=`dmesg | grep  SPI-NOR-UniqueID | cut -d " " -f 4`
+	echo $serial > /etc/serial
+	sha1=`echo $serial | sha1sum`
 
 	echo 0x0456 > $GADGET/idVendor
 	echo 0xb673 > $GADGET/idProduct
 
 	mkdir $GADGET/strings/0x409
 	echo "Analog Devices Inc." > $GADGET/strings/0x409/manufacturer
-	echo "PLUTO SDR" > $GADGET/strings/0x409/product
-	echo 00000001 > $GADGET/strings/0x409/serialnumber
+	echo "PlutoSDR (ADALM-PLUTO)" > $GADGET/strings/0x409/product
+	echo $serial > $GADGET/strings/0x409/serialnumber
 
 	mkdir $GADGET/functions/ffs.pluto_ffs
 	mkdir $GADGET/functions/acm.usb0
@@ -25,10 +28,17 @@ case "$1" in
 	mkdir $GADGET/functions/mass_storage.0
 
 	echo /opt/vfat.img > $GADGET/functions/mass_storage.0/lun.0/file
+	echo Y > $GADGET/functions/mass_storage.0/lun.0/removable
+
+	host_addr=`echo -n 00:E0:22; echo $sha1 | dd bs=1 count=6 2>/dev/null | hexdump -v -e '/1 ":%01c""%c"'`
+	dev_addr=`echo -n 00; echo $sha1 | dd bs=1 count=10 skip=6 2>/dev/null | hexdump -v -e '/1 ":%01c""%c"'`
+
+	echo $host_addr > $GADGET/functions/rndis.0/host_addr
+	echo $dev_addr > $GADGET/functions/rndis.0/dev_addr
 
 	mkdir $GADGET/configs/c.1
 	mkdir $GADGET/configs/c.1/strings/0x409
-	echo "PLUTO SDR (RNDIS/MSD/ACM/IIOUSBD)" > $GADGET/configs/c.1/strings/0x409/configuration
+	echo "PlutoSDR (RNDIS/MSD/ACM/IIOUSBD)" > $GADGET/configs/c.1/strings/0x409/configuration
 	echo 500 > $GADGET/configs/c.1/MaxPower
 
 
@@ -44,12 +54,16 @@ case "$1" in
 	sleep 0.2
 
 	echo ci_hdrc.0 > $GADGET/UDC
+
+	start-stop-daemon -S -b -q -m -p /var/run/update.pid -x /bin/sh -- /sbin/update.sh
+
 	;;
   stop)
 	echo -n "Stopping UDC Gadgets ..."
 	echo "" > $GADGET/UDC
 
 	start-stop-daemon -K -q -p /var/run/usbd.pid 2>/dev/null
+	start-stop-daemon -K -q -p /var/run/update.pid 2>/dev/null
 
 	rm $GADGET/configs/c.1/rndis.0
 	rm $GADGET/configs/c.1/mass_storage.0
