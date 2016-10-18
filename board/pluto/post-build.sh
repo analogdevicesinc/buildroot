@@ -24,3 +24,7 @@ genimage                           \
 	--inputpath "${BOARD_DIR}/msd"  \
 	--outputpath "${TARGET_DIR}/opt/" \
 	--config "${GENIMAGE_CFG}"
+
+rm ${TARGET_DIR}/opt/boot.vfat
+cp ${BOARD_DIR}/update.sh ${TARGET_DIR}/sbin/
+cp ${BOARD_DIR}/S20urandom ${TARGET_DIR}/etc/init.d/
