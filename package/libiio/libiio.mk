@@ -78,12 +78,6 @@ ifeq ($(BR2_PACKAGE_LIBIIO_IIOD),y)
 define LIBIIO_INSTALL_INIT_SYSV
 	$(INSTALL) -D -m 0755 package/libiio/S99iiod \
 		$(TARGET_DIR)/etc/init.d/S99iiod
-	$(INSTALL) -D -m 0755 package/libiio/S23udc \
-		$(TARGET_DIR)/etc/init.d/S23udc
-	$(INSTALL) -D -m 0755 package/libiio/S41network \
-		$(TARGET_DIR)/etc/init.d/S41network
-	$(INSTALL) -D -m 0755 package/libiio/S15watchdog \
-		$(TARGET_DIR)/etc/init.d/S15watchdog
 endef
 define LIBIIO_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -d $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
