@@ -27,7 +27,7 @@ case "$1" in
 	mkdir $GADGET/functions/rndis.0
 	mkdir $GADGET/functions/mass_storage.0
 
-	echo /opt/vfat.img > $GADGET/functions/mass_storage.0/lun.0/file
+#	echo /opt/vfat.img > $GADGET/functions/mass_storage.0/lun.0/file
 	echo Y > $GADGET/functions/mass_storage.0/lun.0/removable
 
 	host_addr=`echo -n 00:E0:22; echo $sha1 | dd bs=1 count=6 2>/dev/null | hexdump -v -e '/1 ":%01c""%c"'`
@@ -55,15 +55,12 @@ case "$1" in
 
 	echo ci_hdrc.0 > $GADGET/UDC
 
-	start-stop-daemon -S -b -q -m -p /var/run/update.pid -x /bin/sh -- /sbin/update.sh
-
 	;;
   stop)
 	echo -n "Stopping UDC Gadgets ..."
 	echo "" > $GADGET/UDC
 
 	start-stop-daemon -K -q -p /var/run/usbd.pid 2>/dev/null
-	start-stop-daemon -K -q -p /var/run/update.pid 2>/dev/null
 
 	rm $GADGET/configs/c.1/rndis.0
 	rm $GADGET/configs/c.1/mass_storage.0

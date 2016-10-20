@@ -1,21 +1,41 @@
-
 #!/bin/sh
-
 # Server-side demuxing by default
-IIOD_OPTS=/etc/udhcpd.conf
+UDHCPD_CONF=/etc/udhcpd.conf
+CONF=/opt/config.txt
 
 case "$1" in
 	start)
 		echo "Starting dhcpd Server Daemon"
-		ifconfig usb0 192.168.2.1 up
-		start-stop-daemon -S -b -q -m -p /var/run/udhcpd.pid -x /usr/sbin/udhcpd -- $IIOD_OPTS
+		IPADDR=`fw_printenv -n ipaddr || echo 192.168.2.1`
+		IPADDR_HOST=`fw_printenv -n ipaddr_host || echo 192.168.2.10`
+		NETMASK=`fw_printenv -n netmask || echo 255.255.255.0`
+
+		echo "start $IPADDR_HOST" > $UDHCPD_CONF
+		echo "interface usb0" >> $UDHCPD_CONF
+		echo "option subnet $NETMASK" >> $UDHCPD_CONF
+
+		echo "# PlutoSDR Configuration File"$'\r' > $CONF
+		echo "# Edit, Save and then Eject the PlutoSDR USB Drive"$'\r' >> $CONF
+		echo ""$'\r'>> $CONF
+		echo "[NETWORK]"$'\r' >> $CONF
+		echo "ipaddr = $IPADDR"$'\r' >> $CONF
+		echo "ipaddr_host = $IPADDR_HOST"$'\r' >> $CONF
+		echo "netmask = $NETMASK"$'\r' >> $CONF
+		echo ""$'\r'>> $CONF
+		echo "[ACTIONS]"$'\r' >> $CONF
+		echo "dfu = 0"$'\r' >> $CONF
+		echo "reset = 0"$'\r' >> $CONF
+		echo ""$'\r'>> $CONF
+
+		ifconfig usb0 $IPADDR up
+		start-stop-daemon -S -b -q -m -p /var/run/udhcpd.pid -x /usr/sbin/udhcpd -- $UDHCPD_CONF
 		exit $?
 		;;
 
 	stop)
 		echo "Stopping dhcpd Server Daemon"
 		start-stop-daemon -K -q -p /var/run/udhcpd.pid 2>/dev/null
-		ifconfig usb0 192.168.2.1 down
+		ifconfig usb0 down
 		exit $?
 		;;
 

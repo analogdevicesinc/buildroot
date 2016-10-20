@@ -1,0 +1,50 @@
+#!/bin/sh
+# Server-side demuxing by default
+CONF=/opt/config.txt
+file=/sys/kernel/config/usb_gadget/pluto_comp_gadget/functions/mass_storage.0/lun.0/file
+img=/opt/vfat.img
+
+patch_html_page() {
+	LINUX=`uname -a | tr / -`
+	MODEL=`cat /sys/firmware/devicetree/base/model | tr / -`
+	SERIAL=`cat /sys/kernel/config/usb_gadget/pluto_comp_gadget/strings/0x409/serialnumber`
+	IP=`grep "ipaddr " /opt/config.txt | cut -d ' ' -f 3`
+	IPHOST=`grep "ipaddr_host " /opt/config.txt | cut -d ' ' -f 3`
+	NETMASK=`grep "netmask " /opt/config.txt | cut -d ' ' -f 3`
+	MACHOST=`cat /sys/kernel/config/usb_gadget/pluto_comp_gadget/functions/rndis.0/host_addr`
+	MAC=`cat /sys/kernel/config/usb_gadget/pluto_comp_gadget/functions/rndis.0/dev_addr`
+
+	sed -i -e "s/#LINUX#/$LINUX/g" -e "s/#MODEL#/$MODEL/g" -e "s/#SERIAL#/$SERIAL/g" -e "s/#IP#/$IP/g" -e "s/#HOSTIP#/$IPHOST/g" -e "s/#NETMASK#/$NETMASK/g" -e "s/#MACHOST#/$MACHOST/g" -e "s/#MAC#/$MAC/g" $1
+
+}
+case "$1" in
+	start)
+		echo "Starting MSD Daemon"
+		losetup /dev/loop7 $img -o 512
+		mount /dev/loop7 /mnt
+		cp $CONF /mnt
+		md5sum /mnt/config.txt > /opt/config.md5
+		patch_html_page /mnt/info.html
+		umount /mnt
+		echo $img > $file
+
+		start-stop-daemon -S -b -q -m -p /var/run/update.pid -x /bin/sh -- /sbin/update.sh
+		exit $?
+		;;
+
+	stop)
+		echo "Stopping MSD Daemon"
+		start-stop-daemon -K -q -p /var/run/update.pid 2>/dev/null
+		exit $?
+		;;
+
+	restart)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+
+	*)
+		echo "Usage: $0 {start|stop|restart}"
+		exit 1
+esac
