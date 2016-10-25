@@ -13,8 +13,8 @@ patch_html_page() {
 	NETMASK=`grep "netmask " /opt/config.txt | cut -d ' ' -f 3`
 	MACHOST=`cat /sys/kernel/config/usb_gadget/pluto_comp_gadget/functions/rndis.0/host_addr`
 	MAC=`cat /sys/kernel/config/usb_gadget/pluto_comp_gadget/functions/rndis.0/dev_addr`
-
-	sed -i -e "s/#LINUX#/$LINUX/g" -e "s/#MODEL#/$MODEL/g" -e "s/#SERIAL#/$SERIAL/g" -e "s/#IP#/$IP/g" -e "s/#HOSTIP#/$IPHOST/g" -e "s/#NETMASK#/$NETMASK/g" -e "s/#MACHOST#/$MACHOST/g" -e "s/#MAC#/$MAC/g" $1
+	IIO=`iio_info 2>/dev/null | grep "Library version:"`
+	sed -i -e "s/#LINUX#/$LINUX/g" -e "s/#MODEL#/$MODEL/g" -e "s/#SERIAL#/$SERIAL/g" -e "s/#IP#/$IP/g" -e "s/#HOSTIP#/$IPHOST/g" -e "s/#NETMASK#/$NETMASK/g" -e "s/#MACHOST#/$MACHOST/g" -e "s/#MAC#/$MAC/g" -e "s/#IIO#/$IIO/g" $1
 
 }
 case "$1" in
