@@ -20,12 +20,19 @@ ini_parser() {
 }
 
 reset() {
+	echo "REBOOT/RESET using Watchdog timeout"
+	flash_indication_off
+	sync
 	killall -9 watchdog
 	watchdog -t 1 -T5 /dev/watchdog
 	killall -9 watchdog
+	sleep 10
 }
 
 dfu() {
+	echo "Entering DFU mode using SW Reset"
+	flash_indication_off
+	sync
 	reboot -f
 }
 
@@ -82,7 +89,6 @@ process_ini() {
 	then
 		dfu
 	fi
-
 }
 
 
@@ -101,29 +107,25 @@ do
 		rm -f /mnt/SUCCESS /mnt/FAILED /mnt/FAILED_NO_PLUTO_FRM /mnt/FAILED_FIRMWARE_CHSUM_ERROR
 		tail -c 33 ${firmware} > /opt/pluto.md5
 		head -c -33 ${firmware} > /opt/pluto.frm
+		FRM_SIZE=`cat /opt/pluto.frm | wc -c | xargs printf "%X\n"`
 		frm=`md5sum /opt/pluto.frm | cut -d ' ' -f 1`
 		md5=`cat /opt/pluto.md5`
 		if [ "$frm" = "$md5" ]
 		then
-			grep -q "ITB PlutoSDR (ADALM-PLUTO)" /opt/pluto.frm && dd if=/opt/pluto.frm of=$mtd bs=64k && touch /mnt/SUCCESS || touch /mnt/FAILED
+			grep -q "ITB PlutoSDR (ADALM-PLUTO)" /opt/pluto.frm && dd if=/opt/pluto.frm of=$mtd bs=64k && fw_setenv fit_size ${FRM_SIZE} && do_reset=1 && touch /mnt/SUCCESS || touch /mnt/FAILED
 		else
 			touch /mnt/FAILED_FIRMWARE_CHSUM_ERROR
 		fi
 
 		rm -f $firmware /opt/pluto.frm /opt/pluto.md5
 		sync
-	fi	
+	fi
 
 	md5sum /opt/config.md5 && process_ini $conf
 
-	if [[ -r /mnt/RESET ]]
+	if [[ $do_reset = 1 ]]
 	then
 		reset
-	fi
-
-	if [[ -r /mnt/DFU ]]
-	then
-		dfu
 	fi
 
 	umount /mnt
