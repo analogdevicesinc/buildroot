@@ -15,7 +15,7 @@ patch_html_page() {
 	MAC=`cat /sys/kernel/config/usb_gadget/pluto_comp_gadget/functions/rndis.0/dev_addr`
 	IIO=`iio_info 2>/dev/null | grep "Library version:"`
 	sed -i -e "s/#LINUX#/$LINUX/g" -e "s/#MODEL#/$MODEL/g" -e "s/#SERIAL#/$SERIAL/g" -e "s/#IP#/$IP/g" -e "s/#HOSTIP#/$IPHOST/g" -e "s/#NETMASK#/$NETMASK/g" -e "s/#MACHOST#/$MACHOST/g" -e "s/#MAC#/$MAC/g" -e "s/#IIO#/$IIO/g" $1
-	BUILD=`grep pultosdr-fw  /opt/VERSIONS | cut -d ' ' -f 2`
+	BUILD=`grep plutosdr-fw  /opt/VERSIONS | cut -d ' ' -f 2`
 	FPGA=`grep hdl /opt/VERSIONS | cut -d ' ' -f 2`
 	ROOTFS=`grep buildroot /opt/VERSIONS | cut -d ' ' -f 2`
 	sed -i -e "s/#BUILD#/$BUILD/g" -e "s/#FPGA#/$FPGA/g" -e "s/#ROOTFS#/$ROOTFS/g" $1
