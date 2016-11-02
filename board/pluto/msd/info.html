@@ -36,11 +36,10 @@ function versionCompare(v1, v2) {
 
 <script type="text/javascript">
 function CheckFrmVersion() {
-	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/libiio/tags");
+	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-fw/tags");
 
 	req.done(function(response) {
 		var VerOnGithub = response[0].name
-
 
 		var res = versionCompare("#BUILD#", VerOnGithub);
 		if (res < 0) {
@@ -54,6 +53,8 @@ function CheckFrmVersion() {
 		}
 
 		document.getElementById('#versiontest').innerHTML = message;
+		jQuery('#plutsdr-fw-download').attr ('href', response[0].assets[0].browser_download_url);
+
 	});
 }
 window.onload = CheckFrmVersion;
@@ -140,16 +141,19 @@ window.onload = CheckFrmVersion;
 	</table>
 
 
-	<h4>Get the latest PlutoSDR firmware</h4>
+	<h4 style="color: #0000ff;">Get the latest PlutoSDR firmware</h4>
 	<h2 id="#versiontest"> Checking Version ...</h2>
 
+	<a id="plutsdr-fw-download"> Download the latest version</a>
 
-	<h4>Visit PlutoSDR on the WEB</h4>
+	<h4 style="color: #0000ff;">Visit PlutoSDR on the WEB</h4>
 	<ul>
 	<li><a title="PlutoSDR Documentation (ADALM-PLUTO)" href="https://wiki.analog.com/university/tools/pluto" target="_blank">PlutoSDR Documentation (ADALM-PLUTO)</a></li>
 	<li><a title="PlutoSDR Windows Drivers " href="https://wiki.analog.com/university/tools/pluto/drivers/windows" target="_blank">PlutoSDR Windows Drivers </a></li>
 	<li><a title="PlutoSDR Linux Drivers " href="https://wiki.analog.com/university/tools/pluto/drivers/linux" target="_blank">PlutoSDR Linux Drivers </a></li>
 	</ul>
+
+	<h4 style="color: #0000ff;">Related Downloads</h4>
 
 	<table>
 	<tbody>
