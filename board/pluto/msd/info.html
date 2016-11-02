@@ -42,13 +42,13 @@ function CheckFrmVersion() {
 		var VerOnGithub = response[0].name
 
 
-		var res = versionCompare("v0.7.164de86", VerOnGithub);
+		var res = versionCompare("#BUILD#", VerOnGithub);
 		if (res < 0) {
-			var message = "Newer Version " + VerOnGithub + " exists please update";
+			var message = "New update available ( Version " + VerOnGithub + " )";
 		} else  if (res > 0) {
-			var message = "You're newer than me (" + VerOnGithub + ")";
+			var message = "Wow PlutoSDR Version #BUILD# is newer than (" + VerOnGithub + ")";
 		} else if (res == 0) {
-			var message = "You're up to date";
+			var message = "PlutoSDR is up to date!";
 		} else {
 			var message = "Failure";
 		}
@@ -113,7 +113,11 @@ window.onload = CheckFrmVersion;
 	<td>#FPGA#</td>
 	</tr>
 	<tr>
-	<td>IP Address</td>
+	<td>Root FS</td>
+	<td>#ROOTFS#</td>
+	</tr>
+	<tr>
+	<td>IP Address (PLUTO)</td>
 	<td>#IP#</td>
 	</tr>
 	<tr>
@@ -125,7 +129,7 @@ window.onload = CheckFrmVersion;
 	<td>#NETMASK#</td>
 	</tr>
 	<tr>
-	<td>MAC Address</td>
+	<td>MAC Address (PLUTO)</td>
 	<td>#MAC#</td>
 	</tr>
 	<tr>
@@ -135,8 +139,17 @@ window.onload = CheckFrmVersion;
 	</tbody>
 	</table>
 
-	<h4>Visit PlutoSDR on the WEB or get the last firmware</h4>
-	<input type="button" value="Documentation" onclick="OnTheWeb()">
+
+	<h4>Get the latest PlutoSDR firmware</h4>
+	<h2 id="#versiontest"> Checking Version ...</h2>
+
+
+	<h4>Visit PlutoSDR on the WEB</h4>
+	<ul>
+	<li><a title="PlutoSDR Documentation (ADALM-PLUTO)" href="https://wiki.analog.com/university/tools/pluto" target="_blank">PlutoSDR Documentation (ADALM-PLUTO)</a></li>
+	<li><a title="PlutoSDR Windows Drivers " href="https://wiki.analog.com/university/tools/pluto/drivers/windows" target="_blank">PlutoSDR Windows Drivers </a></li>
+	<li><a title="PlutoSDR Linux Drivers " href="https://wiki.analog.com/university/tools/pluto/drivers/linux" target="_blank">PlutoSDR Linux Drivers </a></li>
+	</ul>
 
 	<table>
 	<tbody>
@@ -153,7 +166,7 @@ window.onload = CheckFrmVersion;
 	</tbody>
 	</table>
 
-	<h2 id="#versiontest"> Checking Version ...</h2>
+
 
         <p>&nbsp;</p>
     </body>
