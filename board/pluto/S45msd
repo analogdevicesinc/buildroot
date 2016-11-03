@@ -18,7 +18,8 @@ patch_html_page() {
 	BUILD=`grep plutosdr-fw  /opt/VERSIONS | cut -d ' ' -f 2`
 	FPGA=`grep hdl /opt/VERSIONS | cut -d ' ' -f 2`
 	ROOTFS=`grep buildroot /opt/VERSIONS | cut -d ' ' -f 2`
-	sed -i -e "s/#BUILD#/$BUILD/g" -e "s/#FPGA#/$FPGA/g" -e "s/#ROOTFS#/$ROOTFS/g" $1
+	UBOOT=`cat /proc/cmdline | tr  "=" "\n" | grep "U-Boot"`
+	sed -i -e "s/#BUILD#/$BUILD/g" -e "s/#FPGA#/$FPGA/g" -e "s/#ROOTFS#/$ROOTFS/g" -e "s/#UBOOT#/$UBOOT/g" $1
 }
 case "$1" in
 	start)
