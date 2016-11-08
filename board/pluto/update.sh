@@ -23,9 +23,7 @@ reset() {
 	echo "REBOOT/RESET using Watchdog timeout"
 	flash_indication_off
 	sync
-	killall -9 watchdog
-	watchdog -t 1 -T5 /dev/watchdog
-	killall -9 watchdog
+	pluto_reboot reset
 	sleep 10
 }
 
@@ -33,7 +31,7 @@ dfu() {
 	echo "Entering DFU mode using SW Reset"
 	flash_indication_off
 	sync
-	reboot -f
+	pluto_reboot sf
 }
 
 flash_indication_on() {

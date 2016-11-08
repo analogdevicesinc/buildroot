@@ -1,0 +1,24 @@
+#!/bin/sh
+
+case "$1" in
+	ram)
+		cause=7
+		;;
+
+	sf)
+		cause=0
+		;;
+
+	reset)
+		cause=42
+		;;
+
+	*)
+		echo "Usage: $0 {ram|sf|reset}"
+		exit 1
+esac
+
+echo $cause > /sys/kernel/debug/zynq_rst/code
+reboot
+
+exit 0
