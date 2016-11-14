@@ -44,6 +44,17 @@ flash_indication_off() {
 	echo heartbeat > /sys/class/leds/led0:green/trigger
 }
 
+make_diagnostic_report () {
+	FILE=$1
+	cat  /opt/VERSIONS /etc/os-release /var/log/messages /proc/cpuinfo /proc/interrupts /proc/iomem /proc/meminfo /proc/cmdline /sys/kernel/debug/clk/clk_summary > ${FILE}
+	grep -r "" /sys/kernel/debug/regmap/ >> ${FILE} 2>&1
+	iio_info >> ${FILE} 2>&1
+	ifconfig -a >> ${FILE} 2>&1
+	mount >> ${FILE} 2>&1
+	top -b -n1  >> ${FILE} 2>&1
+	unix2dos ${FILE}
+}
+
 process_ini() {
 	FILE=$1
 	md5sum $FILE > /opt/config.md5
@@ -88,6 +99,10 @@ process_ini() {
 		dfu
 	fi
 
+	if [ "$diagnostic_report" == "1" ]
+	then
+		make_diagnostic_report /mnt/diagnostic_report
+	fi
 
 }
 

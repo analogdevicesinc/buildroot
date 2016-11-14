@@ -23,6 +23,7 @@ case "$1" in
 		echo "netmask = $NETMASK"$'\r' >> $CONF
 		echo ""$'\r'>> $CONF
 		echo "[ACTIONS]"$'\r' >> $CONF
+		echo "diagnostic_report = 0"$'\r' >> $CONF
 		echo "dfu = 0"$'\r' >> $CONF
 		echo "reset = 0"$'\r' >> $CONF
 		echo ""$'\r'>> $CONF
