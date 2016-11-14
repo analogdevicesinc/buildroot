@@ -2,8 +2,8 @@
 
 file=/sys/kernel/config/usb_gadget/pluto_comp_gadget/functions/mass_storage.0/lun.0/file
 firmware=/mnt/pluto.frm
+bootimage=/mnt/boot.frm
 conf=/mnt/config.txt
-mtd=/dev/mtdblock3
 img=/opt/vfat.img
 
 
@@ -87,8 +87,64 @@ process_ini() {
 	then
 		dfu
 	fi
+
+
 }
 
+handle_boot_frm () {
+	FILE=$1
+	rm -f /mnt/BOOT_SUCCESS /mnt/BOOT_FAILED /mnt/FAILED_MTD_PARTITION_ERROR /mnt/FAILED_BOOT_CHSUM_ERROR
+	cat /proc/mtd > /opt/mtd
+	dd if=/dev/null of=/opt/mtd bs=1 count=0 seek=1024
+
+	md5=`tail -c 33 ${FILE}`
+	head -c -33 ${FILE} > /opt/boot_and_env_and_mtdinfo.bin
+
+	tail -c 1024 /opt/boot_and_env_and_mtdinfo.bin > /opt/mtd-info.txt
+	head -c -1024 /opt/boot_and_env_and_mtdinfo.bin > /opt/boot_and_env.bin
+
+	tail -c 131072 /opt/boot_and_env.bin > /opt/u-boot-env.bin
+	head -c -131072 /opt/boot_and_env.bin > /opt/boot.bin
+
+	frm=`md5sum /opt/boot_and_env_and_mtdinfo.bin | cut -d ' ' -f 1`
+
+	if [ "$frm" = "$md5" ]
+	then
+		diff -w /opt/mtd /opt/mtd-info.txt
+		if [ $? -eq 0 ]; then
+			flash_indication_on
+			dd if=/opt/boot.bin of=/dev/mtdblock0 bs=64k && dd if=/opt/u-boot-env.bin of=/dev/mtdblock1 bs=64k && touch /mnt/BOOT_SUCCESS || touch /mnt/BOOT_FAILED
+			flash_indication_off
+		else
+			cat /opt/mtd /opt/mtd-info.txt > /mnt/FAILED_MTD_PARTITION_ERROR
+		fi
+	else
+		echo $md5 $frm >  /mnt/FAILED_BOOT_CHSUM_ERROR
+	fi
+
+	rm -f ${FILE} /opt/boot_and_env_and_mtdinfo.bin /opt/mtd-info.txt /opt/boot_and_env.bin /opt/u-boot-env.bin /opt/boot.bin /opt/mtd
+}
+
+handle_pluto_frm () {
+	FILE=$1
+	rm -f /mnt/SUCCESS /mnt/FAILED /mnt/FAILED_FIRMWARE_CHSUM_ERROR
+	md5=`tail -c 33 ${FILE}`
+	head -c -33 ${FILE} > /opt/pluto.frm
+	FRM_SIZE=`cat /opt/pluto.frm | wc -c | xargs printf "%X\n"`
+	frm=`md5sum /opt/pluto.frm | cut -d ' ' -f 1`
+	if [ "$frm" = "$md5" ]
+	then
+		flash_indication_on
+		grep -q "ITB PlutoSDR (ADALM-PLUTO)" /opt/pluto.frm && dd if=/opt/pluto.frm of=/dev/mtdblock3 bs=64k && fw_setenv fit_size ${FRM_SIZE} && do_reset=1 && touch /mnt/SUCCESS || touch /mnt/FAILED
+		flash_indication_off
+	else
+		echo $frm $md5 > /mnt/FAILED_FIRMWARE_CHSUM_ERROR
+	fi
+
+	rm -f ${FILE} /opt/pluto.frm
+	sync
+
+}
 
 while [ 1 ]
 do
@@ -101,22 +157,12 @@ do
 	mount /dev/loop7 /mnt
 	if [[ -s ${firmware} ]]
 	then 
-		flash_indication_on
-		rm -f /mnt/SUCCESS /mnt/FAILED /mnt/FAILED_NO_PLUTO_FRM /mnt/FAILED_FIRMWARE_CHSUM_ERROR
-		tail -c 33 ${firmware} > /opt/pluto.md5
-		head -c -33 ${firmware} > /opt/pluto.frm
-		FRM_SIZE=`cat /opt/pluto.frm | wc -c | xargs printf "%X\n"`
-		frm=`md5sum /opt/pluto.frm | cut -d ' ' -f 1`
-		md5=`cat /opt/pluto.md5`
-		if [ "$frm" = "$md5" ]
-		then
-			grep -q "ITB PlutoSDR (ADALM-PLUTO)" /opt/pluto.frm && dd if=/opt/pluto.frm of=$mtd bs=64k && fw_setenv fit_size ${FRM_SIZE} && do_reset=1 && touch /mnt/SUCCESS || touch /mnt/FAILED
-		else
-			touch /mnt/FAILED_FIRMWARE_CHSUM_ERROR
-		fi
+		handle_pluto_frm ${firmware}
+	fi
 
-		rm -f $firmware /opt/pluto.frm /opt/pluto.md5
-		sync
+	if [[ -s ${bootimage} ]]
+	then
+		handle_boot_frm ${bootimage}
 	fi
 
 	md5sum /opt/config.md5 && process_ini $conf
