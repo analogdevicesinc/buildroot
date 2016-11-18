@@ -19,6 +19,6 @@ case "$1" in
 esac
 
 echo $cause > /sys/kernel/debug/zynq_rst/code
-reboot
+/sbin/reboot
 
 exit 0
