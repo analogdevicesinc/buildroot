@@ -40,3 +40,4 @@ ${INSTALL} -D -m 0755 ${BOARD_DIR}/usbd ${TARGET_DIR}/usr/sbin/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/VERSIONS ${TARGET_DIR}/opt/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/pluto_reboot ${TARGET_DIR}/usr/sbin/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/motd ${TARGET_DIR}/etc/
+${INSTALL} -D -m 0755 ${BOARD_DIR}/test_ensm_pinctrl.sh ${TARGET_DIR}/usr/sbin/
