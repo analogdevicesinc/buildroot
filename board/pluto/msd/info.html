@@ -47,7 +47,7 @@ function versionCompare(v1, v2) {
 
 <script type="text/javascript">
 function CheckFrmVersion() {
-	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-fw/tags");
+	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-fw/releases");
 
 	req.done(function(response) {
 		var VerOnGithub = response[0].name
