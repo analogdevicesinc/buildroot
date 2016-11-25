@@ -1,6 +1,17 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
+
+<style>
+table, th, td {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+}
+</style>
+
 <script>
 function OnTheWeb() {
   window.location.assign("https://wiki.analog.com/university/tools/pluto")
@@ -63,9 +74,14 @@ window.onload = CheckFrmVersion;
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
             jQuery(document).ready (function () {
-              jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/iio-oscilloscope/releases").done(function (data1) {
-                    jQuery('#osc-download').attr ('href', data1[0].assets[0].browser_download_url);
-                    jQuery('#osc-version').text (data1[0].name);
+              jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-drivers-win/releases").done(function (data) {
+                    jQuery('#drivers-win-download').attr ('href', data[0].assets[0].browser_download_url);
+                    jQuery('#drivers-win-version').text (data[0].name);
+
+              })
+              jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/iio-oscilloscope/releases").done(function (data) {
+                    jQuery('#osc-download').attr ('href', data[0].assets[0].browser_download_url);
+                    jQuery('#osc-version').text (data[0].name);
 
               })
               jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/libiio/tags").done(function (data) {
@@ -78,15 +94,12 @@ window.onload = CheckFrmVersion;
 
 </head>
 <body>
-	<table>
-	<tbody>
-	<tr>
-	<td>
+
 	<h1><span style="color: #0000ff;">Welcome to PlutoSDR</span></h1>
-	</td>
-	</tr>
-	<tr>
-	<td>&nbsp;
+
+
+	<h4 style="color: #0000ff;">Version Information</h4>
+
 	<table>
 	<tbody>
 	<tr>
@@ -121,6 +134,13 @@ window.onload = CheckFrmVersion;
 	<td>IIO</td>
 	<td>#IIO#</td>
 	</tr>
+	</tbody>
+	</table>
+
+	<h4 style="color: #0000ff;">Current Configuration</h4>
+
+	<table>
+	<tbody>
 	<tr>
 	<td>IP Address (PLUTO)</td>
 	<td>#IP#</td>
@@ -144,8 +164,8 @@ window.onload = CheckFrmVersion;
 	</tbody>
 	</table>
 
-
 	<h4 style="color: #0000ff;">Get the latest PlutoSDR firmware</h4>
+
 	<h2 id="#versiontest"> Checking Version ...</h2>
 
 	<a id="plutsdr-fw-download"> Download the latest version</a>
@@ -157,26 +177,28 @@ window.onload = CheckFrmVersion;
 	<li><a title="PlutoSDR Linux Drivers " href="https://wiki.analog.com/university/tools/pluto/drivers/linux" target="_blank">PlutoSDR Linux Drivers </a></li>
 	</ul>
 
-	<h4 style="color: #0000ff;">Related Downloads</h4>
+	<h4 style="color: #0000ff;">Latest Related Downloads</h4>
 
 	<table>
 	<tbody>
 	<tr>
-        <td><b> Latest IIO </b></td>
+        <td><b> Windows USB drivers  </b></td>
+        <td><b id="drivers-win-version"> loading...</b></td>
+	<td><a id="drivers-win-download"> Download </a></td>
+        </tr>
+	<tr>
+        <td><b> libIIO  </b></td>
         <td><b id="libiio-version"> loading...</b></td>
-	<td><a id="libiio-download"> Download the latest version</a></td>
+	<td><a id="libiio-download"> Download </a></td>
         </tr>
         <tr>
-        <td><b> Latest OSC</b></td>
+        <td><b> IIO Oscilloscope  </b></td>
         <td><b id="osc-version"> loading...</b></td>
-	<td><a id="osc-download"> Download the latest version</a></td>
+	<td><a id="osc-download"> Download </a></td>
 	</tr>
 	</tbody>
 	</table>
 
-
-
-        <p>&nbsp;</p>
     </body>
 </html>
 
