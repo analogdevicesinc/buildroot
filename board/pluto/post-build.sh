@@ -30,7 +30,7 @@ genimage                           \
 rm ${TARGET_DIR}/opt/boot.vfat
 rm ${TARGET_DIR}/etc/init.d/S99iiod
 
-mkdir -p ${TARGET_DIR}/www
+mkdir -p ${TARGET_DIR}/www/img
 
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/update.sh ${TARGET_DIR}/sbin/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/S20urandom ${TARGET_DIR}/etc/init.d/
@@ -43,3 +43,8 @@ ${INSTALL} -D -m 0644 ${BOARD_DIR}/VERSIONS ${TARGET_DIR}/opt/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/pluto_reboot ${TARGET_DIR}/usr/sbin/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/motd ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/test_ensm_pinctrl.sh ${TARGET_DIR}/usr/sbin/
+
+${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/img/ADI_Logo_AWP.png ${TARGET_DIR}/www/img/
+${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/img/download.png ${TARGET_DIR}/www/img/
+${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/img/favicon.ico ${TARGET_DIR}/www/img/
+${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/index.html ${TARGET_DIR}/www/

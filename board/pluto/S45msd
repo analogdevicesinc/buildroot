@@ -24,12 +24,13 @@ patch_html_page() {
 case "$1" in
 	start)
 		echo "Starting MSD Daemon"
+		patch_html_page /www/index.html
 		losetup /dev/loop7 $img -o 512
 		mount /dev/loop7 /mnt
 		cp $CONF /mnt
 		md5sum /mnt/config.txt > /opt/config.md5
-		patch_html_page /mnt/info.html
-		cp /mnt/info.html /www/index.html
+		cp -a /www/* /mnt/
+		mv /mnt/index.html /mnt/info.html
 		umount /mnt
 		echo $img > $file
 
