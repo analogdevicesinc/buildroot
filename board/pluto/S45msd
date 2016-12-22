@@ -29,6 +29,7 @@ case "$1" in
 		cp $CONF /mnt
 		md5sum /mnt/config.txt > /opt/config.md5
 		patch_html_page /mnt/info.html
+		cp /mnt/info.html /www/index.html
 		umount /mnt
 		echo $img > $file
 

@@ -30,11 +30,13 @@ case "$1" in
 
 		ifconfig usb0 $IPADDR up
 		start-stop-daemon -S -b -q -m -p /var/run/udhcpd.pid -x /usr/sbin/udhcpd -- $UDHCPD_CONF
+		httpd -h /www
 		exit $?
 		;;
 
 	stop)
 		echo "Stopping dhcpd Server Daemon"
+		killall httpd
 		start-stop-daemon -K -q -p /var/run/udhcpd.pid 2>/dev/null
 		ifconfig usb0 down
 		exit $?

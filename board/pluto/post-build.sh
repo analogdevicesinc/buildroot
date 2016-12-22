@@ -30,6 +30,8 @@ genimage                           \
 rm ${TARGET_DIR}/opt/boot.vfat
 rm ${TARGET_DIR}/etc/init.d/S99iiod
 
+mkdir -p ${TARGET_DIR}/www
+
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/update.sh ${TARGET_DIR}/sbin/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/S20urandom ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/S23udc ${TARGET_DIR}/etc/init.d/
