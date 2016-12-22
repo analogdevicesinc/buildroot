@@ -1,204 +1,356 @@
-<!DOCTYPE HTML>
-<html lang="en-US">
-<head>
 
-<style>
-table, th, td {
-    border: 2px solid black;
-    border-collapse: collapse;
-}
-th, td {
-    padding: 10px;
-}
-</style>
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ADALM-PLUTO On-board documenation</title>
+        <meta name="description" content="ADALM-PLUTO On board docs">
 
-<script>
-function OnTheWeb() {
-  window.location.assign("https://wiki.analog.com/university/tools/pluto")
-}
-</script>
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+        <!-- Place favicon.ico in the root directory -->
+        <style>
+          body{
+            font-family: "Helvetica Neue", sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            line-height: 1.5em;
+            color: #636363;
+            padding: 0 20px 0;
+            max-width: 1024px;
+          }
+          hr{
+            color: #ccc;
+            margin: 10px 0 20px;
+          }
+          h1, h3{
+            font-family: "Arial Regular", sans-serif;
+            font-weight: bold;
+          }
+          h1{
+            font-size: 32px;
+            color: #1e4056;
+            margin-bottom: 40px;
+          }
+          h3{
+            font-size: 24px;
+          }
+          header{
+            margin-bottom: 20px;
+          }
+          header img{
+            margin-top: 10px;
+            width: 175px;
+          }
+          nav{
+            margin-bottom: 20px;
+          }
+          ul{
+            padding-left: 20px;
+          }
+          table{
+            width: 100%;
+          }
+          th{
+            background-color: #33b3ca;
+            color: #fff;
+            font-weight: normal;
+            padding: 10px;
+            text-align: left;
+          }
+          td{
+            background-color: #f5f5f5;
+            font-size: 14px;
+            padding: 5px 10px;
+          }
+          th:first-of-type,
+          td:first-of-type{
+            width: 25%;
+            font-weight: bold;
+          }
+          #versiontest{
+            color: #27B34F;
+          }
+          a{
+            color: #33b3ca;
+            text-decoration: none;
+          }
+          .button{
+            background-color: #33b3ca;
+            border-radius: 15px;
+            color: #ffffff;
+            margin: 0 20px 20px 0;
+            padding: 5px 15px;
+            cursor: pointer;
+          }
+          .download{
+            background-image: url("img/download.png");
+            padding: 1em 1em .5em 70px;
+            margin-bottom: 1.5em;
+            min-height: 68px;
+            background-position: 10px 50%;
+            background-repeat: no-repeat;
+            color: #000;
+            overflow: hidden;
+            box-sizing: border-box;
+            background-color: #d6efc2;
+            border-radius: 1.4em;
+          }
+          .colLeft, .colRight{
+            float: left;
+          }
+          .colLeft{
+            width: 60%;
+          }
+          .colRight{
+            width: 40%;
+            text-align: center;
+          }
+          .anchor{
+            float: right;
+          }
+        </style>
 
-<script>
-function versionCompare(v1, v2) {
-	var v1parts = ("" + v1).replace("_", ".").replace(/[^0-9.]/g, "").split("."),
-		v2parts = ("" + v2).replace("_", ".").replace(/[^0-9.]/g, "").split("."),
-		minLength = Math.min(v1parts.length, v2parts.length),
-		p1, p2, i;
-	for(i = 0; i < minLength; i++) {
-		p1 = parseInt(v1parts[i], 10);
-		p2 = parseInt(v2parts[i], 10);
-		if (isNaN(p1)){ p1 = v1parts[i]; }
-		if (isNaN(p2)){ p2 = v2parts[i]; }
-		if (p1 == p2) {
-		continue;
-		}else if (p1 > p2) {
-		return 1;
-		}else if (p1 < p2) {
-		return -1;
-		}
-		return NaN;
-	}
-	if (v1parts.length === v2parts.length) {
-		return 0;
-	}
-	return (v1parts.length < v2parts.length) ? -1 : 1;
-	}
-</script>
+    </head>
+    <body>
+        <!--[if lte IE 11]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <![endif]-->
 
-<script type="text/javascript">
-function CheckFrmVersion() {
-	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-fw/releases");
+        <!-- Add your site or application content here -->
+        <header id="top">
+          <a href="http://www.analog.com">
+            <img src="img/ADI_Logo_AWP.png" alt="Analog Devices logo" />
+          </a>
+        </header>
 
-	req.done(function(response) {
-		var VerOnGithub = response[0].name
+        <nav>
+          <a class="button" href="#started">Get Started</a>
+	  <a class="button" href="#firmware">Firmware</a>
+	  <a class="button" href="#version">Version</a>
+          <a class="button" href="#host">Host Software</a>
+	  <a class="button" href="#support">Help and Support</a>
+        </nav>
+        <hr>
+        <section>
+          <h1>Welcome to the <strong>ADALM-PLUTO</strong></h1>
+          <p>Thank you for purchasing the ADALM-PLUTO Active Learning Module. It is an easy to use tool available from Analog Devices Inc. (ADI) that can be used to introduce fundamentals of sed at sollicitudin diam. Morbi nec tincidunt eros. Etiam magna libero, laoreet dignissim dignissim a, rhoncus at lorem. Sed sit amet scelerisque elit. Sed eget mauris sagittis, faucibus sem non, fringilla eros. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras maximus augue lectus. Cras posuere congue enim eget tempor. Nulla rhoncus tristique pulvinar. Donec faucibus mi in tempus rhoncus. Ut tellus ligula, fermentum eget tortor at, molestie maximus ipsum. Donec eu arcu non diam ornare tristique id ut dui.</p>
+	  <p>Proin elementum libero vel feugiat efficitur. Nullam vulputate a odio et pellentesque. Curabitur ac odio sagittis, commodo nisi in, maximus justo. Ut sem metus, blandit eget magna rhoncus, euismod condimentum lorem. Etiam fringilla dolor id finibus luctus. Sed luctus eget orci at aliquam. Suspendisse rhoncus metus turpis, at maximus felis commodo sed. Nullam venenatis mollis nulla sed elementum. Nam dignissim interdum auctor.</p>
+          <div class="colLeft">
+            <p><strong>Features:</strong></p>
+            <ul>
+              <li>USB 2 (480 Mbits/seconds) data and power back to Host PC
+	        <ul>
+                  <li>Libiio device</li>
+                  <li>Network device</li>
+                  <li>Serial device</li>
+                  <li>Mass storage</li>
+                </ul>
+              </li>
+            </ul>
+            <p><strong>Package Contents:</strong></p>
+            <ul>
+              <li>ADALM-PLUTO (in case)</li>
+              <li>USB cable</li>
+              <li>Getting started guide</li>
+            </ul>
+          </div>
+        </section>
+        <hr style="clear: both">
+        <section id="started">
+          <a class="anchor" href="#top">Back to top</a>
+          <h3>Getting Started</h3>
+	  <p>The Pluto <a href="https://wiki.analog.com/university/tools/pluto/users/quick_start">Quick Start Guide</a> provides some quick instructions on how to set up the drivers for your host PC for using the ADALM-PLUTO Active Learning Module.</p>
+	  <ul>
+            <li><a href="https://wiki.analog.com/university/tools/pluto/users">Getting started for end users</a></li>
+            <li><a href="https://wiki.analog.com/university/tools/pluto/users/prerequisites">System requirements</a></li>
+            <li><a href="https://wiki.analog.com/university/tools/pluto">Main Documentation</a></li>
+	  </ul>
+        </section>
+        <hr>
+        <section id="firmware">
+          <a class="anchor" href="#top">Back to top</a>
+          <h3>Firmware</h3>
+	  <p>ADALM-PLUTO Firmware refers to the U-Boot, HDL, Linux kernel, device drivers, and userspace software, that runs on the Pluto which enales the device to communicate to USB host. This is bundled up and given a specific version number for the ADALM-PLUTO device. For help upgrading firmware, check out the <a href="https://wiki.analog.com/university/tools/pluto/users/firmware">online documentation</a>.</p>
+          <p><strong>Status of the Pluto firmware:</strong></p>
+          <p><span id="versiontest">No new updates</span></p>
+          <p><a id="plutsdr-fw-download" class="button" href="">Download the latest version</a>
+          <br>
+          <p id="version"><strong>Version Information:</strong></p>
+          <p>The various parts of the firmware all have their own unique versions as well:</p>
+          <table>
+            <thead>
+              <tr>
+              <th>Model</th>
+              <th>#MODEL#</th>
+	      </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Serial</td>
+                <td>#SERIAL#</td>
+              </tr>
+              <tr>
+                <td>Build</td>
+                <td>#BUILD#</td>
+              </tr>
+              <tr>
+                <td>Linux</td>
+                <td>#LINUX#</td>
+              </tr>
+              <tr>
+                <td>U-Boot</td>
+                <td>#UBOOT#</td>
+              </tr>
+              <tr>
+                <td>FPGA</td>
+                <td>#FPGA#</td>
+              </tr>
+              <tr>
+                <td>Root FS</td>
+                <td>#ROOTFS#</td>
+              </tr>
+              <tr>
+                <td>IIO</td>
+                <td>#IIO#</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>On the root file system, there are configuration settings that can modify the default configuration, they currently are:</p>
+          <table>
+            <tbody>
+              <tr>
+                <td>IP Address (PLUTO)</td>
+                <td>#IP#</td>
+              </tr>
+              <tr>
+                <td>IP Address (HOST)</td>
+                <td>#HOSTIP#</td>
+              </tr>
+              <tr>
+                <td>Netmask</td>
+                <td>#NETMASK#</td>
+              </tr>
+              <tr>
+                <td>MAC Address (PLUTO)</td>
+                <td>#MAC#</td>
+              </tr>
+              <tr>
+                <td>MAC Address (HOST)</td>
+                <td>#MACHOST#</td>
+              </tr>
+            </tbody>
+          </table>
+	  <p>To change these settings, check the <a href="https://wiki.analog.com/university/tools/pluto/users/customizing">on-line documentation</a>.</p>
+        </section>
+        <hr>
+        <section id="host">
+          <a class="anchor" href="#top">Back to top</a>
+	  <h3>Drivers</h3>
+	  <p>The ADALM-PLUTO supports multiple hosts environments including Linux, OS X, and Windows. The software should be portable to many other operating sytems including Android, OpenBSD, Windows CE, NetBSD, Haiku - anything that libusb can support. We test, support and provide drivers for:</p>
+	  <div class="download">
+            <ul>
+              <li><a href="https://wiki.analog.com/university/tools/pluto/drivers/windows">Windows setup info</a></li>
+              <li><a href="https://wiki.analog.com/university/tools/pluto/drivers/linux">Linux setup info</a></li>
+              <li><a href="https://wiki.analog.com/university/tools/pluto/drivers/osx">OS X setup info</a></li>
+            </ul>
+	  </div>
+          <h3>Libiio</h3>
+          <p>The Linux Industrial I/O subsystem provides support for devices that in some sense are analog to digital or digital to analog convertors (ADCs, DACs) between people and the Linux kernel. Libiio is a library that has been developed to ease the development of software interfacing to Linux Industrial I/O (IIO) devices. The library abstracts the low-level details of the hardware, and provides a simple yet complete programming interface that can be used for advanced projects. With bindings for custom C, C++, python applications, and applications like MATLAB and Simulink, it can be the cross platform (Windows, MAC, Linux), library that you use to talk to your Pluto device.</p>
+	    <div class="download">
+              <ul>
+                <li><a href="https://wiki.analog.com/resources/tools-software/linux-software/libiio">Libiio Documentation</a></li>
+                <li><a href="https://github.com/analogdevicesinc/libiio/releases">Latest Libiio Release</a></li>
+              </ul>
+	    </div>
+	  <h3>IIO Oscilloscope</h3>
+          <p>The IIO Oscilloscope is a example cross platform GTK application, which demonstrates how to interface the ADALM-PLUTO to a GUI. The application supports plotting of the captured data in four different modes (time domain, frequency domain, constellation and cross-correlation), playback of various signals. The application also allows to view and modify settings of the IIO devices on the Pluto.</p>
+          <div class="download">
+            <ul>
+              <li><a href="https://wiki.analog.com/resources/tools-software/linux-software/iio_oscilloscope">IIO Oscilloscope Documenation</a></li>
+              <li><a href="https://github.com/analogdevicesinc/iio-oscilloscope/releases/latest">IIO Oscilloscope Release</a></li>
+           </ul>
+         </div>
+        </section>
+	<hr>
+        <section id="support">
+        <a class="anchor" href="#top">Back to top</a>
+	<h3>Help and Support</h3>
+	<p>Help and support for the ADALM-PLUTO is provided exclusively <a href="https://wiki.analog.com/university/tools/pluto/help_support">on-line</a>. If you don't have an internet connection on this computer, please find one that does.</p>
+	</section>
+	<hr>
+        <footer>
+          <p>&copy; 2017 ANALOG DEVICES, INC. ALL RIGHTS RESERVED.</p>
+        </footer>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.1.1.min.js"><\/script>')</script>
+        <script>
 
-		var res = versionCompare("#BUILD#", VerOnGithub);
-		if (res < 0) {
-			var message = "New update available ( Version " + VerOnGithub + " )";
-		} else  if (res > 0) {
-			var message = "Wow PlutoSDR Version #BUILD# is newer than (" + VerOnGithub + ")";
-		} else if (res == 0) {
-			var message = "PlutoSDR is up to date!";
-		} else {
-			var message = "Failure";
-		}
+        function OnTheWeb() {
+          window.location.assign("https://wiki.analog.com/university/tools/pluto")
+        }
 
-		document.getElementById('#versiontest').innerHTML = message;
-		jQuery('#plutsdr-fw-download').attr ('href', response[0].assets[0].browser_download_url);
-
-	});
-}
-window.onload = CheckFrmVersion;
-</script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script>
-            jQuery(document).ready (function () {
-              jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-drivers-win/releases").done(function (data) {
-                    jQuery('#drivers-win-download').attr ('href', data[0].assets[0].browser_download_url);
-                    jQuery('#drivers-win-version').text (data[0].name);
-
-              })
-              jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/iio-oscilloscope/releases").done(function (data) {
-                    jQuery('#osc-download').attr ('href', data[0].assets[0].browser_download_url);
-                    jQuery('#osc-version').text (data[0].name);
-
-              })
-              jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/libiio/tags").done(function (data) {
-                    jQuery('#libiio-download').attr ('href', data[0].zipball_url);
-                    jQuery('#libiio-version').text (data[0].name);
-                    })
-
-	    });
-</script>
-
-</head>
-<body>
-
-	<h1><span style="color: #0000ff;">Welcome to PlutoSDR</span></h1>
-
-
-	<h4 style="color: #0000ff;">Version Information</h4>
-
-	<table>
-	<tbody>
-	<tr>
-	<td>Model</td>
-	<td>#MODEL#</td>
-	</tr>
-	<tr>
-	<td>Serial</td>
-	<td>#SERIAL#</td>
-	</tr>
-	<tr>
-	<td>Build</td>
-	<td>#BUILD#</td>
-	</tr>
-	<tr>
-	<td>Linux</td>
-	<td>#LINUX#</td>
-	</tr>
-	<tr>
-	<td>U-Boot</td>
-	<td>#UBOOT#</td>
-	</tr>
-	<tr>
-	<td>FPGA</td>
-	<td>#FPGA#</td>
-	</tr>
-	<tr>
-	<td>Root FS</td>
-	<td>#ROOTFS#</td>
-	</tr>
-	<tr>
-	<td>IIO</td>
-	<td>#IIO#</td>
-	</tr>
-	</tbody>
-	</table>
-
-	<h4 style="color: #0000ff;">Current Configuration</h4>
-
-	<table>
-	<tbody>
-	<tr>
-	<td>IP Address (PLUTO)</td>
-	<td>#IP#</td>
-	</tr>
-	<tr>
-	<td>IP Address (HOST)</td>
-	<td>#HOSTIP#</td>
-	</tr>
-	<tr>
-	<td>Netmask</td>
-	<td>#NETMASK#</td>
-	</tr>
-	<tr>
-	<td>MAC Address (PLUTO)</td>
-	<td>#MAC#</td>
-	</tr>
-	<tr>
-	<td>MAC Address (HOST)</td>
-	<td>#MACHOST#</td>
-	</tr>
-	</tbody>
-	</table>
-
-	<h4 style="color: #0000ff;">Get the latest PlutoSDR firmware</h4>
-
-	<h2 id="#versiontest"> Checking Version ...</h2>
-
-	<a id="plutsdr-fw-download"> Download the latest version</a>
-
-	<h4 style="color: #0000ff;">Visit PlutoSDR on the WEB</h4>
-	<ul>
-	<li><a title="PlutoSDR Documentation (ADALM-PLUTO)" href="https://wiki.analog.com/university/tools/pluto" target="_blank">PlutoSDR Documentation (ADALM-PLUTO)</a></li>
-	<li><a title="PlutoSDR Windows Drivers " href="https://wiki.analog.com/university/tools/pluto/drivers/windows" target="_blank">PlutoSDR Windows Drivers </a></li>
-	<li><a title="PlutoSDR Linux Drivers " href="https://wiki.analog.com/university/tools/pluto/drivers/linux" target="_blank">PlutoSDR Linux Drivers </a></li>
-	</ul>
-
-	<h4 style="color: #0000ff;">Latest Related Downloads</h4>
-
-	<table>
-	<tbody>
-	<tr>
-        <td><b> Windows USB drivers  </b></td>
-        <td><b id="drivers-win-version"> loading...</b></td>
-	<td><a id="drivers-win-download"> Download </a></td>
-        </tr>
-	<tr>
-        <td><b> libIIO  </b></td>
-        <td><b id="libiio-version"> loading...</b></td>
-	<td><a id="libiio-download"> Download </a></td>
-        </tr>
-        <tr>
-        <td><b> IIO Oscilloscope  </b></td>
-        <td><b id="osc-version"> loading...</b></td>
-	<td><a id="osc-download"> Download </a></td>
-	</tr>
-	</tbody>
-	</table>
-
+        function versionCompare(v1, v2) {
+          var v1parts = ("" + v1).replace("_", ".").replace(/[^0-9.]/g, "").split("."),
+            v2parts = ("" + v2).replace("_", ".").replace(/[^0-9.]/g, "").split("."),
+            minLength = Math.min(v1parts.length, v2parts.length),
+            p1, p2, i;
+            console.log(v1parts + " || " + v2parts);
+          for(i = 0; i < minLength; i++) {
+            p1 = parseInt(v1parts[i], 10);
+            p2 = parseInt(v2parts[i], 10);
+            if (isNaN(p1)){ p1 = v1parts[i]; }
+            if (isNaN(p2)){ p2 = v2parts[i]; }
+            if (p1 == p2) {
+            continue;
+            }else if (p1 > p2) {
+            return 1;
+            }else if (p1 < p2) {
+            return -1;
+            }
+            return NaN;
+          }
+          if (v1parts.length === v2parts.length) {
+            return 0;
+          }
+          return (v1parts.length < v2parts.length) ? -1 : 1;
+          }
+          function CheckFrmVersion() {
+            var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-fw/releases");
+            req.done(function(response) {
+              var VerOnGithub = response[0].name
+              console.log(VerOnGithub)
+              var res = versionCompare("#BUILD#", VerOnGithub);
+              if (res < 0) {
+                var message = "New update available ( Version " + VerOnGithub + " )";
+              } else  if (res > 0) {
+                var message = "Wow Pluto Firmware Version #BUILD# is newer than (" + VerOnGithub + ")";
+              } else if (res == 0) {
+                var message = "Pluto is up to date!";
+              } else {
+                var message = "Failure";
+              }
+              document.getElementById('versiontest').innerHTML = message;
+              jQuery('#plutsdr-fw-download').attr ('href', response[0].assets[0].browser_download_url);
+            });
+          }
+          window.onload = CheckFrmVersion;
+          jQuery(document).ready (function () {
+            jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-drivers-win/releases").done(function (data) {
+              jQuery('#drivers-win-download').attr ('href', data[0].assets[0].browser_download_url);
+              jQuery('#drivers-win-version').text (data[0].name);
+            })
+            jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/iio-oscilloscope/releases").done(function (data) {
+              jQuery('#osc-download').attr ('href', data[0].assets[0].browser_download_url);
+              jQuery('#osc-version').text (data[0].name);
+            })
+            jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/libiio/tags").done(function (data) {
+              jQuery('#libiio-download').attr ('href', data[0].zipball_url);
+              jQuery('#libiio-version').text (data[0].name);
+            })
+          });
+        </script>
     </body>
 </html>
-
