@@ -44,7 +44,5 @@ ${INSTALL} -D -m 0755 ${BOARD_DIR}/pluto_reboot ${TARGET_DIR}/usr/sbin/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/motd ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/test_ensm_pinctrl.sh ${TARGET_DIR}/usr/sbin/
 
-${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/img/ADI_Logo_AWP.png ${TARGET_DIR}/www/img/
-${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/img/download.png ${TARGET_DIR}/www/img/
-${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/img/favicon.ico ${TARGET_DIR}/www/img/
+${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/img/* ${TARGET_DIR}/www/img/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/index.html ${TARGET_DIR}/www/
