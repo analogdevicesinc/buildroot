@@ -337,20 +337,6 @@
             });
           }
           window.onload = CheckFrmVersion;
-          jQuery(document).ready (function () {
-            jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-drivers-win/releases").done(function (data) {
-              jQuery('#drivers-win-download').attr ('href', data[0].assets[0].browser_download_url);
-              jQuery('#drivers-win-version').text (data[0].name);
-            })
-            jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/iio-oscilloscope/releases").done(function (data) {
-              jQuery('#osc-download').attr ('href', data[0].assets[0].browser_download_url);
-              jQuery('#osc-version').text (data[0].name);
-            })
-            jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/libiio/tags").done(function (data) {
-              jQuery('#libiio-download').attr ('href', data[0].zipball_url);
-              jQuery('#libiio-version').text (data[0].name);
-            })
-          });
         </script>
     </body>
 </html>
