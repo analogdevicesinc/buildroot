@@ -2,7 +2,7 @@
 
 CONFIGFS=/sys/kernel/config/usb_gadget
 GADGET=$CONFIGFS/pluto_comp_gadget
-USBD_OPTS="/dev/pluto_ffs/ep0 /usr/sbin/iiod -i -a"
+IIOD_OPTS="-D -F /dev/pluto_ffs"
 
 case "$1" in
   start)
@@ -52,7 +52,7 @@ case "$1" in
 	mkdir /dev/pluto_ffs
 	mount pluto_ffs -t functionfs /dev/pluto_ffs
 
-	start-stop-daemon -S -b -q -m -p /var/run/usbd.pid -x /usr/sbin/usbd -- $USBD_OPTS
+	start-stop-daemon -S -b -q -m -p /var/run/iiod.pid -x  /usr/sbin/iiod  -- $IIOD_OPTS
 	sleep 0.2
 
 	echo ci_hdrc.0 > $GADGET/UDC
@@ -62,7 +62,7 @@ case "$1" in
 	echo -n "Stopping UDC Gadgets ..."
 	echo "" > $GADGET/UDC
 
-	start-stop-daemon -K -q -p /var/run/usbd.pid 2>/dev/null
+	start-stop-daemon -K -q -p /var/run/iiod.pid 2>/dev/null
 
 	rm $GADGET/configs/c.1/rndis.0
 	rm $GADGET/configs/c.1/mass_storage.0
