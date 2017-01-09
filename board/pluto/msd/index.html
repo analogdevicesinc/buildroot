@@ -11,108 +11,7 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
         <!-- Place favicon.ico in the root directory -->
-        <style>
-          body{
-            font-family: "Helvetica Neue", sans-serif;
-            font-size: 16px;
-            font-weight: normal;
-            line-height: 1.5em;
-            color: #636363;
-            padding: 0 20px 0;
-            max-width: 1024px;
-          }
-          hr{
-            color: #ccc;
-            margin: 10px 0 20px;
-          }
-          h1, h3{
-            font-family: "Arial Regular", sans-serif;
-            font-weight: bold;
-          }
-          h1{
-            font-size: 32px;
-            color: #1e4056;
-            margin-bottom: 40px;
-          }
-          h3{
-            font-size: 24px;
-          }
-          header{
-            margin-bottom: 20px;
-          }
-          header img{
-            margin-top: 10px;
-            width: 175px;
-          }
-          nav{
-            margin-bottom: 20px;
-          }
-          ul{
-            padding-left: 20px;
-          }
-          table{
-            width: 100%;
-          }
-          th{
-            background-color: #33b3ca;
-            color: #fff;
-            font-weight: normal;
-            padding: 10px;
-            text-align: left;
-          }
-          td{
-            background-color: #f5f5f5;
-            font-size: 14px;
-            padding: 5px 10px;
-          }
-          th:first-of-type,
-          td:first-of-type{
-            width: 25%;
-            font-weight: bold;
-          }
-          #versiontest{
-            color: #27B34F;
-          }
-          a{
-            color: #33b3ca;
-            text-decoration: none;
-          }
-          .button{
-            background-color: #33b3ca;
-            border-radius: 15px;
-            color: #ffffff;
-            margin: 0 20px 20px 0;
-            padding: 5px 15px;
-            cursor: pointer;
-          }
-          .download{
-            background-image: url("img/download.png");
-            padding: 1em 1em .5em 70px;
-            margin-bottom: 1.5em;
-            min-height: 68px;
-            background-position: 10px 50%;
-            background-repeat: no-repeat;
-            color: #000;
-            overflow: hidden;
-            box-sizing: border-box;
-            background-color: #d6efc2;
-            border-radius: 1.4em;
-          }
-          .colLeft, .colRight{
-            float: left;
-          }
-          .colLeft{
-            width: 60%;
-          }
-          .colRight{
-            width: 40%;
-            text-align: center;
-          }
-          .anchor{
-            float: right;
-          }
-        </style>
-
+	<link type="text/css" href="./img/style.css" rel="stylesheet">
     </head>
     <body>
         <!--[if lte IE 11]>
@@ -124,6 +23,15 @@
           <a href="http://www.analog.com">
             <img src="img/ADI_Logo_AWP.png" alt="Analog Devices logo" />
           </a>
+	  <div class="anchor">
+	  <a href="#" title="English">English</a> |
+	  <a href="./img/index_de.html" title="Deutsche (German)">Deutsche</a> |
+	  <a href="./img/index_es.html" title="Español (Spanish)">Español</a> |
+	  <a href="./img/index_br.html" title="Português (Portuguese)">Português</a> |
+	  <a href="./image/index_cn.html" title="简体中文 (Chinese)">简体中文</a> |
+	  <a href="./image/index_jp.html" title="日本語 (Japanese)">日本語</a> |
+	  <a href="./image/index_ru.html" title="Руccкий (Russian)">Руccкий</a>
+	  </div>
         </header>
 
         <nav>
@@ -174,9 +82,11 @@
           <a class="anchor" href="#top">Back to top</a>
           <h3>Firmware</h3>
 	  <p>ADALM-PLUTO Firmware refers to the U-Boot, HDL, Linux kernel, device drivers, and userspace software, that runs on the Pluto which enales the device to communicate to USB host. This is bundled up and given a specific version number for the ADALM-PLUTO device. For help upgrading firmware, check out the <a href="https://wiki.analog.com/university/tools/pluto/users/firmware">online documentation</a>.</p>
+	  <div id="versionsection" class="download">
           <p><strong>Status of the Pluto firmware:</strong></p>
-          <p><span id="versiontest">No new updates</span></p>
-          <p><a id="plutsdr-fw-download" class="button" href="">Download the latest version</a>
+          <p><span id="versiontest">Need javascript to check (sorry)</span></p>
+          <p><a id="plutsdr-fw-download" class="button" href="https://github.com/analogdevicesinc/plutosdr-fw/releases/latest">Check the latest version</a>
+	  </div>
           <br>
           <p id="version"><strong>Version Information:</strong></p>
           <p>The various parts of the firmware all have their own unique versions as well:</p>
@@ -294,57 +204,6 @@
         </footer>
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.1.1.min.js"><\/script>')</script>
-        <script>
-
-        function OnTheWeb() {
-          window.location.assign("https://wiki.analog.com/university/tools/pluto")
-        }
-
-        function versionCompare(v1, v2) {
-          var v1parts = ("" + v1).replace("_", ".").replace(/[^0-9.]/g, "").split("."),
-            v2parts = ("" + v2).replace("_", ".").replace(/[^0-9.]/g, "").split("."),
-            minLength = Math.min(v1parts.length, v2parts.length),
-            p1, p2, i;
-            console.log(v1parts + " || " + v2parts);
-          for(i = 0; i < minLength; i++) {
-            p1 = parseInt(v1parts[i], 10);
-            p2 = parseInt(v2parts[i], 10);
-            if (isNaN(p1)){ p1 = v1parts[i]; }
-            if (isNaN(p2)){ p2 = v2parts[i]; }
-            if (p1 == p2) {
-            continue;
-            }else if (p1 > p2) {
-            return 1;
-            }else if (p1 < p2) {
-            return -1;
-            }
-            return NaN;
-          }
-          if (v1parts.length === v2parts.length) {
-            return 0;
-          }
-          return (v1parts.length < v2parts.length) ? -1 : 1;
-          }
-          function CheckFrmVersion() {
-            var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-fw/releases");
-            req.done(function(response) {
-              var VerOnGithub = response[0].name
-              console.log(VerOnGithub)
-              var res = versionCompare("#BUILD#", VerOnGithub);
-              if (res < 0) {
-                var message = "New update available ( Version " + VerOnGithub + " )";
-              } else  if (res > 0) {
-                var message = "Wow Pluto Firmware Version #BUILD# is newer than (" + VerOnGithub + ")";
-              } else if (res == 0) {
-                var message = "Pluto is up to date!";
-              } else {
-                var message = "Failure";
-              }
-              document.getElementById('versiontest').innerHTML = message;
-              jQuery('#plutsdr-fw-download').attr ('href', response[0].assets[0].browser_download_url);
-            });
-          }
-          window.onload = CheckFrmVersion;
-        </script>
+	<script src="./img/version.js"></script>
     </body>
 </html>
