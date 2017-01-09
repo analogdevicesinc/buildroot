@@ -84,6 +84,27 @@ a{
 	background-color: #d6efc2;
 	border-radius: 1.4em;
 }
+.quicklinks{
+	float: right;
+	-webkit-column-count: 2; /* Chrome, Safari, Opera */
+	-moz-column-count: 2; /* Firefox */
+	column-count: 2;
+	-webkit-column-gap: 20px; /* Chrome, Safari, Opera */
+	-moz-column-gap: 20px; /* Firefox */
+	column-gap: 20px;
+	-webkit-column-rule: 1px solid lightblue; /* Chrome, Safari, Opera */
+	-moz-column-rule: 1px solid lightblue; /* Firefox */
+	column-rule: 1px solid lightblue;
+	list-style: none;
+	list-style-type: none;
+	list-style-image: none;
+	list-style-position: outside;
+	font-size: 12px;
+	line-height: 18px;
+	font-family: Helvetica,Arial,sans-serif;
+	margin-top: 10;
+	margin-bottom: 10;
+}
 .colLeft, .colRight{
 	float: left;
 }
