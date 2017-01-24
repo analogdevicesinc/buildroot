@@ -10,7 +10,10 @@ case "$1" in
 	mount configfs -t configfs /sys/kernel/config >> /dev/null
 
 	mkdir $GADGET
-	serial=`dmesg | grep  SPI-NOR-UniqueID | cut -d " " -f 4`
+
+	serial=`dmesg | grep SPI-NOR-UniqueID`
+	serial=${serial#*SPI-NOR-UniqueID }
+
 	echo $serial > /etc/serial
 	sha1=`echo $serial | sha1sum`
 
