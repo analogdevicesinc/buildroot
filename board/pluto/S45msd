@@ -20,11 +20,13 @@ patch_html_page() {
 	ROOTFS=`grep buildroot /opt/VERSIONS | cut -d ' ' -f 2`
 	UBOOT=`cat /proc/cmdline | tr  "=" "\n" | grep "U-Boot"`
 	sed -i -e "s/#BUILD#/$BUILD/g" -e "s/#FPGA#/$FPGA/g" -e "s/#ROOTFS#/$ROOTFS/g" -e "s/#UBOOT#/$UBOOT/g" $1
+	sed -i -e "s/#BUILD#/$BUILD/g" $2
+
 }
 case "$1" in
 	start)
 		echo "Starting MSD Daemon"
-		patch_html_page /www/index.html
+		patch_html_page /www/index.html /www/img/version.js
 		losetup /dev/loop7 $img -o 512
 		mount /dev/loop7 /mnt
 		cp $CONF /mnt
