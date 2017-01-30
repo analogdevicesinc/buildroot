@@ -1073,7 +1073,7 @@ endif
 	source "package/json-javascript/Config.in"
 endmenu
 
-menu "JSON/XML"
+menu "JSON/XML/INI"
 	source "package/benejson/Config.in"
 	source "package/cjson/Config.in"
 	source "package/expat/Config.in"
@@ -1083,6 +1083,7 @@ menu "JSON/XML"
 	source "package/json-glib/Config.in"
 	source "package/jsoncpp/Config.in"
 	source "package/libfastjson/Config.in"
+	source "package/libini/Config.in"
 	source "package/libjson/Config.in"
 	source "package/libroxml/Config.in"
 	source "package/libucl/Config.in"
