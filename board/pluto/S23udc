@@ -1,8 +1,10 @@
 #!/bin/sh
 
 CONFIGFS=/sys/kernel/config/usb_gadget
-GADGET=$CONFIGFS/pluto_comp_gadget
-IIOD_OPTS="-D -F /dev/pluto_ffs"
+GADGET=$CONFIGFS/composite_gadget
+IIOD_OPTS="-D -F /dev/iio_ffs"
+
+
 create_iiod_context_attributes() {
 	model=$1
 	serial=$2
@@ -37,7 +39,7 @@ case "$1" in
 	echo "PlutoSDR (ADALM-PLUTO)" > $GADGET/strings/0x409/product
 	echo $serial > $GADGET/strings/0x409/serialnumber
 
-	mkdir $GADGET/functions/ffs.pluto_ffs
+	mkdir $GADGET/functions/ffs.iio_ffs
 	mkdir $GADGET/functions/acm.usb0
 	mkdir $GADGET/functions/rndis.0
 	mkdir $GADGET/functions/mass_storage.0
@@ -62,10 +64,10 @@ case "$1" in
 	ln -s $GADGET/functions/rndis.0 $GADGET/configs/c.1
 	ln -s $GADGET/functions/mass_storage.0 $GADGET/configs/c.1
 	ln -s $GADGET/functions/acm.usb0 $GADGET/configs/c.1
-	ln -s $GADGET/functions/ffs.pluto_ffs $GADGET/configs/c.1/ffs.pluto_ffs
+	ln -s $GADGET/functions/ffs.iio_ffs $GADGET/configs/c.1/ffs.iio_ffs
 
-	mkdir /dev/pluto_ffs
-	mount pluto_ffs -t functionfs /dev/pluto_ffs
+	mkdir /dev/iio_ffs
+	mount iio_ffs -t functionfs /dev/iio_ffs
 
 	start-stop-daemon -S -b -q -m -p /var/run/iiod.pid -x  /usr/sbin/iiod  -- $IIOD_OPTS
 	sleep 0.2
@@ -82,13 +84,13 @@ case "$1" in
 	rm $GADGET/configs/c.1/rndis.0
 	rm $GADGET/configs/c.1/mass_storage.0
 	rm $GADGET/configs/c.1/acm.usb0
-	rm $GADGET/configs/c.1/ffs.pluto_ffs
+	rm $GADGET/configs/c.1/ffs.iio_ffs
 
 	rmdir $GADGET/strings/0x409
 	rmdir $GADGET/configs/c.1/strings/0x409
 	rmdir $GADGET/configs/c.1
 
-	rmdir $GADGET/functions/ffs.pluto_ffs
+	rmdir $GADGET/functions/ffs.iio_ffs
 	#rmdir $GADGET/functions/acm.usb0
 	rmdir $GADGET/functions/rndis.0
 	rmdir $GADGET/functions/mass_storage.0
