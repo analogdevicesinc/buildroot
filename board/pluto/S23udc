@@ -3,6 +3,14 @@
 CONFIGFS=/sys/kernel/config/usb_gadget
 GADGET=$CONFIGFS/pluto_comp_gadget
 IIOD_OPTS="-D -F /dev/pluto_ffs"
+create_iiod_context_attributes() {
+	model=$1
+	serial=$2
+
+	echo "[Context Attributes]" > /etc/libiio.ini
+	echo "hw_model=$model" >> /etc/libiio.ini
+	echo -e "hw_serial=$serial\n" >> /etc/libiio.ini
+}
 
 case "$1" in
   start)
@@ -11,8 +19,12 @@ case "$1" in
 
 	mkdir $GADGET
 
+	model=`cat /sys/firmware/devicetree/base/model | tr / -`
+
 	serial=`dmesg | grep SPI-NOR-UniqueID`
 	serial=${serial#*SPI-NOR-UniqueID }
+
+	create_iiod_context_attributes "$model" "$serial"
 
 	echo $serial > /etc/serial
 	sha1=`echo $serial | sha1sum`
