@@ -1,0 +1,8 @@
+#S23udc
+PRODUCT="M2k (ADALM-2000)"
+USBPID=0xb672
+
+#update.sh
+FIRMWARE=/mnt/m2k.frm
+FRM_MAGIC="ITB M2k (ADALM-2000)"
+

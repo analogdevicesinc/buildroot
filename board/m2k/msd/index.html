@@ -1,0 +1,287 @@
+
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>ADALM-PLUTO On-board documenation</title>
+<meta name="description" content="ADALM-PLUTO On board docs">
+
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+<!-- Place favicon.ico in the root directory -->
+<link type="text/css" href="./img/style.css" rel="stylesheet">
+</head>
+<body>
+<!--[if lte IE 11]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+<![endif]-->
+
+<!-- Add your site or application content here -->
+<header id="top">
+<a href="http://www.analog.com">
+<img src="img/ADI_Logo_AWP.png" alt="Analog Devices logo" />
+</a>
+<div class="anchor">
+<a href="#" title="English">English</a> |
+<a href="./img/index_de.html" title="Deutsche (German)">Deutsche</a> |
+<a href="./img/index_es.html" title="Español (Spanish)">Español</a> |
+<a href="./img/index_br.html" title="Português (Portuguese)">Português</a> |
+<a href="./image/index_cn.html" title="简体中文 (Chinese)">简体中文</a> |
+<a href="./image/index_jp.html" title="日本語 (Japanese)">日本語</a> |
+<a href="./image/index_ru.html" title="Руccкий (Russian)">Руccкий</a>
+</div>
+</header>
+
+<nav>
+<a class="button" href="#started">Get Started</a>
+<a class="button" href="#firmware">Firmware</a>
+<a class="button" href="#version">Version</a>
+<a class="button" href="#host">Host Software</a>
+<a class="button" href="#sdr">SDR Environments</a>
+<a class="button" href="#support">Help and Support</a>
+</nav>
+<hr>
+<section>
+<h1>Welcome to the <strong>ADALM-PLUTO</strong> Active Learning Module</h1>
+<a href="http://www.analog.com/education"><img src="./img/prof_blue.png" alt="ADI Professor" style="float:left" /></a>
+<p>Thank you for purchasing the ADALM-PLUTO Active Learning Module (PlutoSDR). The easy to use ADALM-PLUTO active learning module (PlutoSDR) helps introduce electrical engineering students to the fundamentals of software-defined radio (SDR), radio frequency (RF), and wireless communications. Designed for students at all levels and from all backgrounds, the module can be used for both instructor-led and self-directed learning to help students develop a foundation in real-world RF and communications that they can build on as they pursue science, technology, or engineering degrees.</p>
+<p>The PlutoSDR works as a portable lab that, when used with a host, can augment classroom learning. MATLAB and Simulink are two of the many software packages supported by PlutoSDR, and it provides an intuitive graphical user interface (GUI) so students can learn faster, work smarter, and explore more.</p>
+<p>Based on the <a href="http://www.analog.com/AD9363">AD9363</a>, The PlutoSDR features independent receive and transmit channels that can be operated in full duplex. The active learning module can generate or acquire RF analog signals from 325 MHz to 3800 MHz at up to 61.44 megasamples per second (MSPS). Small enough to fit in a shirt pocket, the PlutoSDR is completely self-contained and entirely USB powered with the default firmware. Because PlutoSDR is enabled by libiio drivers, it supports OS X® , Windows®,  and Linux®,  which allows students to learn and explore on a variety of host platforms.</p>
+
+<div class="colLeft">
+<p><strong>Features:</strong></p>
+<ul>
+  <li>Separate Receive and Transmit SMA connectors to connect to instrumentation or antennas
+     <ul>
+        <li>Software tunable across wide frequency range (325 MHz to 3.8 GHz)</li>
+	<li>Integrated fractional N synthesizers</li>
+	<li>Independent Receive and Transmit local oscillators, with 2.4 Hz step size</li>
+     </ul>
+  </li>
+  <li>12-bit DACs and ADCs
+     <ul>
+        <li>channel bandwidth of &lt;200 kHz to 20 MHz</li>
+	<li>Maxium sample rate of 61.44 MSPS (burst mode)</li>
+     </ul>
+  </li>
+  <li>Supports <a href="https://en.wikipedia.org/wiki/Duplex_%28telecommunications%29#Time-division_duplexing">time division duplex</a> (TDD) and <a href="https://en.wikipedia.org/wiki/Duplex_%28telecommunications%29#Frequency-division_duplexing">frequency division duplex</a> (FDD) operation</li>
+  <li>Receive (Rx) gain control
+     <ul>
+	<li>Real-time monitor and control signals for manual gain</li>
+	<li>Independent automatic gain control (AGC)</li>
+     </ul>
+  </li>
+  <li>USB 2 (480 Mbits/seconds) data and power back to Host Platform
+     <ul>
+	<li><a href="https://en.wikipedia.org/wiki/USB_mass_storage_device_class">Mass storage</a> (for easy firmware updates)</li>
+	<li><a href="https://en.wikipedia.org/wiki/USB#Device_Firmware_Upgrade">Device Firmware Upgrade</a>(for harder firmware upgrades)</li>
+	<li><a href="https://en.wikipedia.org/wiki/USB_communications_device_class">Serial</a> (for interacting with the Linux kernel/userspace on PlutoSDR)</li>
+	<li><a href="https://en.wikipedia.org/wiki/RNDIS">Networking/RNDIS</a> (for loading controlling and custom ARM® applications)</li>
+	<li><a href="https://wiki.analog.com/resources/tools-software/linux-software/libiio">libiio</a> (bulk USB for SDR data transfer and control)</li>
+     </ul>
+  </li>
+</ul>
+<p><strong>Package Contents:</strong></p>
+<ul>
+<li>Analog Devices PlutoSDR Active Learning Module</li>
+<li>Two antennas (824-894 MHz / 1710-2170 MHz)
+<li>SMA cable</li>
+<li>USB cable</li>
+<li>Getting started guide</li>
+</ul>
+</div>
+<div class="colRight"><img src="img/PlutoSDR.png" alt="ADALM-PLUTO part" /></div>
+</section>
+<hr style="clear: both">
+<section id="started">
+<a class="anchor" href="#top">Back to top</a>
+<h3>Getting Started</h3>
+<p>The PlutoSDR <a href="https://wiki.analog.com/university/tools/pluto/users/quick_start">Quick Start Guide</a> provides some quick instructions on how to set up the drivers for your host PC for using the ADALM-PLUTO Active Learning Module.</p>
+<ul>
+<li><a href="https://wiki.analog.com/university/tools/pluto/users">Getting started for end users</a></li>
+<li><a href="https://wiki.analog.com/university/tools/pluto/users/prerequisites">System requirements</a></li>
+<li><a href="https://wiki.analog.com/university/tools/pluto">Main Documentation</a></li>
+</ul>
+</section>
+<hr>
+<section id="firmware">
+<a class="anchor" href="#top">Back to top</a>
+<h3>Firmware</h3>
+<p>ADALM-PLUTO Firmware refers to the U-Boot, HDL, Linux kernel, device drivers, and userspace software, that runs on the PlutoSDR which enales the device to communicate to USB host. This is bundled up and given a specific version number for the ADALM-PLUTO device. For help upgrading firmware, check out the <a href="https://wiki.analog.com/university/tools/pluto/users/firmware">online documentation</a>.</p>
+<div id="versionsection" class="download">
+<p><strong>Status of the PlutoSDR firmware:</strong></p>
+<p><span id="versiontest">Need javascript to check (sorry)</span></p>
+<p><a id="plutsdr-fw-download" class="button" href="https://github.com/analogdevicesinc/plutosdr-fw/releases/latest">Check the latest version</a>
+</div>
+<br>
+<p id="version"><strong>Version Information:</strong></p>
+<p>The various parts of the firmware all have their own unique versions as well:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>#MODEL#</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Serial</td>
+<td>#SERIAL#</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>#BUILD#</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>#LINUX#</td>
+</tr>
+<tr>
+<td>U-Boot</td>
+<td>#UBOOT#</td>
+</tr>
+<tr>
+<td>FPGA</td>
+<td>#FPGA#</td>
+</tr>
+<tr>
+<td>Root FS</td>
+<td>#ROOTFS#</td>
+</tr>
+<tr>
+<td>IIO</td>
+<td>#IIO#</td>
+</tr>
+</tbody>
+</table>
+<p>On the root file system, there are configuration settings that can modify the default configuration, they currently are:</p>
+<table>
+<tbody>
+<tr>
+<td>IP Address (PLUTO)</td>
+<td>#IP#</td>
+</tr>
+<tr>
+<td>IP Address (HOST)</td>
+<td>#HOSTIP#</td>
+</tr>
+<tr>
+<td>Netmask</td>
+<td>#NETMASK#</td>
+</tr>
+<tr>
+<td>MAC Address (PLUTO)</td>
+<td>#MAC#</td>
+</tr>
+<tr>
+<td>MAC Address (HOST)</td>
+<td>#MACHOST#</td>
+</tr>
+</tbody>
+</table>
+<p>To change these settings, check the <a href="https://wiki.analog.com/university/tools/pluto/users/customizing">on-line documentation</a>.</p>
+</section>
+<hr>
+<section id="host">
+<a class="anchor" href="#top">Back to top</a>
+<h3>Drivers</h3>
+<p>The ADALM-PLUTO supports multiple hosts environments including Linux, OS X, and Windows. The software should be portable to many other operating sytems including Android, OpenBSD, Windows CE, NetBSD, Haiku - anything that libusb can support. We test, support and provide drivers for:</p>
+<div class="download">
+<ul>
+<li><a href="https://wiki.analog.com/university/tools/pluto/drivers/windows">Windows setup and drivers</a></li>
+<li><a href="https://wiki.analog.com/university/tools/pluto/drivers/linux">Linux setup</a></li>
+<li><a href="https://wiki.analog.com/university/tools/pluto/drivers/osx">OS X setup</a></li>
+</ul>
+</div>
+<h3>Libiio</h3>
+<p>The Linux Industrial I/O subsystem provides support for devices that in some sense are analog to digital or digital to analog convertors (ADCs, DACs) between people and the Linux kernel. Libiio is a library that has been developed to ease the development of software interfacing to Linux Industrial I/O (IIO) devices. The library abstracts the low-level details of the hardware, and provides a simple yet complete programming interface that can be used for advanced projects. With bindings for custom C, C++, python applications, and applications like MATLAB and Simulink, it can be the cross platform (Windows, MAC, Linux), library that you use to talk to your PlutoSDR device.</p>
+<div class="download">
+<ul>
+<li><a href="https://wiki.analog.com/resources/tools-software/linux-software/libiio">Libiio Documentation</a></li>
+<li><a href="https://github.com/analogdevicesinc/libiio/releases">Latest Libiio Release</a></li>
+</ul>
+</div>
+<h3>IIO Oscilloscope</h3>
+<p>The IIO Oscilloscope is a example cross platform GTK application, which demonstrates how to interface the ADALM-PLUTO to a GUI. The application supports plotting of the captured data in four different modes (time domain, frequency domain, constellation and cross-correlation), playback of various signals. The application also allows to view and modify settings of the IIO devices on the PlutoSDR.</p>
+<div class="download">
+<ul>
+<li><a href="https://wiki.analog.com/resources/tools-software/linux-software/iio_oscilloscope">IIO Oscilloscope Documenation</a></li>
+<li><a href="https://github.com/analogdevicesinc/iio-oscilloscope/releases/latest">IIO Oscilloscope Release</a></li>
+</ul>
+</div>
+</section>
+<hr>
+<section id="sdr">
+<a class="anchor" href="#top">Back to top</a>
+<h3>MathWorks</h3>
+<img src="./img/mathworks_logo.png" alt="MathWorks Logo" style="float:left" />
+<p>The PlutoSDR can be connected to MATLAB® and Simulink® to enable advanced wireless design, simulation, and sinal analysis.</p>
+<ul>
+<li>Transmit and receive standards-based and customer generated signals</li>
+<li>Test Designs in the presence of interference and other real-world conditions</li>
+<li>Perform real-time signal analysis and measurement with live data</li>
+<li>Verify implmentation with the radio-in-the loop tests</li>
+</ul>
+<p>Design and curriculum information is avalible at <a href="http://mathworks.com/adi-pluto">mathworks.com/adi-pluto</a>.</p>
+</section>
+<hr>
+<section>
+<a class="anchor" href="#top">Back to top</a>
+<h3>GNU Radio</h3>
+<img src="img/GNURadio_logo.jpg" alt="GNU Radio" style="float:left" />
+<p>GNU Radio is a free & open-source software development toolkit that provides signal processing blocks to implement software radios. It can be used with readily-available RF hardware, like the PlutoSDR to create software-defined radios. It is widely used in hobbyist, and academic environments to support wireless communications research.</p>
+<p>GNU Radio performs all the signal processing. You can use it to write applications to receive data out of digital streams or to push data into digital streams, which is then transmitted using hardware.</p>
+<p>For more information, check out:</p>
+<ul>
+   <li><a href="http://gnuradio.org/">GNU Radio Web site</a></li>
+   <li><a href="https://wiki.analog.com/resources/tools-software/linux-software/gnuradio">PlutoSDR Specific GNU Radio Documentation</a></li>
+</ul>
+</section>
+<hr>
+<section id="support">
+<a class="anchor" href="#top">Back to top</a>
+<h3>Help and Support</h3>
+<p>Help and support for the ADALM-PLUTO is provided exclusively <a href="https://wiki.analog.com/university/tools/pluto/help_support">on-line</a>. If you don't have an internet connection on this computer, please find one that does.</p>
+</section>
+<hr>
+<section id="social">
+<div>
+<ul class="quicklinks">
+<li><a href="http://www.analog.com/en/about-adi.html" title="About ADI">About ADI</a></li>
+<li><a href="http://www.analog.com/en/analog-dialogue.html" title="Analog Dialogue">Analog Dialogue</a></li>
+<li><a href="http://www.analog.com/en/about-adi/careers.html" title="Careers">Careers</a></li>
+<li><a href="http://www.analog.com/en/about-adi/careers/students-and-graduates/new-college-graduates.html" title="Students and Graduates">New College Graduates</a></li>
+<li><a href="http://investor.analog.com/" title="Investor Relations">Investor Relations</a></li>
+<li><a href="http://www.analog.com/en/about-adi/news-room.html" title="News Room">News Room</a></li>
+<li><a href="http://www.analog.com/en/about-adi/corporate-information/sales-distribution.html" title="Sales &amp; Distributors">Sales &amp; Distribution</a></li>
+<li><a href="https://form.analog.com/Form_Pages/corporate/parts.aspx" title="College Parts Program">College Parts Program</a></li>
+</ul>
+</div>
+<h3>About Analog Devices</h3>
+<div class="colLeft">
+<p>Intelligently bridging the digital and analog worlds takes knowledge as well as products. We offer <a href="https://ez.analog.com/welcome">blogs</a>, <a href="http://www.analog.com/en/analog-dialogue.html">technical journals</a> and other <a href="http://www.analog.com/en/index.html">community</a> resources to engineers, scientists, technicians, and students looking to help and share with one another.</p>
+<p>Follow Analog Devices on your favorite <a href="http://www.analog.com/social"> social media site</a>:</p>
+</div>
+<div style="clear: both">
+<p><a href="http://ez.analog.com/welcome" target="_blank" title="Join Analog Devices on EngineerZone"><img src="./img/ez.png" alt="EngineerZone logo"></a>
+<a href="http://www.facebook.com/AnalogDevicesInc" target="_blank" title="Visit Analog Devices on Facebook"><img src="./img/fb.png" alt="FaceBook Logo"></a>
+<a href="https://twitter.com/#!/adi_news" target="_blank" title="Follow Analog Devices on Twitter"><img src="./img/tw.png" alt="Twitter Logo"></a>
+<a href="http://plus.google.com/116502491843999760953/posts" target="_blank" title="Follow us on Google+"><img src="./img/gp.png" alt="Google+ Logo"></a>
+<a href="http://www.linkedin.com/company/3450" target="_blank" title="Join Analog Devices on LinkedIn"><img src="./img/li.png" alt="LinkedIn Logo"></a>
+<a href="http://www.youtube.com/user/AnalogDevicesInc" target="_blank" title="View Analog Devices on YouTube"><img src="./img/yt.png" alt="YouTube Logo"></a>
+<a href="http://www.weibo.com/analogdevices" target="_blank" title="Chinese language information on Sina Weibo"><img src="./img/sw.png" alt="Sina Weibo Logo"></a>
+<a href="http://www.slideshare.com/analogdevicesinc" target="_blank" title="Visit our official SlideShare channel to gain access to technical presentations"><img src="./img/ss.png" alt="SlideShare Logo"></a>
+</p>
+</div>
+</section>
+<hr>
+<footer>
+<p>&copy; 2017 ANALOG DEVICES, INC. ALL RIGHTS RESERVED.</p>
+</footer>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-3.1.1.min.js"><\/script>')</script>
+<script src="./img/version.js"></script>
+</body>
+</html>
