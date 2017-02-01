@@ -14,8 +14,8 @@ case "$1" in
 		echo "interface usb0" >> $UDHCPD_CONF
 		echo "option subnet $NETMASK" >> $UDHCPD_CONF
 
-		echo "# PlutoSDR Configuration File"$'\r' > $CONF
-		echo "# Edit, Save and then Eject the PlutoSDR USB Drive"$'\r' >> $CONF
+		echo "# Device Configuration File"$'\r' > $CONF
+		echo "# Edit, Save and then Eject the USB Drive"$'\r' >> $CONF
 		echo ""$'\r'>> $CONF
 		echo "[NETWORK]"$'\r' >> $CONF
 		echo "ipaddr = $IPADDR"$'\r' >> $CONF

@@ -1,9 +1,10 @@
 #!/bin/sh
 
+source /etc/device_config
+
 CONFIGFS=/sys/kernel/config/usb_gadget
 GADGET=$CONFIGFS/composite_gadget
 IIOD_OPTS="-D -F /dev/iio_ffs"
-
 
 create_iiod_context_attributes() {
 	model=$1
@@ -32,11 +33,11 @@ case "$1" in
 	sha1=`echo $serial | sha1sum`
 
 	echo 0x0456 > $GADGET/idVendor
-	echo 0xb673 > $GADGET/idProduct
+	echo $USBPID > $GADGET/idProduct
 
 	mkdir $GADGET/strings/0x409
 	echo "Analog Devices Inc." > $GADGET/strings/0x409/manufacturer
-	echo "PlutoSDR (ADALM-PLUTO)" > $GADGET/strings/0x409/product
+	echo $PRODUCT > $GADGET/strings/0x409/product
 	echo $serial > $GADGET/strings/0x409/serialnumber
 
 	mkdir $GADGET/functions/ffs.iio_ffs
@@ -50,16 +51,13 @@ case "$1" in
 	host_addr=`echo -n 00:E0:22; echo $sha1 | dd bs=1 count=6 2>/dev/null | hexdump -v -e '/1 ":%01c""%c"'`
 	dev_addr=`echo -n 00:05:F7; echo $sha1 | dd bs=1 count=6 skip=6 2>/dev/null | hexdump -v -e '/1 ":%01c""%c"'`
 
-#	dev_addr=`echo -n 00; echo $sha1 | dd bs=1 count=10 skip=6 2>/dev/null | hexdump -v -e '/1 ":%01c""%c"'`
-
 	echo $host_addr > $GADGET/functions/rndis.0/host_addr
 	echo $dev_addr > $GADGET/functions/rndis.0/dev_addr
 
 	mkdir $GADGET/configs/c.1
 	mkdir $GADGET/configs/c.1/strings/0x409
-	echo "PlutoSDR (RNDIS/MSD/ACM/IIOUSBD)" > $GADGET/configs/c.1/strings/0x409/configuration
+	echo "RNDIS/MSD/ACM/IIOUSBD" > $GADGET/configs/c.1/strings/0x409/configuration
 	echo 500 > $GADGET/configs/c.1/MaxPower
-
 
 	ln -s $GADGET/functions/rndis.0 $GADGET/configs/c.1
 	ln -s $GADGET/functions/mass_storage.0 $GADGET/configs/c.1

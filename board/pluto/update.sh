@@ -1,11 +1,11 @@
 #!/bin/sh
 
-file=/sys/kernel/config/usb_gadget/pluto_comp_gadget/functions/mass_storage.0/lun.0/file
-firmware=/mnt/pluto.frm
+source /etc/device_config
+
+file=/sys/kernel/config/usb_gadget/composite_gadget/functions/mass_storage.0/lun.0/file
 bootimage=/mnt/boot.frm
 conf=/mnt/config.txt
 img=/opt/vfat.img
-
 
 ini_parser() {
  FILE=$1
@@ -23,7 +23,7 @@ reset() {
 	echo "REBOOT/RESET using Watchdog timeout"
 	flash_indication_off
 	sync
-	pluto_reboot reset
+	device_reboot reset
 	sleep 10
 }
 
@@ -31,7 +31,7 @@ dfu() {
 	echo "Entering DFU mode using SW Reset"
 	flash_indication_off
 	sync
-	pluto_reboot sf
+	device_reboot sf
 }
 
 flash_indication_on() {
@@ -128,37 +128,42 @@ handle_boot_frm () {
 		diff -w /opt/mtd /opt/mtd-info.txt
 		if [ $? -eq 0 ]; then
 			flash_indication_on
-			dd if=/opt/boot.bin of=/dev/mtdblock0 bs=64k && dd if=/opt/u-boot-env.bin of=/dev/mtdblock1 bs=64k && touch /mnt/BOOT_SUCCESS || touch /mnt/BOOT_FAILED
+			dd if=/opt/boot.bin of=/dev/mtdblock0 bs=64k && dd if=/opt/u-boot-env.bin of=/dev/mtdblock1 bs=64k && do_reset=1 && touch /mnt/BOOT_SUCCESS || touch /mnt/BOOT_FAILED
 			flash_indication_off
 		else
 			cat /opt/mtd /opt/mtd-info.txt > /mnt/FAILED_MTD_PARTITION_ERROR
+			do_reset=0
 		fi
 	else
 		echo $md5 $frm >  /mnt/FAILED_BOOT_CHSUM_ERROR
+		do_reset=0
 	fi
 
 	rm -f ${FILE} /opt/boot_and_env_and_mtdinfo.bin /opt/mtd-info.txt /opt/boot_and_env.bin /opt/u-boot-env.bin /opt/boot.bin /opt/mtd
 }
 
-handle_pluto_frm () {
+
+
+handle_frimware_frm () {
 	FILE=$1
+	MAGIC=$2
 	rm -f /mnt/SUCCESS /mnt/FAILED /mnt/FAILED_FIRMWARE_CHSUM_ERROR
 	md5=`tail -c 33 ${FILE}`
-	head -c -33 ${FILE} > /opt/pluto.frm
-	FRM_SIZE=`cat /opt/pluto.frm | wc -c | xargs printf "%X\n"`
-	frm=`md5sum /opt/pluto.frm | cut -d ' ' -f 1`
+	head -c -33 ${FILE} > /opt/firmware.frm
+	FRM_SIZE=`cat /opt/firmware.frm | wc -c | xargs printf "%X\n"`
+	frm=`md5sum /opt/firmware.frm | cut -d ' ' -f 1`
 	if [ "$frm" = "$md5" ]
 	then
 		flash_indication_on
-		grep -q "ITB PlutoSDR (ADALM-PLUTO)" /opt/pluto.frm && dd if=/opt/pluto.frm of=/dev/mtdblock3 bs=64k && fw_setenv fit_size ${FRM_SIZE} && do_reset=1 && touch /mnt/SUCCESS || touch /mnt/FAILED
+		grep -q ${MAGIC}  /opt/firmware.frm && dd if=/opt/firmware.frm of=/dev/mtdblock3 bs=64k && fw_setenv fit_size ${FRM_SIZE} && do_reset=1 && touch /mnt/SUCCESS || touch /mnt/FAILED
 		flash_indication_off
 	else
 		echo $frm $md5 > /mnt/FAILED_FIRMWARE_CHSUM_ERROR
+		do_reset=0
 	fi
 
-	rm -f ${FILE} /opt/pluto.frm
+	rm -f ${FILE} /opt/firmware.frm
 	sync
-
 }
 
 while [ 1 ]
@@ -170,9 +175,9 @@ do
     then
 	losetup /dev/loop7 $img -o 512
 	mount /dev/loop7 /mnt
-	if [[ -s ${firmware} ]]
+	if [[ -s ${FIRMWARE} ]]
 	then 
-		handle_pluto_frm ${firmware}
+		handle_frimware_frm ${FIRMWARE} ${FRM_MAGIC}
 	fi
 
 	if [[ -s ${bootimage} ]]

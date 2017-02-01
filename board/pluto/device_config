@@ -1,0 +1,8 @@
+#S23udc
+PRODUCT="PlutoSDR (ADALM-PLUTO)"
+USBPID=0xb673
+
+#update.sh
+FIRMWARE=/mnt/pluto.frm
+FRM_MAGIC="ITB PlutoSDR (ADALM-PLUTO)"
+
