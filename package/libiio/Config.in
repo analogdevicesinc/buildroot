@@ -16,11 +16,11 @@ config BR2_PACKAGE_LIBIIO_LOCAL_BACKEND
 	  Enable the local backend of the library.
 
 config BR2_PACKAGE_LIBIIO_LOCAL_CONFIG
-	bool "Read local context attributes from /etc/libiio.ini"
-	select BR2_PACKAGE_LIBINI
+	bool "Local context attributes"
+	depends on BR2_PACKAGE_LIBINI
 	default y
 	help
-	  Enable the local backend of the library.
+	  Read local context attributes from /etc/libiio.ini.
 
 config BR2_PACKAGE_LIBIIO_XML_BACKEND
 	bool "XML backend"
