@@ -3,8 +3,8 @@ function OnTheWeb() {
 }
 
 function versionCompare(v1, v2) {
-	var v1parts = ("" + v1).replace("_", ".").replace(/[^0-9.]/g, "").split("."),
-	v2parts = ("" + v2).replace("_", ".").replace(/[^0-9.]/g, "").split("."),
+	var v1parts = ("" + v1).replace(/[a-zA-Z]/g, "").replace("-", ".").split("."),
+	v2parts = ("" + v2).replace(/[a-zA-Z]/g, "").replace("-", ".").split("."),
 	minLength = Math.min(v1parts.length, v2parts.length),
 	p1, p2, i;
 	console.log(v1parts + " || " + v2parts);
