@@ -21,7 +21,8 @@ patch_html_page() {
 	ROOTFS=`grep buildroot /opt/VERSIONS | cut -d ' ' -f 2`
 	UBOOT=`cat /proc/cmdline | tr  "=" "\n" | grep "U-Boot"`
 	sed -i -e "s/#BUILD#/$BUILD/g" -e "s/#FPGA#/$FPGA/g" -e "s/#ROOTFS#/$ROOTFS/g" -e "s/#UBOOT#/$UBOOT/g" $1
-	sed -i -e "s/#BUILD#/$BUILD/g" $2
+	sed -i -e "s/#BUILD#/$BUILD/g" $2 /etc/motd
+
 }
 
 case "$1" in
