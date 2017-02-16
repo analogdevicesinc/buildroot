@@ -62,7 +62,7 @@ process_ini() {
 
 	rm -f /mnt/SUCCESS_ENV_UPDATE /mnt/FAILED_INVALID_UBOOT_ENV
 
-	if [ -n "$ipaddr" ] && [ -n "$ipaddr_host" ] && [ -n $netmask ]
+	if [ -n "$ipaddr" ] && [ -n "$ipaddr_host" ] && [ -n "$netmask" ]
 	then
 
 		IPADDR=`fw_printenv -n ipaddr`
@@ -86,6 +86,34 @@ process_ini() {
 			fi
 		fi
 	fi
+
+	ini_parser $FILE "WLAN"
+
+	if [ -n "$ipaddr_wlan" ] && [ -n "$ssid_wlan" ] && [ -n "$pwd_wlan" ]
+	then
+
+		WLAN_SSID=`fw_printenv -n ssid_wlan 2> /dev/null`
+		WLAN_PWD=`fw_printenv -n pwd_wlan 2> /dev/null`
+		WLAN_IPADDR=`fw_printenv -n ipaddr_wlan 2> /dev/null`
+
+		if [ "$WLAN_SSID" != $ssid_wlan ] || [ "$WLAN_PWD" != $pwd_wlan ] || [ "$WLAN_IPADDR" != $ipaddr_wlan ]
+		then
+			fw_printenv qspiboot
+			if [ $? -eq 0 ]; then
+				flash_indication_on
+				echo "ssid_wlan $ssid_wlan" > /opt/fw_set.tmp
+				echo "ipaddr_wlan  $ipaddr_wlan" >> /opt/fw_set.tmp
+				echo "pwd_wlan  $pwd_wlan" >> /opt/fw_set.tmp
+				fw_setenv -s /opt/fw_set.tmp
+				rm /opt/fw_set.tmp
+				flash_indication_off
+				touch /mnt/SUCCESS_ENV_UPDATE
+			else
+				touch /mnt/FAILED_INVALID_UBOOT_ENV
+			fi
+		fi
+	fi
+
 
 	ini_parser $FILE "ACTIONS"
 

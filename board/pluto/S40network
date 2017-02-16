@@ -1,0 +1,94 @@
+#!/bin/sh
+#
+# Start the network....
+#
+
+# Debian ifupdown needs the /run/network lock directory
+
+source /etc/device_config
+
+create_system_files () {
+
+	UDHCPD_CONF=/etc/udhcpd.conf
+	CONF=/opt/config.txt
+	IFAC=/etc/network/interfaces
+
+	echo "Starting dhcpd Server Daemon"
+	IPADDR=`fw_printenv -n ipaddr || echo 192.168.2.1`
+	IPADDR_HOST=`fw_printenv -n ipaddr_host || echo 192.168.2.10`
+	NETMASK=`fw_printenv -n netmask || echo 255.255.255.0`
+
+	WLAN_SSID=`fw_printenv -n ssid_wlan 2> /dev/null`
+	WLAN_PWD=`fw_printenv -n pwd_wlan 2> /dev/null`
+	WLAN_IPADDR=`fw_printenv -n ipaddr_wlan 2> /dev/null`
+
+	### /etc/udhcpd.conf ###
+	echo "start $IPADDR_HOST" > $UDHCPD_CONF
+	echo "interface usb0" >> $UDHCPD_CONF
+	echo "option subnet $NETMASK" >> $UDHCPD_CONF
+
+	### /etc/network/interfaces ###
+	echo -e "auto lo\n""iface lo inet loopback\n" > $IFAC
+	echo -e "auto usb0\n""iface usb0 inet static" >> $IFAC
+	echo -e "\taddress $IPADDR\n""\tnetmask $NETMASK\n" >> $IFAC
+	echo -e "auto wlan0\n""iface wlan0 inet dhcp" >> $IFAC
+	echo -e "\twpa-conf /etc/wpa.conf\n" >> $IFAC
+
+	### /etc/wpa.conf ###
+	if [ -n "$WLAN_SSID" ] && [ -n "$WLAN_PWD" ]
+	then
+		wpa_passphrase $WLAN_SSID $WLAN_PWD > /etc/wpa.conf
+	elif [ -n "$WLAN_SSID" ]
+	then
+		echo "network={" > /etc/wpa.conf
+		echo "    ssid=\"$WLAN_SSID\"" >> /etc/wpa.conf
+		echo "    key_mgmt=NONE" >> /etc/wpa.conf
+		echo "}" >> /etc/wpa.conf
+	fi
+
+	### /opt/config.txt ###
+	echo "# Device Configuration File"$'\r' > $CONF
+	echo "# Edit, Save and then Eject the USB Drive"$'\r' >> $CONF
+	echo ""$'\r'>> $CONF
+	echo "[NETWORK]"$'\r' >> $CONF
+	echo "ipaddr = $IPADDR"$'\r' >> $CONF
+	echo "ipaddr_host = $IPADDR_HOST"$'\r' >> $CONF
+	echo "netmask = $NETMASK"$'\r' >> $CONF
+	echo ""$'\r'>> $CONF
+	echo "[WLAN]"$'\r' >> $CONF
+	echo "ssid_wlan = $WLAN_SSID"$'\r' >> $CONF
+	echo "pwd_wlan = $WLAN_PWD"$'\r' >> $CONF
+	echo "ipaddr_wlan = $WLAN_IPADDR"$'\r' >> $CONF
+	echo ""$'\r'>> $CONF
+	echo "[ACTIONS]"$'\r' >> $CONF
+	echo "diagnostic_report = 0"$'\r' >> $CONF
+	echo "dfu = 0"$'\r' >> $CONF
+	echo "reset = 0"$'\r' >> $CONF
+	echo ""$'\r'>> $CONF
+}
+
+mkdir -p /run/network
+
+case "$1" in
+  start)
+	create_system_files
+	printf "Starting network: "
+	/sbin/ifup -a
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  stop)
+	printf "Stopping network: "
+	/sbin/ifdown -a
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+
