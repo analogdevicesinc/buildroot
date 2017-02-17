@@ -31,19 +31,23 @@ create_system_files () {
 	echo -e "auto lo\n""iface lo inet loopback\n" > $IFAC
 	echo -e "auto usb0\n""iface usb0 inet static" >> $IFAC
 	echo -e "\taddress $IPADDR\n""\tnetmask $NETMASK\n" >> $IFAC
-	echo -e "auto wlan0\n""iface wlan0 inet dhcp" >> $IFAC
-	echo -e "\twpa-conf /etc/wpa.conf\n" >> $IFAC
 
 	### /etc/wpa.conf ###
 	if [ -n "$WLAN_SSID" ] && [ -n "$WLAN_PWD" ]
 	then
 		wpa_passphrase $WLAN_SSID $WLAN_PWD > /etc/wpa.conf
+
+		echo -e "auto wlan0\n""iface wlan0 inet dhcp" >> $IFAC
+		echo -e "\twpa-conf /etc/wpa.conf\n" >> $IFAC
 	elif [ -n "$WLAN_SSID" ]
 	then
 		echo "network={" > /etc/wpa.conf
 		echo "    ssid=\"$WLAN_SSID\"" >> /etc/wpa.conf
 		echo "    key_mgmt=NONE" >> /etc/wpa.conf
 		echo "}" >> /etc/wpa.conf
+
+		echo -e "auto wlan0\n""iface wlan0 inet dhcp" >> $IFAC
+		echo -e "\twpa-conf /etc/wpa.conf\n" >> $IFAC
 	fi
 
 	### /opt/config.txt ###
