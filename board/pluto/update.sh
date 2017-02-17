@@ -220,6 +220,8 @@ do
 		reset
 	fi
 
+	cp /opt/ipaddr-wlan0 /mnt 2>/dev/null
+
 	umount /mnt
 	#losetup -d /dev/loop7
 	echo $img > $file
