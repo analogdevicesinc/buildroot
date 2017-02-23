@@ -49,6 +49,7 @@ ${INSTALL} -D -m 0644 ${BOARD_DIR}/../pluto/device_config ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/../pluto/mdev.conf ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/automounter.sh ${TARGET_DIR}/lib/mdev/automounter.sh
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/ifupdown.sh ${TARGET_DIR}/lib/mdev/ifupdown.sh
+${INSTALL} -D -m 0644 ${BOARD_DIR}/../pluto/input-event-daemon.conf ${TARGET_DIR}/etc/
 
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/img/* ${TARGET_DIR}/www/img/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/index.html ${TARGET_DIR}/www/

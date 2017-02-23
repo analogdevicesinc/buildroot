@@ -6,6 +6,7 @@ my_umount()
 {
 	if grep -qs "^/dev/$1 " /proc/mounts ; then
 		umount "${destdir}/$1";
+		echo heartbeat > /sys/class/leds/led0:green/trigger
 	fi
 
 	[ -d "${destdir}/$1" ] && rmdir "${destdir}/$1"
@@ -20,6 +21,8 @@ my_mount()
 		rmdir "${destdir}/$1"
 		exit 1
 	fi
+
+	echo default-on > /sys/class/leds/led0:green/trigger
 
 	for i in ${destdir}/$1/runme??* ;do
 
@@ -51,4 +54,9 @@ add|"")
 remove)
 	my_umount ${MDEV}
 	;;
+remove_all)
+	for i in ${destdir}/??*
+	do
+		my_umount $(basename $i)
+	done
 esac
