@@ -13,7 +13,9 @@ create_system_files () {
 	CONF=/opt/config.txt
 	IFAC=/etc/network/interfaces
 
-	echo "Starting dhcpd Server Daemon"
+	HOSTNAME=`fw_printenv -n hostname 2> /dev/null || cat /etc/hostname`
+	echo $HOSTNAME > /etc/hostname
+
 	IPADDR=`fw_printenv -n ipaddr || echo 192.168.2.1`
 	IPADDR_HOST=`fw_printenv -n ipaddr_host || echo 192.168.2.10`
 	NETMASK=`fw_printenv -n netmask || echo 255.255.255.0`
@@ -33,20 +35,27 @@ create_system_files () {
 	echo -e "\taddress $IPADDR\n""\tnetmask $NETMASK\n" >> $IFAC
 
 	### /etc/wpa.conf ###
-	if [ -n "$WLAN_SSID" ] && [ -n "$WLAN_PWD" ]
+	if [ -n "$WLAN_SSID" ]
 	then
-		wpa_passphrase $WLAN_SSID $WLAN_PWD > /etc/wpa.conf
+		if [ -n "$WLAN_PWD" ]
+		then
+			wpa_passphrase $WLAN_SSID $WLAN_PWD > /etc/wpa.conf
+		else
+			echo "network={" > /etc/wpa.conf
+			echo "    ssid=\"$WLAN_SSID\"" >> /etc/wpa.conf
+			echo "    key_mgmt=NONE" >> /etc/wpa.conf
+			echo "}" >> /etc/wpa.conf
+		fi
 
-		echo -e "auto wlan0\n""iface wlan0 inet dhcp" >> $IFAC
-		echo -e "\twpa-conf /etc/wpa.conf\n" >> $IFAC
-	elif [ -n "$WLAN_SSID" ]
-	then
-		echo "network={" > /etc/wpa.conf
-		echo "    ssid=\"$WLAN_SSID\"" >> /etc/wpa.conf
-		echo "    key_mgmt=NONE" >> /etc/wpa.conf
-		echo "}" >> /etc/wpa.conf
+		echo -e "auto wlan0" >> $IFAC
 
-		echo -e "auto wlan0\n""iface wlan0 inet dhcp" >> $IFAC
+		if [ -n "$WLAN_IPADDR" ]
+		then
+			echo -e "iface wlan0 inet static" >> $IFAC
+			echo -e "\taddress $WLAN_IPADDR\n""\tnetmask 255.255.255.0" >> $IFAC
+		else
+			echo -e "iface wlan0 inet dhcp" >> $IFAC
+		fi
 		echo -e "\twpa-conf /etc/wpa.conf\n" >> $IFAC
 	fi
 
@@ -55,6 +64,7 @@ create_system_files () {
 	echo "# Edit, Save and then Eject the USB Drive"$'\r' >> $CONF
 	echo ""$'\r'>> $CONF
 	echo "[NETWORK]"$'\r' >> $CONF
+	echo "hostname = $HOSTNAME"$'\r' >> $CONF
 	echo "ipaddr = $IPADDR"$'\r' >> $CONF
 	echo "ipaddr_host = $IPADDR_HOST"$'\r' >> $CONF
 	echo "netmask = $NETMASK"$'\r' >> $CONF
@@ -69,7 +79,12 @@ create_system_files () {
 	echo "dfu = 0"$'\r' >> $CONF
 	echo "reset = 0"$'\r' >> $CONF
 	echo ""$'\r'>> $CONF
-}
+
+	### /www/index.html ###
+
+	sed -i -e "s/#IP#/$IPADDR/g" -e "s/#HOSTIP#/$IPADDR_HOST/g" -e "s/#NETMASK#/$NETMASK/g" -e "s/#HOSTNAME#/$HOSTNAME/g" -e "s/#SSID_WLAN#/$WLAN_SSID/g" -e "s/#IPADDR_WLAN#/$WLAN_IPADDR/g" /www/index.html
+
+	}
 
 mkdir -p /run/network
 
@@ -77,6 +92,7 @@ case "$1" in
   start)
 	create_system_files
 	printf "Starting network: "
+	/bin/hostname -F /etc/hostname
 	/sbin/ifup -a
 	[ $? = 0 ] && echo "OK" || echo "FAIL"
 	;;

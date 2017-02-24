@@ -58,62 +58,30 @@ make_diagnostic_report () {
 process_ini() {
 	FILE=$1
 	md5sum $FILE > /opt/config.md5
+
 	ini_parser $FILE "NETWORK"
+	ini_parser $FILE "WLAN"
 
 	rm -f /mnt/SUCCESS_ENV_UPDATE /mnt/FAILED_INVALID_UBOOT_ENV
 
-	if [ -n "$ipaddr" ] && [ -n "$ipaddr_host" ] && [ -n "$netmask" ]
-	then
 
-		IPADDR=`fw_printenv -n ipaddr`
-		IPADDR_HOST=`fw_printenv -n ipaddr_host`
-		NETMASK=`fw_printenv -n netmask`
-
-		if [ "$IPADDR" != $ipaddr ] || [ "$IPADDR_HOST" != $ipaddr_host ] || [ "$NETMASK" != $netmask ]
-		then
-			fw_printenv qspiboot
-			if [ $? -eq 0 ]; then
-				flash_indication_on
-				echo "ipaddr $ipaddr" > /opt/fw_set.tmp
-				echo "ipaddr_host  $ipaddr_host" >> /opt/fw_set.tmp
-				echo "netmask  $netmask" >> /opt/fw_set.tmp
-				fw_setenv -s /opt/fw_set.tmp
-				rm /opt/fw_set.tmp
-				flash_indication_off
-				touch /mnt/SUCCESS_ENV_UPDATE
-			else
-				touch /mnt/FAILED_INVALID_UBOOT_ENV
-			fi
-		fi
+	fw_printenv qspiboot
+	if [ $? -eq 0 ]; then
+		flash_indication_on
+		echo "hostname $hostname" > /opt/fw_set.tmp
+		echo "ipaddr $ipaddr" >> /opt/fw_set.tmp
+		echo "ipaddr_host $ipaddr_host" >> /opt/fw_set.tmp
+		echo "netmask $netmask" >> /opt/fw_set.tmp
+		echo "ssid_wlan $ssid_wlan" >> /opt/fw_set.tmp
+		echo "ipaddr_wlan $ipaddr_wlan" >> /opt/fw_set.tmp
+		echo "pwd_wlan $pwd_wlan" >> /opt/fw_set.tmp
+		fw_setenv -s /opt/fw_set.tmp
+		rm /opt/fw_set.tmp
+		flash_indication_off
+		touch /mnt/SUCCESS_ENV_UPDATE
+	else
+		touch /mnt/FAILED_INVALID_UBOOT_ENV
 	fi
-
-	ini_parser $FILE "WLAN"
-
-	if [ -n "$ipaddr_wlan" ] && [ -n "$ssid_wlan" ] && [ -n "$pwd_wlan" ]
-	then
-
-		WLAN_SSID=`fw_printenv -n ssid_wlan 2> /dev/null`
-		WLAN_PWD=`fw_printenv -n pwd_wlan 2> /dev/null`
-		WLAN_IPADDR=`fw_printenv -n ipaddr_wlan 2> /dev/null`
-
-		if [ "$WLAN_SSID" != $ssid_wlan ] || [ "$WLAN_PWD" != $pwd_wlan ] || [ "$WLAN_IPADDR" != $ipaddr_wlan ]
-		then
-			fw_printenv qspiboot
-			if [ $? -eq 0 ]; then
-				flash_indication_on
-				echo "ssid_wlan $ssid_wlan" > /opt/fw_set.tmp
-				echo "ipaddr_wlan  $ipaddr_wlan" >> /opt/fw_set.tmp
-				echo "pwd_wlan  $pwd_wlan" >> /opt/fw_set.tmp
-				fw_setenv -s /opt/fw_set.tmp
-				rm /opt/fw_set.tmp
-				flash_indication_off
-				touch /mnt/SUCCESS_ENV_UPDATE
-			else
-				touch /mnt/FAILED_INVALID_UBOOT_ENV
-			fi
-		fi
-	fi
-
 
 	ini_parser $FILE "ACTIONS"
 
