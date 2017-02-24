@@ -172,11 +172,11 @@ do
 	losetup /dev/loop7 $img -o 512
 	mount /dev/loop7 /mnt
 
-	if [[ -s /mnt/plutosdr-fw-*.zip ]]
+	if [[ -s /mnt/$TARGET-fw-*.zip ]]
 	then
-		mv /mnt/plutosdr-fw-*.zip /opt/
-		unzip -o /opt/plutosdr-fw-*.zip *.frm -d /mnt
-		rm /opt/plutosdr-fw-*.zip
+		mv /mnt/$TARGET-fw-*.zip /opt/
+		unzip -o /opt/$TARGET-fw-*.zip *.frm -d /mnt
+		rm /opt/$TARGET-fw-*.zip
 	fi
 
 	if [[ -s ${FIRMWARE} ]]
