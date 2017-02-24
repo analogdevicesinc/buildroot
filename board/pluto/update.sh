@@ -171,6 +171,14 @@ do
     then
 	losetup /dev/loop7 $img -o 512
 	mount /dev/loop7 /mnt
+
+	if [[ -s /mnt/plutosdr-fw-*.zip ]]
+	then
+		mv /mnt/plutosdr-fw-*.zip /opt/
+		unzip -o /opt/plutosdr-fw-*.zip *.frm -d /mnt
+		rm /opt/plutosdr-fw-*.zip
+	fi
+
 	if [[ -s ${FIRMWARE} ]]
 	then 
 		handle_frimware_frm ${FIRMWARE} ${FRM_MAGIC}
