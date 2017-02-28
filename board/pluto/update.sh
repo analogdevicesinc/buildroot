@@ -169,6 +169,7 @@ do
     lun=`cat $file`
     if [ ${#lun} -eq 0 ]
     then
+	do_reset=0
 	losetup /dev/loop7 $img -o 512
 	mount /dev/loop7 /mnt
 
@@ -189,7 +190,7 @@ do
 		handle_boot_frm ${bootimage}
 	fi
 
-	md5sum /opt/config.md5 && process_ini $conf
+	md5sum -c /opt/config.md5 || process_ini $conf
 
 	if [[ $do_reset = 1 ]]
 	then
