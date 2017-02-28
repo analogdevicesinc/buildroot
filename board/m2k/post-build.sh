@@ -47,7 +47,7 @@ ${INSTALL} -D -m 0644 ${BOARD_DIR}/../pluto/fw_env.config ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/VERSIONS ${TARGET_DIR}/opt/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/device_reboot ${TARGET_DIR}/usr/sbin/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/motd ${TARGET_DIR}/etc/
-${INSTALL} -D -m 0644 ${BOARD_DIR}/../pluto/device_config ${TARGET_DIR}/etc/
+${INSTALL} -D -m 0644 ${BOARD_DIR}/device_config ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/../pluto/mdev.conf ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/automounter.sh ${TARGET_DIR}/lib/mdev/automounter.sh
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/ifupdown.sh ${TARGET_DIR}/lib/mdev/ifupdown.sh
