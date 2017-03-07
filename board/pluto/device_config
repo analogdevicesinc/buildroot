@@ -1,6 +1,7 @@
 #S23udc
 PRODUCT="PlutoSDR (ADALM-PLUTO)"
 USBPID=0xb673
+ENDPOINTS=3
 
 #S40network / S41network
 UDHCPD_CONF=/etc/udhcpd.conf

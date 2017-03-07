@@ -1,6 +1,7 @@
 #S23udc
 PRODUCT="M2k (ADALM-2000)"
 USBPID=0xb672
+ENDPOINTS=6
 
 #S40network / S41network
 UDHCPD_CONF=/etc/udhcpd.conf

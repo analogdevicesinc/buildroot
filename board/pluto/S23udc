@@ -4,7 +4,7 @@ source /etc/device_config
 
 CONFIGFS=/sys/kernel/config/usb_gadget
 GADGET=$CONFIGFS/composite_gadget
-IIOD_OPTS="-D -F /dev/iio_ffs"
+IIOD_OPTS="-D -n $ENDPOINTS -F /dev/iio_ffs"
 
 create_iiod_context_attributes() {
 	model=$1
