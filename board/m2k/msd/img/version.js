@@ -1,5 +1,5 @@
 function OnTheWeb() {
-	window.location.assign("https://wiki.analog.com/university/tools/pluto")
+	window.location.assign("https://wiki.analog.com/university/tools/m2k")
 }
 
 function versionCompare(v1, v2) {
@@ -29,7 +29,7 @@ function versionCompare(v1, v2) {
 }
 
 function CheckFrmVersion() {
-	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-fw/releases");
+	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/m2k-fw/releases");
 	req.done(function(response) {
 		var VerOnGithub = response[0].name
 		console.log(VerOnGithub)
@@ -38,19 +38,19 @@ function CheckFrmVersion() {
 			var message = "Newer version available online (Version " + VerOnGithub + " )";
 			document.getElementById('versionsection').className = "download";
 		} else  if (res > 0) {
-			var message = "Wow! Your Pluto Firmware Version #BUILD# is newer than (" + VerOnGithub + ") on Github.";
+			var message = "Wow! Your M2k Firmware Version #BUILD# is newer than (" + VerOnGithub + ") on Github.";
 			document.getElementById('versionsection').className = "";
-			document.getElementById('plutsdr-fw-download').style.visibility = "hidden";
+			document.getElementById('m2k-fw-download').style.visibility = "hidden";
 		} else if (res == 0) {
-			var message = "Pluto is using the same version as latest release!";
+			var message = "M2k is using the same version as latest release!";
 			document.getElementById('versionsection').className = "";
-			document.getElementById('plutsdr-fw-download').style.visibility = "hidden";
+			document.getElementById('m2k-fw-download').style.visibility = "hidden";
 		} else {
 			var message = "Failure in checking version, check manually";
 			document.getElementById('versionsection').className = "";
 		}
 		document.getElementById('versiontest').innerHTML = message;
-		jQuery('#plutsdr-fw-download').attr ('href', response[0].assets[0].browser_download_url);
+		jQuery('#m2k-fw-download').attr ('href', response[0].assets[0].browser_download_url);
 	});
 }
 
