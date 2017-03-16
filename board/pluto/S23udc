@@ -17,10 +17,10 @@ create_iiod_context_attributes() {
 
 case "$1" in
   start)
- 	echo "Starting UDC Gadgets"
-	mount configfs -t configfs /sys/kernel/config >> /dev/null
+	echo -n "Starting UDC Gadgets: "
+	mount configfs -t configfs /sys/kernel/config 2> /dev/null
 
-	mkdir $GADGET
+	mkdir -p $GADGET
 
 	model=`cat /sys/firmware/devicetree/base/model | tr / -`
 
@@ -35,15 +35,15 @@ case "$1" in
 	echo 0x0456 > $GADGET/idVendor
 	echo $USBPID > $GADGET/idProduct
 
-	mkdir $GADGET/strings/0x409
+	mkdir -p $GADGET/strings/0x409
 	echo "Analog Devices Inc." > $GADGET/strings/0x409/manufacturer
 	echo $PRODUCT > $GADGET/strings/0x409/product
 	echo $serial > $GADGET/strings/0x409/serialnumber
 
-	mkdir $GADGET/functions/ffs.iio_ffs
-	mkdir $GADGET/functions/acm.usb0
-	mkdir $GADGET/functions/rndis.0
-	mkdir $GADGET/functions/mass_storage.0
+	mkdir -p $GADGET/functions/ffs.iio_ffs
+	mkdir -p $GADGET/functions/acm.usb0
+	mkdir -p $GADGET/functions/rndis.0
+	mkdir -p $GADGET/functions/mass_storage.0
 
 #	echo /opt/vfat.img > $GADGET/functions/mass_storage.0/lun.0/file
 	echo Y > $GADGET/functions/mass_storage.0/lun.0/removable
@@ -54,8 +54,8 @@ case "$1" in
 	echo $host_addr > $GADGET/functions/rndis.0/host_addr
 	echo $dev_addr > $GADGET/functions/rndis.0/dev_addr
 
-	mkdir $GADGET/configs/c.1
-	mkdir $GADGET/configs/c.1/strings/0x409
+	mkdir -p $GADGET/configs/c.1
+	mkdir -p $GADGET/configs/c.1/strings/0x409
 	echo "RNDIS/MSD/ACM/IIOUSBD" > $GADGET/configs/c.1/strings/0x409/configuration
 	echo 500 > $GADGET/configs/c.1/MaxPower
 
@@ -64,17 +64,19 @@ case "$1" in
 	ln -s $GADGET/functions/acm.usb0 $GADGET/configs/c.1
 	ln -s $GADGET/functions/ffs.iio_ffs $GADGET/configs/c.1/ffs.iio_ffs
 
-	mkdir /dev/iio_ffs
-	mount iio_ffs -t functionfs /dev/iio_ffs
+	mkdir -p /dev/iio_ffs
+	mount iio_ffs -t functionfs /dev/iio_ffs 2> /dev/null
 
 	start-stop-daemon -S -b -q -m -p /var/run/iiod.pid -x  /usr/sbin/iiod  -- $IIOD_OPTS
 	sleep 0.2
 
 	echo ci_hdrc.0 > $GADGET/UDC
 
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+
 	;;
   stop)
-	echo -n "Stopping UDC Gadgets ..."
+	echo "Stopping UDC Gadgets"
 	echo "" > $GADGET/UDC
 
 	start-stop-daemon -K -q -p /var/run/iiod.pid 2>/dev/null
@@ -93,7 +95,7 @@ case "$1" in
 	rmdir $GADGET/functions/rndis.0
 	rmdir $GADGET/functions/mass_storage.0
 
-	rmdir $GADGET
+	rmdir $GADGET 2> /dev/null
 
 	;;
   restart|reload)

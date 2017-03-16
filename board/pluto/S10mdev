@@ -5,11 +5,12 @@
 
 case "$1" in
   start)
-	echo "Starting mdev..."
+	echo -n "Starting mdev: "
 	echo /sbin/mdev >/proc/sys/kernel/hotplug
 	/sbin/mdev -s
 	# coldplug modules
 	# find /sys/ -name modalias -print0 | xargs -0 sort -u -z | xargs -0 modprobe -abq
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
 	;;
   stop)
 	;;

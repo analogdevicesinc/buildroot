@@ -24,7 +24,7 @@ patch_html_page() {
 
 case "$1" in
 	start)
-		echo "Starting MSD Daemon"
+		echo -n "Starting MSD Daemon: "
 		patch_html_page /www/index.html /www/img/version.js
 		losetup /dev/loop7 $img -o 512
 		mount /dev/loop7 /mnt
@@ -36,13 +36,13 @@ case "$1" in
 		echo $img > $file
 
 		start-stop-daemon -S -b -q -m -p /var/run/update.pid -x /bin/sh -- /sbin/update.sh
-		exit $?
+		[ $? = 0 ] && echo "OK" || echo "FAIL"
 		;;
 
 	stop)
-		echo "Stopping MSD Daemon"
+		echo -n "Stopping MSD Daemon: "
 		start-stop-daemon -K -q -p /var/run/update.pid 2>/dev/null
-		exit $?
+		[ $? = 0 ] && echo "OK" || echo "FAIL"
 		;;
 
 	restart)

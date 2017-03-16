@@ -5,17 +5,17 @@ source /etc/device_config
 
 case "$1" in
 	start)
-		echo "Starting dhcpd Daemon& httpd Server"
+		echo -n "Starting dhcpd Daemon & httpd Server: "
 		start-stop-daemon -S -b -q -m -p /var/run/udhcpd.pid -x /usr/sbin/udhcpd -- $UDHCPD_CONF
 		httpd -h /www
-		exit $?
+		[ $? = 0 ] && echo "OK" || echo "FAIL"
 		;;
 
 	stop)
-		echo "Stopping dhcpd Server Daemon"
+		echo -n "Stopping dhcpd Daemon & httpd Server: "
 		killall -7 httpd
 		start-stop-daemon -K -q -p /var/run/udhcpd.pid 2>/dev/null
-		exit $?
+		[ $? = 0 ] && echo "OK" || echo "FAIL"
 		;;
 
 	restart)

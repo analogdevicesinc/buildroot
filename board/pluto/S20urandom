@@ -11,17 +11,13 @@
 
 case "$1" in
 	start|"")
-		# check for read only file syste
-		if [ "$VERBOSE" != no ]
-		then
-			printf "Initializing random number generator... "
-		fi
+		echo -n "Starting initializing random number generator: "
+
 		# Load and then save 512 bytes,
 		# which is the size of the entropy pool
 
-		dmesg | grep SPI-NOR-UniqueID | cut -d " " -f 4 | sha512sum >/dev/urandom
-
-		[ "$VERBOSE" != no ] && echo "done."
+		dmesg | sha512sum > /dev/urandom
+		[ $? = 0 ] && echo "OK" || echo "FAIL"
 		;;
 	stop)
 
