@@ -4,12 +4,12 @@
 #
 ################################################################################
 
-LIBIIO_VERSION = 0.9
-LIBIIO_SITE = $(call github,analogdevicesinc,libiio,v$(LIBIIO_VERSION))
+#LIBIIO_VERSION = 0.9
+#LIBIIO_SITE = $(call github,analogdevicesinc,libiio,v$(LIBIIO_VERSION))
 
-#LIBIIO_VERSION = 93b28f4d8e422661df53fbbbec274c2db380496d
-#LIBIIO_SITE = https://github.com/analogdevicesinc/libiio.git
-#LIBIIO_SITE_METHOD = git
+LIBIIO_VERSION = 82a9cc04c6afa1992ef5fd2108be2c54ca6e086f
+LIBIIO_SITE = https://github.com/analogdevicesinc/libiio.git
+LIBIIO_SITE_METHOD = git
 
 LIBIIO_INSTALL_STAGING = YES
 LIBIIO_LICENSE = LGPLv2.1+
