@@ -52,6 +52,7 @@ make_diagnostic_report () {
 	ifconfig -a >> ${FILE} 2>&1
 	mount >> ${FILE} 2>&1
 	top -b -n1  >> ${FILE} 2>&1
+	fw_printenv >> ${FILE} 2>&1
 	unix2dos ${FILE}
 }
 
