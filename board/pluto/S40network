@@ -82,7 +82,7 @@ create_system_files () {
 
 	### /www/index.html ###
 
-	sed -i -e "s/#IP#/$IPADDR/g" -e "s/#HOSTIP#/$IPADDR_HOST/g" -e "s/#NETMASK#/$NETMASK/g" -e "s/#HOSTNAME#/$HOSTNAME/g" -e "s/#SSID_WLAN#/$WLAN_SSID/g" -e "s/#IPADDR_WLAN#/$WLAN_IPADDR/g" /www/index.html
+	sed -i -e "s/#IP#/$IPADDR/g" -e "s/#HOSTIP#/$IPADDR_HOST/g" -e "s/#NETMASK#/$NETMASK/g" -e "s/#HOSTNAME#/$HOSTNAME/g" -e "s/#SSID_WLAN#/$WLAN_SSID/g" -e "s/#IPADDR_WLAN#/$WLAN_IPADDR/g" /www/index.html /www/img/index_*.html
 
 	}
 
