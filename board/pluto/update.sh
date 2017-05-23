@@ -76,6 +76,7 @@ process_ini() {
 		echo "ssid_wlan $ssid_wlan" >> /opt/fw_set.tmp
 		echo "ipaddr_wlan $ipaddr_wlan" >> /opt/fw_set.tmp
 		echo "pwd_wlan $pwd_wlan" >> /opt/fw_set.tmp
+		echo "xo_correction $xo_correction" >> /opt/fw_set.tmp
 		fw_setenv -s /opt/fw_set.tmp
 		rm /opt/fw_set.tmp
 		flash_indication_off
