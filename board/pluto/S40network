@@ -83,6 +83,7 @@ create_system_files () {
 	echo "diagnostic_report = 0"$'\r' >> $CONF
 	echo "dfu = 0"$'\r' >> $CONF
 	echo "reset = 0"$'\r' >> $CONF
+	echo "calibrate = 0"$'\r' >> $CONF
 	echo ""$'\r'>> $CONF
 
 	### /www/index.html ###

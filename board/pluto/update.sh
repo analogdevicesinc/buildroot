@@ -56,14 +56,32 @@ make_diagnostic_report () {
 	unix2dos ${FILE}
 }
 
+calibrate () {
+	/usr/sbin/ad936x_ref_cal -e $1 ad9361-phy
+	if [ $? -eq 0 ]; then
+
+		for dev in /sys/bus/iio/devices/*; do
+			[ `cat ${dev}/name` == "ad9361-phy" ] && DEV_NAME=`basename ${dev}`
+		done
+		NEW_XO=`cat /sys/bus/iio/devices/${DEV_NAME}/xo_correction`
+		flash_indication_on
+		fw_setenv xo_correction $NEW_XO
+		flash_indication_off
+
+		sed -i -e "s/^xo_correction .*$/xo_correction = $NEW_XO/" -e "s/^calibrate .*$/calibrate = 0/" $conf
+	else
+		sed -i -e "s/^calibrate .*$/calibrate = 0/" $conf
+	fi
+}
+
 process_ini() {
 	FILE=$1
-	md5sum $FILE > /opt/config.md5
 
 	ini_parser $FILE "NETWORK"
 	ini_parser $FILE "WLAN"
+	ini_parser $FILE "SYSTEM"
 
-	rm -f /mnt/SUCCESS_ENV_UPDATE /mnt/FAILED_INVALID_UBOOT_ENV
+	rm -f /mnt/SUCCESS_ENV_UPDATE /mnt/FAILED_INVALID_UBOOT_ENV /mnt/CAL_STATUS
 
 
 	fw_printenv qspiboot
@@ -102,6 +120,12 @@ process_ini() {
 		make_diagnostic_report /mnt/diagnostic_report
 	fi
 
+	if [ "$calibrate" -gt "70000000" ]
+	then
+		calibrate $calibrate > /mnt/CAL_STATUS
+	fi
+
+	md5sum $FILE > /opt/config.md5
 }
 
 handle_boot_frm () {
