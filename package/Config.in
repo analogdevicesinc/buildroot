@@ -1745,4 +1745,8 @@ menu "Text editors and viewers"
 	source "package/vim/Config.in"
 endmenu
 
+menu "Applications and Tools for PlutoSDR & M2k"
+	source "package/poll_sysfs/Config.in"
+endmenu
+
 endmenu

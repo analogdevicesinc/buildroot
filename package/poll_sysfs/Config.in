@@ -1,0 +1,5 @@
+config BR2_PACKAGE_POLLSYSFS
+	bool "poll_sysfs"
+	help
+	  The sysfs poll utility.
+	  
