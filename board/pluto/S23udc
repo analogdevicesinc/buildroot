@@ -5,6 +5,7 @@ source /etc/device_config
 CONFIGFS=/sys/kernel/config/usb_gadget
 GADGET=$CONFIGFS/composite_gadget
 IIOD_OPTS="-D -n $ENDPOINTS -F /dev/iio_ffs"
+UDC_HANDLE_SUSPEND=`fw_printenv -n udc_handle_suspend 2> /dev/null || echo 0`
 
 create_iiod_context_attributes() {
 	model=$1
@@ -74,11 +75,19 @@ case "$1" in
 
 	[ $? = 0 ] && echo "OK" || echo "FAIL"
 
+	if [ "$UDC_HANDLE_SUSPEND" == "1" ]; then
+		start-stop-daemon -S -b -q -m -p /var/run/udc_handle_suspend.pid -x  /sbin/udc_handle_suspend.sh
+	fi
+
 	;;
   stop)
 	echo "Stopping UDC Gadgets"
-	echo "" > $GADGET/UDC
 
+	if [ "$UDC_HANDLE_SUSPEND" == "1" ]; then
+		start-stop-daemon -K -q -p /var/run/udc_handle_suspend.pid 2>/dev/null
+	fi
+
+	echo "" > $GADGET/UDC
 	start-stop-daemon -K -q -p /var/run/iiod.pid 2>/dev/null
 
 	rm $GADGET/configs/c.1/rndis.0
