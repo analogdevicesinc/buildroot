@@ -16,9 +16,9 @@ create_system_files () {
 	HOSTNAME=`fw_printenv -n hostname 2> /dev/null || cat /etc/hostname`
 	echo $HOSTNAME > /etc/hostname
 
-	IPADDR=`fw_printenv -n ipaddr || echo 192.168.2.1`
-	IPADDR_HOST=`fw_printenv -n ipaddr_host || echo 192.168.2.10`
-	NETMASK=`fw_printenv -n netmask || echo 255.255.255.0`
+	IPADDR=`fw_printenv -n ipaddr 2> /dev/null || echo 192.168.2.1`
+	IPADDR_HOST=`fw_printenv -n ipaddr_host 2> /dev/null || echo 192.168.2.10`
+	NETMASK=`fw_printenv -n netmask 2> /dev/null || echo 255.255.255.0`
 
 	WLAN_SSID=`fw_printenv -n ssid_wlan 2> /dev/null`
 	WLAN_PWD=`fw_printenv -n pwd_wlan 2> /dev/null`
