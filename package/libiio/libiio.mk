@@ -4,12 +4,12 @@
 #
 ################################################################################
 
-#LIBIIO_VERSION = 0.9
-#LIBIIO_SITE = $(call github,analogdevicesinc,libiio,v$(LIBIIO_VERSION))
+LIBIIO_VERSION = 0.10
+LIBIIO_SITE = $(call github,analogdevicesinc,libiio,v$(LIBIIO_VERSION))
 
-LIBIIO_VERSION = 60063cb20312c2f06cb8b33e8692e4a0a3546738
-LIBIIO_SITE = https://github.com/analogdevicesinc/libiio.git
-LIBIIO_SITE_METHOD = git
+#LIBIIO_VERSION = 60063cb20312c2f06cb8b33e8692e4a0a3546738
+#LIBIIO_SITE = https://github.com/analogdevicesinc/libiio.git
+#LIBIIO_SITE_METHOD = git
 
 LIBIIO_INSTALL_STAGING = YES
 LIBIIO_LICENSE = LGPLv2.1+
@@ -20,8 +20,9 @@ LIBIIO_CONF_OPTS = -DENABLE_IPV6=ON \
 	-DWITH_LOCAL_CONFIG=$(if $(BR2_PACKAGE_LIBIIO_LOCAL_CONFIG),ON,OFF) \
 	-DWITH_NETWORK_BACKEND=$(if $(BR2_PACKAGE_LIBIIO_NETWORK_BACKEND),ON,OFF) \
 	-DWITH_TESTS=$(if $(BR2_PACKAGE_LIBIIO_TESTS),ON,OFF) \
-	-DLIBIIO_VERSION_GIT=60063cb \
 	-DWITH_DOC=OFF
+
+#	-DLIBIIO_VERSION_GIT=60063cb \
 
 ifeq ($(BR2_PACKAGE_LIBIIO_XML_BACKEND),y)
 LIBIIO_DEPENDENCIES += libxml2
