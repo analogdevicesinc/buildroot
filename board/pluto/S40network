@@ -20,6 +20,9 @@ create_system_files () {
 	IPADDR_HOST=`fw_printenv -n ipaddr_host 2> /dev/null || echo 192.168.2.10`
 	NETMASK=`fw_printenv -n netmask 2> /dev/null || echo 255.255.255.0`
 
+	ETH_IPADDR=`fw_printenv -n ipaddr_eth 2> /dev/null`
+	ETH_NETMASK=`fw_printenv -n netmask_eth 2> /dev/null || echo 255.255.255.0`
+
 	WLAN_SSID=`fw_printenv -n ssid_wlan 2> /dev/null`
 	WLAN_PWD=`fw_printenv -n pwd_wlan 2> /dev/null`
 	WLAN_IPADDR=`fw_printenv -n ipaddr_wlan 2> /dev/null`
@@ -36,6 +39,15 @@ create_system_files () {
 	echo -e "auto lo\n""iface lo inet loopback\n" > $IFAC
 	echo -e "auto usb0\n""iface usb0 inet static" >> $IFAC
 	echo -e "\taddress $IPADDR\n""\tnetmask $NETMASK\n" >> $IFAC
+
+	echo -e "auto eth0" >> $IFAC
+	if [ -n "$ETH_IPADDR" ]
+	then
+		echo -e "iface eth0 inet static" >> $IFAC
+		echo -e "\taddress $ETH_IPADDR\n""\tnetmask $ETH_NETMASK\n" >> $IFAC
+	else
+		echo -e "iface eth0 inet dhcp\n" >> $IFAC
+	fi
 
 	### /etc/wpa.conf ###
 	if [ -n "$WLAN_SSID" ]
@@ -77,6 +89,10 @@ create_system_files () {
 	echo "pwd_wlan = $WLAN_PWD"$'\r' >> $CONF
 	echo "ipaddr_wlan = $WLAN_IPADDR"$'\r' >> $CONF
 	echo ""$'\r'>> $CONF
+	echo "[USB_ETHERNET]"$'\r' >> $CONF
+	echo "ipaddr_eth = $ETH_IPADDR"$'\r' >> $CONF
+	echo "netmask_eth = $ETH_NETMASK"$'\r' >> $CONF
+	echo ""$'\r'>> $CONF
 	echo "[SYSTEM]"$'\r' >> $CONF
 	echo "xo_correction = $XO_CORRECTION"$'\r' >> $CONF
 	echo "udc_handle_suspend = $UDC_HANDLE_SUSPEND"$'\r' >> $CONF
@@ -90,7 +106,7 @@ create_system_files () {
 
 	### /www/index.html ###
 
-	sed -i -e "s/#IP#/$IPADDR/g" -e "s/#HOSTIP#/$IPADDR_HOST/g" -e "s/#NETMASK#/$NETMASK/g" -e "s/#HOSTNAME#/$HOSTNAME/g" -e "s/#SSID_WLAN#/$WLAN_SSID/g" -e "s/#IPADDR_WLAN#/$WLAN_IPADDR/g" /www/index.html /www/img/index_*.html
+	sed -i -e "s/#IP#/$IPADDR/g" -e "s/#HOSTIP#/$IPADDR_HOST/g" -e "s/#NETMASK#/$NETMASK/g" -e "s/#HOSTNAME#/$HOSTNAME/g" -e "s/#SSID_WLAN#/$WLAN_SSID/g" -e "s/#IPADDR_WLAN#/$WLAN_IPADDR/g" -e "s/#IPADDR_ETH#/$ETH_IPADDR/g" -e "s/#NETMASK_ETH#/$ETH_NETMASK/g" /www/index.html /www/img/index_*.html
 
 	}
 

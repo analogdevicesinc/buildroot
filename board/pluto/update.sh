@@ -80,6 +80,7 @@ process_ini() {
 	ini_parser $FILE "NETWORK"
 	ini_parser $FILE "WLAN"
 	ini_parser $FILE "SYSTEM"
+	ini_parser $FILE "USB_ETHERNET"
 
 	rm -f /mnt/SUCCESS_ENV_UPDATE /mnt/FAILED_INVALID_UBOOT_ENV /mnt/CAL_STATUS
 
@@ -96,6 +97,8 @@ process_ini() {
 		echo "pwd_wlan $pwd_wlan" >> /opt/fw_set.tmp
 		echo "xo_correction $xo_correction" >> /opt/fw_set.tmp
 		echo "udc_handle_suspend $udc_handle_suspend" >> /opt/fw_set.tmp
+		echo "ipaddr_eth $ipaddr_eth" >> /opt/fw_set.tmp
+		echo "netmask_eth $netmask_eth" >> /opt/fw_set.tmp
 		fw_setenv -s /opt/fw_set.tmp
 		rm /opt/fw_set.tmp
 		flash_indication_off
@@ -223,7 +226,7 @@ do
 		reset
 	fi
 
-	cp /opt/ipaddr-wlan0 /mnt 2>/dev/null
+	cp /opt/ipaddr-* /mnt 2>/dev/null
 
 	umount /mnt
 	#losetup -d /dev/loop7
