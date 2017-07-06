@@ -11,9 +11,9 @@ KBD_CONF_OPTS = \
 	--disable-vlock \
 	--disable-tests
 KBD_DEPENDENCIES = \
-	$(if $(BR2_NEEDS_GETTEXT_IF_LOCALE),gettext) \
+	$(TARGET_NLS_DEPENDENCIES) \
 	host-pkgconf
-KBD_LICENSE = GPLv2+
+KBD_LICENSE = GPL-2.0+
 KBD_LICENSE_FILES = COPYING
 KBD_AUTORECONF = YES
 

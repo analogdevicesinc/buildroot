@@ -4,12 +4,12 @@
 #
 ################################################################################
 
-GLIBC_VERSION = $(call qstrip,$(BR2_GLIBC_VERSION_STRING))
+GLIBC_VERSION = 2.25
 GLIBC_SITE = $(BR2_GNU_MIRROR)/libc
 GLIBC_SOURCE = glibc-$(GLIBC_VERSION).tar.xz
 GLIBC_SRC_SUBDIR = .
 
-GLIBC_LICENSE = GPLv2+ (programs), LGPLv2.1+, BSD-3c, MIT (library)
+GLIBC_LICENSE = GPL-2.0+ (programs), LGPL-2.1+, BSD-3-Clause, MIT (library)
 GLIBC_LICENSE_FILES = $(addprefix $(GLIBC_SRC_SUBDIR)/,COPYING COPYING.LIB LICENSES)
 
 # glibc is part of the toolchain so disable the toolchain dependency
@@ -94,24 +94,23 @@ define GLIBC_CONFIGURE_CMDS
 	$(GLIBC_ADD_MISSING_STUB_H)
 endef
 
-
 #
 # We also override the install to target commands since we only want
 # to install the libraries, and nothing more.
 #
 
 GLIBC_LIBS_LIB = \
-	ld*.so.* libc.so.* libcrypt.so.* libdl.so.* libgcc_s.so.* libm.so.*        \
-	libnsl.so.* libpthread.so.* libresolv.so.* librt.so.* libutil.so.*   \
-	libnss_files.so.* libnss_dns.so.*
+	ld*.so.* libanl.so.* libc.so.* libcrypt.so.* libdl.so.* libgcc_s.so.* \
+	libm.so.* libnsl.so.* libpthread.so.* libresolv.so.* librt.so.* \
+	libutil.so.* libnss_files.so.* libnss_dns.so.* libmvec.so.*
 
 ifeq ($(BR2_PACKAGE_GDB),y)
 GLIBC_LIBS_LIB += libthread_db.so.*
 endif
 
 define GLIBC_INSTALL_TARGET_CMDS
-	for libs in $(GLIBC_LIBS_LIB); do \
-		$(call copy_toolchain_lib_root,$$libs) ; \
+	for libpattern in $(GLIBC_LIBS_LIB); do \
+		$(call copy_toolchain_lib_root,$$libpattern) ; \
 	done
 endef
 
@@ -136,7 +135,7 @@ endef
 # highly unlikely. The failure mode, if it ever occurs, would be either
 # that a signalling NaN fails to raise an invalid operation exception or
 # (more likely) an ordinary NaN raises an invalid operation exception.
-ifeq ($(BR2_mips_32r6)$(BR2_mips_64r6),y)
+ifeq ($(BR2_MIPS_CPU_MIPS32R6)$(BR2_MIPS_CPU_MIPS64R6),y)
 define GLIBC_FIX_MIPS_R6
 	$(SED) 's#10.0.0#4.0.0#' \
 		$(@D)/sysdeps/unix/sysv/linux/mips/configure \

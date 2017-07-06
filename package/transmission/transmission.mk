@@ -5,7 +5,7 @@
 ################################################################################
 
 TRANSMISSION_VERSION = 2.92
-TRANSMISSION_SITE = http://download.transmissionbt.com/files
+TRANSMISSION_SITE = https://github.com/transmission/transmission-releases/raw/master
 TRANSMISSION_SOURCE = transmission-$(TRANSMISSION_VERSION).tar.xz
 TRANSMISSION_DEPENDENCIES = \
 	host-pkgconf \
@@ -18,7 +18,7 @@ TRANSMISSION_AUTORECONF = YES
 TRANSMISSION_CONF_OPTS = \
 	--disable-libnotify \
 	--enable-lightweight
-TRANSMISSION_LICENSE = GPLv2 or GPLv3 with OpenSSL exception
+TRANSMISSION_LICENSE = GPL-2.0 or GPL-3.0 with OpenSSL exception
 TRANSMISSION_LICENSE_FILES = COPYING
 
 ifeq ($(BR2_PACKAGE_LIBMINIUPNPC),y)

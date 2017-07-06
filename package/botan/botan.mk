@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-BOTAN_VERSION = 1.10.13
+BOTAN_VERSION = 1.10.16
 BOTAN_SOURCE = Botan-$(BOTAN_VERSION).tgz
 BOTAN_SITE = http://botan.randombit.net/releases
-BOTAN_LICENSE = BSD-2c
+BOTAN_LICENSE = BSD-2-Clause
 BOTAN_LICENSE_FILES = doc/license.txt
 
 BOTAN_INSTALL_STAGING = YES
@@ -43,20 +43,26 @@ BOTAN_DEPENDENCIES += zlib
 BOTAN_CONF_OPTS += --with-zlib
 endif
 
+ifeq ($(BR2_POWERPC_CPU_HAS_ALTIVEC),y)
+BOTAN_CONF_OPTS += --enable-altivec
+else
+BOTAN_CONF_OPTS += --disable-altivec
+endif
+
 define BOTAN_CONFIGURE_CMDS
-	(cd $(@D); ./configure.py $(BOTAN_CONF_OPTS))
+	(cd $(@D); $(TARGET_MAKE_ENV) ./configure.py $(BOTAN_CONF_OPTS))
 endef
 
 define BOTAN_BUILD_CMDS
-	$(MAKE) -C $(@D) AR="$(TARGET_AR) crs"
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) AR="$(TARGET_AR) crs"
 endef
 
 define BOTAN_INSTALL_STAGING_CMDS
-	$(MAKE) -C $(@D) DESTDIR="$(STAGING_DIR)/usr" install
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR="$(STAGING_DIR)/usr" install
 endef
 
 define BOTAN_INSTALL_TARGET_CMDS
-	$(MAKE) -C $(@D) DESTDIR="$(TARGET_DIR)/usr" install
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR="$(TARGET_DIR)/usr" install
 endef
 
 $(eval $(generic-package))

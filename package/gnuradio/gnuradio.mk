@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-GNURADIO_VERSION = 3.7.9.1
+GNURADIO_VERSION = 3.7.11
 GNURADIO_SITE = http://gnuradio.org/releases/gnuradio
-GNURADIO_LICENSE = GPLv3+
+GNURADIO_LICENSE = GPL-3.0+
 GNURADIO_LICENSE_FILES = COPYING
 
 GNURADIO_SUPPORTS_IN_SOURCE_BUILD = NO
@@ -36,7 +36,7 @@ GNURADIO_INSTALL_STAGING = YES
 # CFLAGS to decide whether to build the NEON functions or not, and
 # wants to see the string 'armv7' in the CFLAGS.
 ifeq ($(BR2_ARM_CPU_ARMV7A)$(BR2_ARM_CPU_HAS_NEON),yy)
-GNURADIO_CONF_OPTS += -DCMAKE_C_FLAGS="-march=armv7-a"
+GNURADIO_CONF_OPTS += -DCMAKE_C_FLAGS="$(TARGET_CFLAGS) -march=armv7-a"
 endif
 
 # As soon as -mfpu=neon is supported by the compiler, gnuradio will try
@@ -89,6 +89,7 @@ GNURADIO_CONF_OPTS += -DENABLE_GR_DIGITAL=OFF
 endif
 
 ifeq ($(BR2_PACKAGE_GNURADIO_FEC),y)
+GNURADIO_DEPENDENCIES += gsl
 GNURADIO_CONF_OPTS += -DENABLE_GR_FEC=ON
 else
 GNURADIO_CONF_OPTS += -DENABLE_GR_FEC=OFF

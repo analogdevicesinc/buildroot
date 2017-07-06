@@ -29,6 +29,18 @@ if test -n "$LD_LIBRARY_PATH" ; then
 	fi
 fi;
 
+# PATH should not contain a newline, otherwise it fails in spectacular ways
+# as soon as PATH is referenced in a package rule
+case "${PATH}" in
+(*"
+"*)	printf "\n"
+	# Break the '\n' sequence, or a \n is printed (which is not what we want).
+	printf "Your PATH contains a newline (%sn) character.\n" "\\"
+	printf "This doesn't work. Fix you PATH.\n"
+	exit 1
+	;;
+esac
+
 # sanity check for CWD in PATH. Having the current working directory
 # in the PATH makes the toolchain build process break.
 # try not to rely on egrep..
@@ -68,6 +80,10 @@ check_prog_host()
 check_prog_host "which"
 # Verify that sed is installed
 check_prog_host "sed"
+
+# 'file' must be present and must be exactly /usr/bin/file,
+# otherwise libtool fails in incomprehensible ways.
+check_prog_host "/usr/bin/file"
 
 # Check make
 MAKE=$(which make 2> /dev/null)
@@ -178,8 +194,7 @@ if test "${missing_progs}" = "yes" ; then
 	exit 1
 fi
 
-if grep ^BR2_TOOLCHAIN_BUILDROOT=y $BR2_CONFIG > /dev/null && \
-	grep ^BR2_ENABLE_LOCALE=y       $BR2_CONFIG > /dev/null ; then
+if grep ^BR2_NEEDS_HOST_UTF8_LOCALE=y $BR2_CONFIG > /dev/null; then
 	if ! which locale > /dev/null ; then
 		echo
 		echo "You need locale support on your build machine to build a toolchain supporting locales"
@@ -238,7 +253,13 @@ fi
 
 # Check that the Perl installation is complete enough for Buildroot.
 required_perl_modules="Data::Dumper" # Needed to build host-autoconf
+required_perl_modules="$required_perl_modules ExtUtils::MakeMaker" # Used by host-libxml-parser-perl
 required_perl_modules="$required_perl_modules Thread::Queue" # Used by host-automake
+
+if grep -q ^BR2_PACKAGE_MPV=y $BR2_CONFIG ; then
+    required_perl_modules="$required_perl_modules Math::BigInt"
+    required_perl_modules="$required_perl_modules Math::BigRat"
+fi
 
 # This variable will keep the modules that are missing in your system.
 missing_perl_modules=""

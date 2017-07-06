@@ -1,6 +1,6 @@
 config BR2_TARGET_ROOTFS_EXT2
 	bool "ext2/3/4 root filesystem"
-	select BR2_PACKAGE_HOST_MKE2IMG
+	select BR2_PACKAGE_HOST_E2FSPROGS
 	help
 	  Build an ext2/3/4 root filesystem
 
@@ -11,7 +11,7 @@ config BR2_TARGET_ROOTFS_EXT2_2
 
 choice
 	bool "ext2/3/4 variant"
-	default BR2_TARGET_ROOTFS_EXT2_2r0
+	default BR2_TARGET_ROOTFS_EXT2_2r1
 
 config BR2_TARGET_ROOTFS_EXT2_2r0
 	bool "ext2 (rev0)"
@@ -44,33 +44,25 @@ config BR2_TARGET_ROOTFS_EXT2_REV
 config BR2_TARGET_ROOTFS_EXT2_LABEL
 	string "filesystem label"
 
+# 61440 = 60MB, i.e usually small enough to fit on a 64MB media
 config BR2_TARGET_ROOTFS_EXT2_BLOCKS
-	int "exact size in blocks (leave at 0 for auto calculation)"
-	default 0
+	int "exact size in blocks"
+	default 61440
+	help
+	  Specify the file system size as a number of 1024-byte blocks.
 
 config BR2_TARGET_ROOTFS_EXT2_INODES
 	int "exact number of inodes (leave at 0 for auto calculation)"
 	default 0
 
-config BR2_TARGET_ROOTFS_EXT2_EXTRA_BLOCKS
-	int "extra size in blocks" if BR2_TARGET_ROOTFS_EXT2_BLOCKS = 0
-	default 0
-	help
-	  Enter here the number of extra blocks of free space you
-	  want on your filesystem. By default, Buildroot will not
-	  leave much space free.
-
-config BR2_TARGET_ROOTFS_EXT2_EXTRA_INODES
-	int "extra inodes" if BR2_TARGET_ROOTFS_EXT2_INODES = 0
-	default 0
-	help
-	  Enter here the number of extra free inodes you want on
-	  your filesystem. By default, Buildroot will not leave
-	  many free inodes.
-
 config BR2_TARGET_ROOTFS_EXT2_RESBLKS
 	int "reserved blocks percentage"
-	default 0
+	default 5
+	help
+	  The number of blocks on the filesystem (as a percentage of the
+	  total number of blocksi), that are reserved for use by root.
+	  Traditionally, this has been 5%, and all ext-related tools still
+	  default to reserving 5% when creating a new ext filesystem.
 
 choice
 	prompt "Compression method"

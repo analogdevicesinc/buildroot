@@ -4,14 +4,13 @@
 #
 ################################################################################
 
-NCURSES_VERSION = 5.9
+NCURSES_VERSION = 6.0
 NCURSES_SITE = $(BR2_GNU_MIRROR)/ncurses
 NCURSES_INSTALL_STAGING = YES
 NCURSES_DEPENDENCIES = host-ncurses
-NCURSES_PROGS = clear infocmp tabs tic toe tput tset
 NCURSES_LICENSE = MIT with advertising clause
 NCURSES_LICENSE_FILES = README
-NCURSES_CONFIG_SCRIPTS = ncurses$(NCURSES_LIB_SUFFIX)$(NCURSES_ABI_VERSION)-config
+NCURSES_CONFIG_SCRIPTS = ncurses$(NCURSES_LIB_SUFFIX)6-config
 
 NCURSES_CONF_OPTS = \
 	--without-cxx \
@@ -26,13 +25,9 @@ NCURSES_CONF_OPTS = \
 	--enable-const \
 	--enable-overwrite \
 	--enable-pc-files \
+	--with-pkg-config-libdir="/usr/lib/pkgconfig" \
 	$(if $(BR2_PACKAGE_NCURSES_TARGET_PROGS),,--without-progs) \
 	--without-manpages
-
-# Install after busybox for the full-blown versions
-ifeq ($(BR2_PACKAGE_BUSYBOX),y)
-NCURSES_DEPENDENCIES += busybox
-endif
 
 ifeq ($(BR2_STATIC_LIBS),y)
 NCURSES_CONF_OPTS += --without-shared --with-normal
@@ -50,17 +45,14 @@ else
 NCURSES_CONF_OPTS += --without-gpm
 endif
 
-NCURSES_LIBS-y = ncurses
-NCURSES_LIBS-$(BR2_PACKAGE_NCURSES_TARGET_MENU) += menu
-NCURSES_LIBS-$(BR2_PACKAGE_NCURSES_TARGET_PANEL) += panel
-NCURSES_LIBS-$(BR2_PACKAGE_NCURSES_TARGET_FORM) += form
-
 NCURSES_TERMINFO_FILES = \
 	a/ansi \
+	d/dumb \
 	l/linux \
 	p/putty \
 	p/putty-vt100 \
 	s/screen \
+	s/screen-256color \
 	v/vt100 \
 	v/vt100-putty \
 	v/vt102 \
@@ -68,46 +60,43 @@ NCURSES_TERMINFO_FILES = \
 	v/vt220 \
 	x/xterm \
 	x/xterm-color \
-	x/xterm-xfree86 \
+	x/xterm-xfree86
 
 ifeq ($(BR2_PACKAGE_NCURSES_WCHAR),y)
 NCURSES_CONF_OPTS += --enable-widec
 NCURSES_LIB_SUFFIX = w
+NCURSES_LIBS = ncurses menu panel form
 
 define NCURSES_LINK_LIBS_STATIC
-	$(foreach lib,$(NCURSES_LIBS-y:%=lib%), \
-		ln -sf $(lib)$(NCURSES_LIB_SUFFIX).a $(1)/usr/lib/$(lib).a
+	$(foreach lib,$(NCURSES_LIBS:%=lib%), \
+		ln -sf $(lib)$(NCURSES_LIB_SUFFIX).a $(STAGING_DIR)/usr/lib/$(lib).a
 	)
 	ln -sf libncurses$(NCURSES_LIB_SUFFIX).a \
-		$(1)/usr/lib/libcurses.a
+		$(STAGING_DIR)/usr/lib/libcurses.a
 endef
 
 define NCURSES_LINK_LIBS_SHARED
-	$(foreach lib,$(NCURSES_LIBS-y:%=lib%), \
-		ln -sf $(lib)$(NCURSES_LIB_SUFFIX).so $(1)/usr/lib/$(lib).so
+	$(foreach lib,$(NCURSES_LIBS:%=lib%), \
+		ln -sf $(lib)$(NCURSES_LIB_SUFFIX).so $(STAGING_DIR)/usr/lib/$(lib).so
 	)
 	ln -sf libncurses$(NCURSES_LIB_SUFFIX).so \
-		$(1)/usr/lib/libcurses.so
+		$(STAGING_DIR)/usr/lib/libcurses.so
 endef
 
 define NCURSES_LINK_PC
-	$(foreach pc,$(NCURSES_LIBS-y), \
+	$(foreach pc,$(NCURSES_LIBS), \
 		ln -sf $(pc)$(NCURSES_LIB_SUFFIX).pc \
-			$(1)/usr/lib/pkgconfig/$(pc).pc
+			$(STAGING_DIR)/usr/lib/pkgconfig/$(pc).pc
 	)
 endef
 
-NCURSES_LINK_TARGET_LIBS = \
-	$(if $(BR2_STATIC_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_STATIC,$(TARGET_DIR));) \
-	$(if $(BR2_SHARED_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_SHARED,$(TARGET_DIR)))
 NCURSES_LINK_STAGING_LIBS = \
-	$(if $(BR2_STATIC_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_STATIC,$(STAGING_DIR));) \
-	$(if $(BR2_SHARED_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_SHARED,$(STAGING_DIR)))
+	$(if $(BR2_STATIC_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_STATIC);) \
+	$(if $(BR2_SHARED_LIBS)$(BR2_SHARED_STATIC_LIBS),$(call NCURSES_LINK_LIBS_SHARED))
 
-NCURSES_LINK_STAGING_PC = $(call NCURSES_LINK_PC,$(STAGING_DIR))
+NCURSES_LINK_STAGING_PC = $(call NCURSES_LINK_PC)
 
 NCURSES_CONF_OPTS += --enable-ext-colors
-NCURSES_ABI_VERSION = 6
 NCURSES_TERMINFO_FILES += \
 	p/putty-256color \
 	x/xterm+256color \
@@ -116,8 +105,6 @@ NCURSES_TERMINFO_FILES += \
 NCURSES_POST_INSTALL_STAGING_HOOKS += NCURSES_LINK_STAGING_LIBS
 NCURSES_POST_INSTALL_STAGING_HOOKS += NCURSES_LINK_STAGING_PC
 
-else # BR2_PACKAGE_NCURSES_WCHAR
-NCURSES_ABI_VERSION = 5
 endif # BR2_PACKAGE_NCURSES_WCHAR
 
 ifneq ($(BR2_ENABLE_DEBUG),y)
@@ -127,41 +114,26 @@ endif
 # ncurses breaks with parallel build, but takes quite a while to
 # build single threaded. Work around it similar to how Gentoo does
 define NCURSES_BUILD_CMDS
-	$(MAKE1) -C $(@D) DESTDIR=$(STAGING_DIR) sources
+	$(TARGET_MAKE_ENV) $(MAKE1) -C $(@D) DESTDIR=$(STAGING_DIR) sources
 	rm -rf $(@D)/misc/pc-files
-	$(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR)
+	$(TARGET_MAKE_ENV) $(MAKE) -C $(@D) DESTDIR=$(STAGING_DIR)
 endef
-
-ifneq ($(BR2_STATIC_LIBS),y)
-define NCURSES_INSTALL_TARGET_LIBS
-	$(foreach lib,$(NCURSES_LIBS-y:%=lib%), \
-		cp -dpf $(NCURSES_DIR)/lib/$(lib)$(NCURSES_LIB_SUFFIX).so* \
-			$(TARGET_DIR)/usr/lib/
-	)
-endef
-endif
 
 ifeq ($(BR2_PACKAGE_NCURSES_TARGET_PROGS),y)
-define NCURSES_INSTALL_TARGET_PROGS
-	$(foreach prog,$(NCURSES_PROGS), \
-		$(INSTALL) -m 0755 $(NCURSES_DIR)/progs/$(prog) \
-			$(TARGET_DIR)/usr/bin/$(prog)
-	)
+define NCURSES_TARGET_SYMLINK_RESET
 	ln -sf tset $(TARGET_DIR)/usr/bin/reset
 endef
+NCURSES_POST_INSTALL_TARGET_HOOKS += NCURSES_TARGET_SYMLINK_RESET
 endif
 
-define NCURSES_INSTALL_TARGET_CMDS
-	mkdir -p $(TARGET_DIR)/usr/lib
-	$(NCURSES_INSTALL_TARGET_LIBS)
-	$(NCURSES_LINK_TARGET_LIBS)
-	$(NCURSES_INSTALL_TARGET_PROGS)
-	ln -snf /usr/share/terminfo $(TARGET_DIR)/usr/lib/terminfo
-	$(foreach terminfo,$(NCURSES_TERMINFO_FILES),\
-		$(INSTALL) -D -m 0644 $(STAGING_DIR)/usr/share/terminfo/$(terminfo) \
-			$(TARGET_DIR)/usr/share/terminfo/$(terminfo)
+define NCURSES_TARGET_CLEANUP_TERMINFO
+	$(RM) -rf $(TARGET_DIR)/usr/share/terminfo $(TARGET_DIR)/usr/share/tabset
+	$(foreach t,$(NCURSES_TERMINFO_FILES), \
+		$(INSTALL) -D -m 0644 $(STAGING_DIR)/usr/share/terminfo/$(t) \
+			$(TARGET_DIR)/usr/share/terminfo/$(t)
 	)
-endef # NCURSES_INSTALL_TARGET_CMDS
+endef
+NCURSES_POST_INSTALL_TARGET_HOOKS += NCURSES_TARGET_CLEANUP_TERMINFO
 
 #
 # On systems with an older version of tic, the installation of ncurses hangs
@@ -169,8 +141,8 @@ endef # NCURSES_INSTALL_TARGET_CMDS
 # ourselves, and use that during installation.
 #
 define HOST_NCURSES_BUILD_CMDS
-	$(MAKE1) -C $(@D) sources
-	$(MAKE) -C $(@D)/progs tic
+	$(HOST_MAKE_ENV) $(MAKE1) -C $(@D) sources
+	$(HOST_MAKE_ENV) $(MAKE) -C $(@D)/progs tic
 endef
 
 HOST_NCURSES_CONF_OPTS = \

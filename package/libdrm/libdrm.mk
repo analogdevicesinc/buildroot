@@ -4,13 +4,11 @@
 #
 ################################################################################
 
-LIBDRM_VERSION = 2.4.70
+LIBDRM_VERSION = 2.4.81
 LIBDRM_SOURCE = libdrm-$(LIBDRM_VERSION).tar.bz2
 LIBDRM_SITE = http://dri.freedesktop.org/libdrm
 LIBDRM_LICENSE = MIT
-
 LIBDRM_INSTALL_STAGING = YES
-
 LIBDRM_DEPENDENCIES = \
 	libpthread-stubs \
 	host-pkgconf
@@ -63,6 +61,12 @@ ifeq ($(BR2_PACKAGE_LIBDRM_OMAP),y)
 LIBDRM_CONF_OPTS += --enable-omap-experimental-api
 else
 LIBDRM_CONF_OPTS += --disable-omap-experimental-api
+endif
+
+ifeq ($(BR2_PACKAGE_LIBDRM_ETNAVIV),y)
+LIBDRM_CONF_OPTS += --enable-etnaviv-experimental-api
+else
+LIBDRM_CONF_OPTS += --disable-etnaviv-experimental-api
 endif
 
 ifeq ($(BR2_PACKAGE_LIBDRM_EXYNOS),y)

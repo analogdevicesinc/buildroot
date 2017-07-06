@@ -1,4 +1,3 @@
-# md5 from https://pypi.python.org/pypi/pytablewriter/json
-md5	7a28e4ddb8b59199e161b7ee9e97e3a3  pytablewriter-0.5.0.tar.gz
-# sha256 calculated by scanpypi
-sha256	e939adec820e68ed1b7c2eddfba73ce82a88f315aa90c81e04af0229020bfb7c  pytablewriter-0.5.0.tar.gz
+# md5 from https://pypi.python.org/pypi/pytablewriter/json, sha256 locally computed
+md5 f45f065cad97c00aaeb72db6768ff6e5  pytablewriter-0.19.9.tar.gz
+sha256 00f657b656267945d565488f1676d91f22d90748a0a06dd94d513a551e4c12d9  pytablewriter-0.19.9.tar.gz

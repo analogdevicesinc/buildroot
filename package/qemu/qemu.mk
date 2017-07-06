@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-QEMU_VERSION = 2.6.0
+QEMU_VERSION = 2.8.0
 QEMU_SOURCE = qemu-$(QEMU_VERSION).tar.bz2
 QEMU_SITE = http://wiki.qemu.org/download
-QEMU_LICENSE = GPLv2, LGPLv2.1, MIT, BSD-3c, BSD-2c, Others/BSD-1c
+QEMU_LICENSE = GPL-2.0, LGPL-2.1, MIT, BSD-3-Clause, BSD-2-Clause, Others/BSD-1c
 QEMU_LICENSE_FILES = COPYING COPYING.LIB
 # NOTE: there is no top-level license file for non-(L)GPL licenses;
 #       the non-(L)GPL license texts are specified in the affected
@@ -34,6 +34,8 @@ HOST_QEMU_DEPENDENCIES = host-pkgconf host-python host-zlib host-libglib2 host-p
 #       mips64          mips64
 #       mips64el        mips64el
 #       powerpc         ppc
+#       powerpc64       ppc64
+#       powerpc64le     ppc64 (system) / ppc64le (usermode)
 #       sh2a            not supported
 #       sh4             sh4
 #       sh4eb           sh4eb
@@ -55,15 +57,23 @@ endif
 ifeq ($(HOST_QEMU_ARCH),powerpc)
 HOST_QEMU_ARCH = ppc
 endif
+ifeq ($(HOST_QEMU_ARCH),powerpc64)
+HOST_QEMU_ARCH = ppc64
+endif
+ifeq ($(HOST_QEMU_ARCH),powerpc64le)
+HOST_QEMU_ARCH = ppc64le
+HOST_QEMU_SYS_ARCH = ppc64
+endif
 ifeq ($(HOST_QEMU_ARCH),sh4a)
 HOST_QEMU_ARCH = sh4
 endif
 ifeq ($(HOST_QEMU_ARCH),sh4aeb)
 HOST_QEMU_ARCH = sh4eb
 endif
+HOST_QEMU_SYS_ARCH ?= $(HOST_QEMU_ARCH)
 
 ifeq ($(BR2_PACKAGE_HOST_QEMU_SYSTEM_MODE),y)
-HOST_QEMU_TARGETS += $(HOST_QEMU_ARCH)-softmmu
+HOST_QEMU_TARGETS += $(HOST_QEMU_SYS_ARCH)-softmmu
 HOST_QEMU_OPTS += --enable-system --enable-fdt
 HOST_QEMU_DEPENDENCIES += host-dtc
 else
@@ -110,16 +120,19 @@ HOST_QEMU_OPTS += --enable-vde
 HOST_QEMU_DEPENDENCIES += host-vde2
 endif
 
+# Override CPP, as it expects to be able to call it like it'd
+# call the compiler.
 define HOST_QEMU_CONFIGURE_CMDS
-	cd $(@D); $(HOST_CONFIGURE_OPTS) ./configure    \
-		--target-list="$(HOST_QEMU_TARGETS)"    \
-		--prefix="$(HOST_DIR)/usr"              \
-		--interp-prefix=$(STAGING_DIR)          \
-		--cc="$(HOSTCC)"                        \
-		--host-cc="$(HOSTCC)"                   \
-		--python=$(HOST_DIR)/usr/bin/python2    \
-		--extra-cflags="$(HOST_CFLAGS)"         \
-		--extra-ldflags="$(HOST_LDFLAGS)"       \
+	cd $(@D); $(HOST_CONFIGURE_OPTS) CPP="$(HOSTCC) -E" \
+		./configure \
+		--target-list="$(HOST_QEMU_TARGETS)" \
+		--prefix="$(HOST_DIR)" \
+		--interp-prefix=$(STAGING_DIR) \
+		--cc="$(HOSTCC)" \
+		--host-cc="$(HOSTCC)" \
+		--python=$(HOST_DIR)/bin/python2 \
+		--extra-cflags="$(HOST_CFLAGS)" \
+		--extra-ldflags="$(HOST_LDFLAGS)" \
 		$(HOST_QEMU_OPTS)
 endef
 
@@ -134,7 +147,7 @@ endef
 $(eval $(host-generic-package))
 
 # variable used by other packages
-QEMU_USER = $(HOST_DIR)/usr/bin/qemu-$(HOST_QEMU_ARCH)
+QEMU_USER = $(HOST_DIR)/bin/qemu-$(HOST_QEMU_ARCH)
 
 #-------------------------------------------------------------
 # Target-qemu
@@ -148,8 +161,8 @@ QEMU_LIBS = -lrt -lm
 QEMU_OPTS =
 
 QEMU_VARS = \
-	LIBTOOL=$(HOST_DIR)/usr/bin/libtool \
-	PYTHON=$(HOST_DIR)/usr/bin/python2 \
+	LIBTOOL=$(HOST_DIR)/bin/libtool \
+	PYTHON=$(HOST_DIR)/bin/python2 \
 	PYTHONPATH=$(TARGET_DIR)/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages
 
 # If we want to specify only a subset of targets, we must still enable all
@@ -193,43 +206,51 @@ else
 QEMU_OPTS += --disable-fdt
 endif
 
+ifeq ($(BR2_PACKAGE_QEMU_TOOLS),y)
+QEMU_OPTS += --enable-tools
+else
+QEMU_OPTS += --disable-tools
+endif
+
+# Override CPP, as it expects to be able to call it like it'd
+# call the compiler.
 define QEMU_CONFIGURE_CMDS
-	( cd $(@D);                                     \
-		LIBS='$(QEMU_LIBS)'                     \
-		$(TARGET_CONFIGURE_OPTS)                \
-		$(TARGET_CONFIGURE_ARGS)                \
-		$(QEMU_VARS)                            \
-		./configure                             \
-			--prefix=/usr                   \
-			--cross-prefix=$(TARGET_CROSS)  \
-			--with-system-pixman            \
-			--audio-drv-list=               \
-			--enable-kvm                    \
-			--enable-attr                   \
-			--enable-vhost-net              \
-			--disable-bsd-user              \
-			--disable-xen                   \
-			--disable-slirp                 \
-			--disable-vnc                   \
-			--disable-virtfs                \
-			--disable-brlapi                \
-			--disable-curses                \
-			--disable-curl                  \
-			--disable-bluez                 \
-			--disable-uuid                  \
-			--disable-vde                   \
-			--disable-linux-aio             \
-			--disable-cap-ng                \
-			--disable-docs                  \
-			--disable-spice                 \
-			--disable-rbd                   \
-			--disable-libiscsi              \
-			--disable-usb-redir             \
-			--disable-strip                 \
-			--disable-seccomp               \
-			--disable-sparse                \
-			--disable-tools                 \
-			$(QEMU_OPTS)                    \
+	( cd $(@D); \
+		LIBS='$(QEMU_LIBS)' \
+		$(TARGET_CONFIGURE_OPTS) \
+		$(TARGET_CONFIGURE_ARGS) \
+		CPP="$(TARGET_CC) -E" \
+		$(QEMU_VARS) \
+		./configure \
+			--prefix=/usr \
+			--cross-prefix=$(TARGET_CROSS) \
+			--with-system-pixman \
+			--audio-drv-list= \
+			--enable-kvm \
+			--enable-attr \
+			--enable-vhost-net \
+			--disable-bsd-user \
+			--disable-xen \
+			--disable-slirp \
+			--disable-vnc \
+			--disable-virtfs \
+			--disable-brlapi \
+			--disable-curses \
+			--disable-curl \
+			--disable-bluez \
+			--disable-uuid \
+			--disable-vde \
+			--disable-linux-aio \
+			--disable-cap-ng \
+			--disable-docs \
+			--disable-spice \
+			--disable-rbd \
+			--disable-libiscsi \
+			--disable-usb-redir \
+			--disable-strip \
+			--disable-seccomp \
+			--disable-sparse \
+			$(QEMU_OPTS) \
 	)
 endef
 

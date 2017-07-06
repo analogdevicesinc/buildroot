@@ -9,7 +9,7 @@ QTUIO_SITE = $(call github,x29a,qTUIO,$(QTUIO_VERSION))
 QTUIO_INSTALL_STAGING = YES
 QTUIO_DEPENDENCIES = qt
 
-QTUIO_LICENSE = GPLv3+
+QTUIO_LICENSE = GPL-3.0+
 QTUIO_LICENSE_FILES = COPYING
 
 # The pong example needs QtOpenGL support, which might become available
@@ -32,7 +32,7 @@ endef
 ifeq ($(BR2_QTUIO_EXAMPLES),y)
 define QTUIO_BUILD_EXAMPLES
 	for example in $(QTUIO_EXAMPLES) ; do \
-		$(MAKE) -C $(@D)/examples/$${example} || exit 1; \
+		$(TARGET_MAKE_ENV) $(MAKE) -C $(@D)/examples/$${example} || exit 1; \
 	done
 endef
 endif

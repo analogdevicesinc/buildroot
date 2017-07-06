@@ -7,7 +7,7 @@
 VDE2_VERSION = 2.3.2
 VDE2_SOURCE = vde2-$(VDE2_VERSION).tar.bz2
 VDE2_SITE = http://downloads.sourceforge.net/project/vde/vde2/$(VDE2_VERSION)
-VDE2_LICENSE = GPLv2+, LGPLv2.1+, BSD-3c
+VDE2_LICENSE = GPL-2.0+, LGPL-2.1+, BSD-3-Clause
 VDE2_LICENSE_FILES = COPYING COPYING.libvdeplug COPYING.slirpvde
 VDE2_INSTALL_STAGING = YES
 
@@ -27,11 +27,11 @@ VDE2_AUTORECONF = YES
 #       in future commits.
 VDE2_CONF_OPTS = \
 	--disable-cryptcab \
-       --disable-experimental \
-       --disable-kernel-switch \
+	--disable-experimental \
+	--disable-kernel-switch \
 	--disable-pcap \
 	--disable-profile \
-       --disable-python \
+	--disable-python \
 	--enable-tuntap
 
 # Package does not build in parallel due to improper make rules
@@ -39,11 +39,11 @@ VDE2_MAKE = $(MAKE1)
 
 HOST_VDE2_CONF_OPTS = \
 	--disable-cryptcab \
-       --disable-experimental \
-       --disable-kernel-switch \
+	--disable-experimental \
+	--disable-kernel-switch \
 	--disable-pcap \
 	--disable-profile \
-       --disable-python \
+	--disable-python \
 	--enable-tuntap
 
 HOST_VDE2_MAKE = $(MAKE1)

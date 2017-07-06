@@ -4,34 +4,24 @@
 #
 ################################################################################
 
-EXT2_OPTS = -G $(BR2_TARGET_ROOTFS_EXT2_GEN) -R $(BR2_TARGET_ROOTFS_EXT2_REV)
+# qstrip results in stripping consecutive spaces into a single one. So the
+# variable is not qstrip-ed to preserve the integrity of the string value.
+EXT2_LABEL := $(subst ",,$(BR2_TARGET_ROOTFS_EXT2_LABEL))
+#" Syntax highlighting... :-/ )
 
-ifneq ($(strip $(BR2_TARGET_ROOTFS_EXT2_BLOCKS)),0)
-EXT2_OPTS += -b $(BR2_TARGET_ROOTFS_EXT2_BLOCKS)
-endif
-EXT2_OPTS += -B $(BR2_TARGET_ROOTFS_EXT2_EXTRA_BLOCKS)
+EXT2_OPTS = \
+	-d $(TARGET_DIR) \
+	-r $(BR2_TARGET_ROOTFS_EXT2_REV) \
+	-N $(BR2_TARGET_ROOTFS_EXT2_INODES) \
+	-m $(BR2_TARGET_ROOTFS_EXT2_RESBLKS) \
+	-L "$(EXT2_LABEL)"
 
-ifneq ($(strip $(BR2_TARGET_ROOTFS_EXT2_INODES)),0)
-EXT2_OPTS += -i $(BR2_TARGET_ROOTFS_EXT2_INODES)
-endif
-EXT2_OPTS += -I $(BR2_TARGET_ROOTFS_EXT2_EXTRA_INODES)
-
-ifneq ($(strip $(BR2_TARGET_ROOTFS_EXT2_RESBLKS)),0)
-EXT2_OPTS += -r $(BR2_TARGET_ROOTFS_EXT2_RESBLKS)
-endif
-
-# Not qstrip-ing the variable, because it may contain spaces, but we must
-# qstrip it when checking. Furthermore, we need to further quote it, so
-# that the quotes do not get eaten by the echo statement when creating the
-# fakeroot script
-ifneq ($(call qstrip,$(BR2_TARGET_ROOTFS_EXT2_LABEL)),)
-EXT2_OPTS += -l '$(BR2_TARGET_ROOTFS_EXT2_LABEL)'
-endif
-
-ROOTFS_EXT2_DEPENDENCIES = host-mke2img
+ROOTFS_EXT2_DEPENDENCIES = host-e2fsprogs
 
 define ROOTFS_EXT2_CMD
-	PATH=$(BR_PATH) mke2img -d $(TARGET_DIR) $(EXT2_OPTS) -o $@
+	rm -f $@
+	$(HOST_DIR)/sbin/mkfs.ext$(BR2_TARGET_ROOTFS_EXT2_GEN) $(EXT2_OPTS) $@ \
+		 $(BR2_TARGET_ROOTFS_EXT2_BLOCKS)
 endef
 
 rootfs-ext2-symlink:

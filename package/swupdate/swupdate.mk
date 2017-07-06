@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-SWUPDATE_VERSION = 2016.07
+SWUPDATE_VERSION = 2017.04
 SWUPDATE_SITE = $(call github,sbabic,swupdate,$(SWUPDATE_VERSION))
-SWUPDATE_LICENSE = GPLv2+, MIT, Public Domain
+SWUPDATE_LICENSE = GPL-2.0+, MIT, Public Domain
 SWUPDATE_LICENSE_FILES = COPYING
 
 # swupdate bundles its own version of mongoose (version 3.8)
@@ -39,8 +39,8 @@ else
 SWUPDATE_MAKE_ENV += HAVE_LIBCURL=n
 endif
 
-ifeq ($(BR2_PACKAGE_LUA),y)
-SWUPDATE_DEPENDENCIES += lua host-pkgconf
+ifeq ($(BR2_PACKAGE_HAS_LUAINTERPRETER),y)
+SWUPDATE_DEPENDENCIES += luainterpreter host-pkgconf
 SWUPDATE_MAKE_ENV += HAVE_LUA=y
 else
 SWUPDATE_MAKE_ENV += HAVE_LUA=n
@@ -71,6 +71,13 @@ else
 SWUPDATE_MAKE_ENV += HAVE_LIBUBOOTENV=n
 endif
 
+ifeq ($(BR2_PACKAGE_ZEROMQ),y)
+SWUPDATE_DEPENDENCIES += zeromq
+SWUPDATE_MAKE_ENV += HAVE_LIBZEROMQ=y
+else
+SWUPDATE_MAKE_ENV += HAVE_LIBZEROMQ=n
+endif
+
 ifeq ($(BR2_PACKAGE_ZLIB),y)
 SWUPDATE_DEPENDENCIES += zlib
 SWUPDATE_MAKE_ENV += HAVE_ZLIB=y
@@ -83,7 +90,7 @@ SWUPDATE_BUILD_CONFIG = $(@D)/.config
 SWUPDATE_KCONFIG_FILE = $(call qstrip,$(BR2_PACKAGE_SWUPDATE_CONFIG))
 SWUPDATE_KCONFIG_EDITORS = menuconfig xconfig gconfig nconfig
 
-ifeq ($(BR2_PREFER_STATIC_LIB),y)
+ifeq ($(BR2_STATIC_LIBS),y)
 define SWUPDATE_PREFER_STATIC
 	$(call KCONFIG_ENABLE_OPT,CONFIG_STATIC,$(SWUPDATE_BUILD_CONFIG))
 endef

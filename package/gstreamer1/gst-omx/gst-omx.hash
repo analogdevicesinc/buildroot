@@ -1,2 +1,2 @@
-# locally computed
-sha256  0b4874961e6488ad9e5808114bd486ea981c540907262caab1419355fd82d745  gst-omx-1.2.0.tar.xz
+# From https://gstreamer.freedesktop.org/src/gst-omx/gst-omx-1.12.1.tar.xz.sha256sum
+sha256 13faf0eb679c37a01f64c47f23018c2d894fa0ff1c3b98d4b1d1c69a7b3ca183  gst-omx-1.12.1.tar.xz

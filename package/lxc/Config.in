@@ -1,6 +1,5 @@
 config BR2_PACKAGE_LXC
 	bool "lxc"
-	select BR2_PACKAGE_LIBCAP
 	depends on BR2_TOOLCHAIN_HAS_THREADS
 	depends on BR2_USE_MMU # fork()
 	# build system forcefully builds a shared library

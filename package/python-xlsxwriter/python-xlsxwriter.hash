@@ -1,4 +1,3 @@
-# md5 from https://pypi.python.org/pypi/XlsxWriter/json
-md5	545c938f279abcfd7f11e705012302fe  XlsxWriter-0.8.9.tar.gz
-# sha256 locally computed
-sha256	cb90c5283b88af72549adf82f203d15623a0f4faeae29b6a20733e187dfde882  XlsxWriter-0.8.9.tar.gz
+# md5 from https://pypi.python.org/pypi/xlsxwriter/json, sha256 locally computed
+md5 3c2831e80fae83070f61f0a9226f45ac XlsxWriter-0.9.6.tar.gz
+sha256 b51c00a1d6572ba35e8c06e0af8dd14c34977ef0b5022c3d85d5f1de9f1220c3 XlsxWriter-0.9.6.tar.gz

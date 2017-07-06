@@ -4,14 +4,14 @@
 #
 ################################################################################
 
-READLINE_VERSION = 6.3
+READLINE_VERSION = 7.0
 READLINE_SITE = $(BR2_GNU_MIRROR)/readline
 READLINE_INSTALL_STAGING = YES
 READLINE_DEPENDENCIES = ncurses
 HOST_READLINE_DEPENDENCIES = host-ncurses
 READLINE_CONF_ENV = bash_cv_func_sigsetjmp=yes \
 	bash_cv_wcwidth_broken=no
-READLINE_LICENSE = GPLv3+
+READLINE_LICENSE = GPL-3.0+
 READLINE_LICENSE_FILES = COPYING
 
 define READLINE_PURGE_EXAMPLES

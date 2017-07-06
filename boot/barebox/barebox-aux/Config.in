@@ -30,9 +30,9 @@ config BR2_TARGET_BAREBOX_AUX_CONFIG_FRAGMENT_FILES
 	  that will be merged to the main Barebox configuration file.
 
 config BR2_TARGET_BAREBOX_AUX_IMAGE_FILE
-	string "Image filename"
+	string "Image file names"
 	help
-	  Name of the generated barebox image, which will be copied to
+	  Space-separated list of barebox images which will be copied to
 	  the images directory.
 
 	  If left empty, defaults to:
@@ -67,8 +67,7 @@ config BR2_TARGET_BAREBOX_AUX_CUSTOM_EMBEDDED_ENV_PATH
 	  invalid. This option sets the barebox Kconfig option
 	  CONFIG_DEFAULT_ENVIRONMENT_PATH to the specified path. This
 	  way it is possible to use Buildroot variables like
-	  BR2_EXTERNAL, TOPDIR etc. to refer to the custom
-	  environment.
+	  TOPDIR etc. to refer to the custom environment.
 
 	  Depending on your setup, the custom embedded environment
 	  will probably be based on either the content of the

@@ -13,7 +13,6 @@ This guide covers the following configurations:
  - atmel_sama5d3_xplained_dev_defconfig
  - atmel_sama5d3_xplained_mmc_defconfig
  - atmel_sama5d3_xplained_mmc_dev_defconfig
- - atmel_sama5d4ek_defconfig
  - atmel_sama5d4_xplained_defconfig
  - atmel_sama5d4_xplained_dev_defconfig
  - atmel_sama5d4_xplained_mmc_defconfig
@@ -45,7 +44,7 @@ using SAM-BA" section below.
 For the Xplained boards, an alternative Buildroot configuration is
 provided to boot from an SD card. Those configurations are labeled as
 'mmc'. In this case, after building Buildroot, follow the instructions
-in the "Preparting the SD card" sction.
+in the "Preparing the SD card" section.
 
 To configure and build Buildroot, run:
 

@@ -8,8 +8,10 @@ LIBMAD_VERSION = 0.15.1b
 LIBMAD_SITE = http://downloads.sourceforge.net/project/mad/libmad/$(LIBMAD_VERSION)
 LIBMAD_INSTALL_STAGING = YES
 LIBMAD_LIBTOOL_PATCH = NO
-LIBMAD_LICENSE = GPLv2+
+LIBMAD_LICENSE = GPL-2.0+
 LIBMAD_LICENSE_FILES = COPYING
+LIBMAD_PATCH = \
+	https://sources.debian.net/data/main/libm/libmad/0.15.1b-8/debian/patches/frame_length.diff
 
 define LIBMAD_PREVENT_AUTOMAKE
 	# Prevent automake from running.

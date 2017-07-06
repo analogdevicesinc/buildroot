@@ -1,2 +1,4 @@
-# From https://lists.freedesktop.org/archives/libva/2016-June/004035.html
-sha1	eb3660197ce4781af4db4d97b0d7965900e7b06e	libva-intel-driver-1.7.1.tar.bz2
+# From https://github.com/01org/intel-vaapi-driver/releases
+sha1 b0cfc0807993aafe78e209dd28cdceb4dfa57e78 intel-vaapi-driver-1.8.3.tar.bz2
+# Locally computed
+sha256 54411d9e579300ed63f8b9b06152a1a9ec95b7699507d7ffa014cd7b2aeaff6f  intel-vaapi-driver-1.8.3.tar.bz2

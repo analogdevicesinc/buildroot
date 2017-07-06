@@ -4,16 +4,16 @@
 #
 ################################################################################
 
-MPV_VERSION = 0.18.1
-MPV_WAF_VERSION = 1.8.12
+MPV_VERSION = 0.25.0
 MPV_SITE = https://github.com/mpv-player/mpv/archive
 MPV_SOURCE = v$(MPV_VERSION).tar.gz
-MPV_EXTRA_DOWNLOADS = https://waf.io/waf-$(MPV_WAF_VERSION)
 MPV_DEPENDENCIES = \
 	host-pkgconf ffmpeg zlib \
 	$(if $(BR2_PACKAGE_LIBICONV),libiconv)
-MPV_LICENSE = GPLv2+
+MPV_LICENSE = GPL-2.0+
 MPV_LICENSE_FILES = LICENSE
+
+MPV_NEEDS_EXTERNAL_WAF = YES
 
 # Some of these options need testing and/or tweaks
 MPV_CONF_OPTS = \
@@ -23,7 +23,7 @@ MPV_CONF_OPTS = \
 	--disable-cdda \
 	--disable-cocoa \
 	--disable-coreaudio \
-	--disable-libguess \
+	--disable-cuda-hwaccel \
 	--disable-libv4l2 \
 	--disable-opensles \
 	--disable-rpi \
@@ -45,7 +45,7 @@ endif
 # GBM support is provided by mesa3d when EGL=y
 ifeq ($(BR2_PACKAGE_MESA3D_OPENGL_EGL),y)
 MPV_CONF_OPTS += --enable-gbm
-MPV_DEPENDENIES += mesa3d
+MPV_DEPENDENCIES += mesa3d
 else
 MPV_CONF_OPTS += --disable-gbm
 endif
@@ -123,14 +123,6 @@ else
 MPV_CONF_OPTS += --disable-drm
 endif
 
-# libenca support
-ifeq ($(BR2_PACKAGE_LIBENCA),y)
-MPV_CONF_OPTS += --enable-enca
-MPV_DEPENDENCIES += libenca
-else
-MPV_CONF_OPTS += --disable-enca
-endif
-
 # LUA support, only for lua51/lua52/luajit
 # This enables the controller (OSD) together with libass
 ifeq ($(BR2_PACKAGE_LUA_5_1)$(BR2_PACKAGE_LUA_5_2)$(BR2_PACKAGE_LUAJIT),y)
@@ -142,10 +134,10 @@ endif
 
 # OpenGL support
 ifeq ($(BR2_PACKAGE_HAS_LIBGL),y)
-MPV_CONF_OPTS += --enable-gl --enable-standard-gl
+MPV_CONF_OPTS += --enable-gl
 MPV_DEPENDENCIES += libgl
 else
-MPV_CONF_OPTS += --disable-gl --disable-standard-gl
+MPV_CONF_OPTS += --disable-gl
 endif
 
 # pulseaudio support
@@ -181,7 +173,7 @@ endif
 # This requires one or more of the egl-drm, wayland, x11 backends
 # For now we support wayland and x11
 ifeq ($(BR2_PACKAGE_LIBVA),y)
-ifneq ($(BR2_PACKAGE_WAYLAND)$(BR2_PACKAGE_XLIB_LIBX11),)
+ifneq ($(BR2_PACKAGE_WAYLAND)$(BR2_PACKAGE_XORG7),)
 MPV_CONF_OPTS += --enable-vaapi
 MPV_DEPENDENCIES += libva
 else
@@ -199,31 +191,12 @@ else
 MPV_CONF_OPTS += --disable-wayland
 endif
 
-# Base X11 support
-ifeq ($(BR2_PACKAGE_XLIB_LIBX11),y)
-MPV_CONF_OPTS += --enable-x11 --disable-xss
-MPV_DEPENDENCIES += xlib_libX11
-# xext
-ifeq ($(BR2_PACKAGE_XLIB_LIBXEXT),y)
-MPV_CONF_OPTS += --enable-xext
-MPV_DEPENDENCIES += xlib_libXext
-else
-MPV_CONF_OPTS += --disable-xext
-endif
-# xinerama
-ifeq ($(BR2_PACKAGE_XLIB_LIBXINERAMA),y)
-MPV_CONF_OPTS += --enable-xinerama
-MPV_DEPENDENCIES += xlib_libXinerama
-else
-MPV_CONF_OPTS += --disable-xinerama
-endif
-# xrandr
-ifeq ($(BR2_PACKAGE_XLIB_LIBXRANDR),y)
-MPV_CONF_OPTS += --enable-xrandr
-MPV_DEPENDENCIES += xlib_libXrandr
-else
-MPV_CONF_OPTS += --disable-xrandr
-endif
+# Base X11 support. Config.in ensures that if BR2_PACKAGE_XORG7 is
+# enabled, xlib_libX11, xlib_libXext, xlib_libXinerama,
+# xlib_libXrandr, xlib_libXScrnSaver.
+ifeq ($(BR2_PACKAGE_XORG7),y)
+MPV_CONF_OPTS += --enable-x11
+MPV_DEPENDENCIES += xlib_libX11 xlib_libXext xlib_libXinerama xlib_libXrandr xlib_libXScrnSaver
 # XVideo
 ifeq ($(BR2_PACKAGE_XLIB_LIBXV),y)
 MPV_CONF_OPTS += --enable-xv
@@ -235,28 +208,4 @@ else
 MPV_CONF_OPTS += --disable-x11
 endif
 
-define MPV_COPY_WAF
-	$(INSTALL) -m 0755 $(DL_DIR)/waf-$(MPV_WAF_VERSION) $(@D)/waf
-endef
-MPV_POST_EXTRACT_HOOKS += MPV_COPY_WAF
-
-define MPV_CONFIGURE_CMDS
-	cd $(@D); \
-		$(TARGET_CONFIGURE_OPTS) \
-		./waf configure $(MPV_CONF_OPTS)
-endef
-
-define MPV_BUILD_CMDS
-	cd $(@D); \
-		$(TARGET_MAKE_ENV) \
-		./waf build
-endef
-
-define MPV_INSTALL_TARGET_CMDS
-	cd $(@D); \
-		$(TARGET_MAKE_ENV) \
-		DESTDIR=$(TARGET_DIR) \
-		./waf install
-endef
-
-$(eval $(generic-package))
+$(eval $(waf-package))

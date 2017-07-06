@@ -4,11 +4,11 @@
 #
 ################################################################################
 
-WEBKITGTK_VERSION = 2.12.3
+WEBKITGTK_VERSION = 2.16.5
 WEBKITGTK_SITE = http://www.webkitgtk.org/releases
 WEBKITGTK_SOURCE = webkitgtk-$(WEBKITGTK_VERSION).tar.xz
 WEBKITGTK_INSTALL_STAGING = YES
-WEBKITGTK_LICENSE = LGPLv2.1+, BSD-2c
+WEBKITGTK_LICENSE = LGPL-2.1+, BSD-2-Clause
 WEBKITGTK_LICENSE_FILES = \
 	Source/WebCore/LICENSE-APPLE \
 	Source/WebCore/LICENSE-LGPL-2.1

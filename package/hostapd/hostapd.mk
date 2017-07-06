@@ -4,13 +4,13 @@
 #
 ################################################################################
 
-HOSTAPD_VERSION = 2.5
+HOSTAPD_VERSION = 2.6
 HOSTAPD_SITE = http://hostap.epitest.fi/releases
 HOSTAPD_SUBDIR = hostapd
 HOSTAPD_CONFIG = $(HOSTAPD_DIR)/$(HOSTAPD_SUBDIR)/.config
 HOSTAPD_DEPENDENCIES = host-pkgconf libnl
 HOSTAPD_CFLAGS = $(TARGET_CFLAGS) -I$(STAGING_DIR)/usr/include/libnl3/
-HOSTAPD_LICENSE = BSD-3c
+HOSTAPD_LICENSE = BSD-3-Clause
 HOSTAPD_LICENSE_FILES = README
 HOSTAPD_CONFIG_SET =
 
@@ -51,7 +51,7 @@ endif
 ifeq ($(BR2_PACKAGE_HOSTAPD_EAP),y)
 HOSTAPD_CONFIG_ENABLE += \
 	CONFIG_EAP \
-	CONFIG_RADIUS_SERVER \
+	CONFIG_RADIUS_SERVER
 
 # Enable both TLS v1.1 (CONFIG_TLSV11) and v1.2 (CONFIG_TLSV12)
 HOSTAPD_CONFIG_ENABLE += CONFIG_TLSV1
