@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Keep the main clock in powerdown until used
+#
+case "$1" in
+ start)
+	iio_attr -d m2k-fabric clk_powerdown 1
+	;;
+  stop)
+	;;
+  restart|reload)
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
