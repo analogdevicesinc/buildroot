@@ -4,7 +4,7 @@
 #
 case "$1" in
  start)
-	echo f8007100.adc > /sys/bus/platform/drivers/xadc/unbind
+	#echo f8007100.adc > /sys/bus/platform/drivers/xadc/unbind
 	;;
   stop)
 	;;
