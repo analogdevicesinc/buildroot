@@ -20,7 +20,7 @@ create_iiod_context_attributes() {
 		done
 
 		echo ad9361-phy,xo_correction=`cat /sys/bus/iio/devices/${DEV_NAME}/xo_correction` >> /etc/libiio.ini
-		echo ad9361-phy,model=`cat /sys/bus/iio/devices/${DEV_NAME}/of_node/compatible` >> /etc/libiio.ini
+		echo ad9361-phy,model=`cat /sys/bus/iio/devices/${DEV_NAME}/of_node/compatible` | sed 's/adi,//g' >> /etc/libiio.ini
 	fi
 }
 
