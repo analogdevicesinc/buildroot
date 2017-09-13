@@ -14,6 +14,7 @@ create_iiod_context_attributes() {
 	echo "[Context Attributes]" > /etc/libiio.ini
 	echo "hw_model=$model" >> /etc/libiio.ini
 	echo -e "hw_serial=$serial\n" >> /etc/libiio.ini
+	echo "fw_version=`grep device-fw /opt/VERSIONS | cut -d ' ' -f 2`" >> /etc/libiio.ini
 	if [ "$USBPID" == "0xb673" ]; then
 		for dev in /sys/bus/iio/devices/*; do
 			[ `cat ${dev}/name` == "ad9361-phy" ] && DEV_NAME=`basename ${dev}`
