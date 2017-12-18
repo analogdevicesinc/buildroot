@@ -10,9 +10,18 @@ UDC_HANDLE_SUSPEND=`fw_printenv -n udc_handle_suspend 2> /dev/null || echo 0`
 create_iiod_context_attributes() {
 	model=$1
 	serial=$2
+	model_variant=$3
 
 	echo "[Context Attributes]" > /etc/libiio.ini
 	echo "hw_model=$model" >> /etc/libiio.ini
+
+	if [ "$model_variant" == "n25q256a" ]
+	then
+		echo "hw_model_variant=0" >> /etc/libiio.ini
+	else
+		echo "hw_model_variant=1" >> /etc/libiio.ini
+	fi
+
 	echo -e "hw_serial=$serial\n" >> /etc/libiio.ini
 	echo "fw_version=`grep device-fw /opt/VERSIONS | cut -d ' ' -f 2`" >> /etc/libiio.ini
 	if [ "$USBPID" == "0xb673" ]; then
@@ -33,11 +42,12 @@ case "$1" in
 	mkdir -p $GADGET
 
 	model=`cat /sys/firmware/devicetree/base/model | tr / -`
+	model_variant=`dmesg | grep m25p80 | grep Kbytes | cut -d ' ' -f 3`
 
 	serial=`dmesg | grep SPI-NOR-UniqueID`
 	serial=${serial#*SPI-NOR-UniqueID }
 
-	create_iiod_context_attributes "$model" "$serial"
+	create_iiod_context_attributes "$model" "$serial" "$model_variant"
 
 	echo $serial > /etc/serial
 	sha1=`echo $serial | sha1sum`
