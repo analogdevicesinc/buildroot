@@ -47,24 +47,39 @@
 <section>
 <h1>Willkommen im <strong>ADALM-2000</strong> Aktiv-Lernmodul</h1>
 <a href="http://www.analog.com/education"><img src="./prof_blue.png" alt="ADI Professor" style="float:left" /></a>
-<p>Vielen Dank für den Kauf des
-ADALM-2000 Aktiv-Lernmoduls (M2k). Das einfach zu bedienende ADALM-2000-Aktiv-Lernmodul
-hilft Studierenden der Elektrotechnik bei der Einführung in die Grundlagen des
-Software-definiertem Radios (SDR), der Hochfrequenztechnik  (RF) und der drahtlosen
-Kommunikation. Entworfen für Studenten auf allen Bildungsebenen und aus allen Fachrichtungen,
+<p>Vielen Dank für den Kauf des ADALM-2000 Aktiv-Lernmoduls (M2k). Das einfach zu bedienende ADALM-2000-Aktiv-Lernmodul
+hilft Studierenden der Elektrotechnik bei der Einführung in die Grundlagen von Schaltungen und Systemen.
+Entworfen für Studenten auf allen Bildungsebenen und aus allen Fachrichtungen,
 kann das Modul sowohl für Lehrer-geführtes als auch für das Lernen in Eigenregie
 verwendet werden. Dabei wird den Studierenden während des wissenschaftlich
-technischen Studiums geholfen, eine Grundlage in realer Hochfrequenztechnik und
-Kommunikation zu entwickeln, oder vorhandenes Wissen zu vertiefen</p>
-<p>Basierend auf dem  <a href="http://www.analog.com/AD9363">AD9363</a> bietet das
-M2k unabhängige Empfangs- und Sendekanäle, die in Vollduplex betrieben
-werden können. Das aktive Lernmodul kann im Hochfrequenzbereich von 325 MHz bis
-3800 MHz analoge Radiosignale mit einer Abtastrate von bis zu 61,44
-Megasamples pro Sekunde (MSPS) erzeugen oder erfassen. Klein genug, um in eine
+technischen Studiums geholfen, eine Grundlage in praxisnaher Signal-, System- und Wechselstromlehre bis in den oberen MHz Bereich
+zu entwickeln, oder vorhandenes Wissen zu vertiefen, ohne die Kosten und Unzugänglichkeit traditionellere Messtechnik.
+</p>
+<p>Mit 12-Bit genauen ADCs und DACs, welche mit bis zu 100 MSPS abgetastete  werden, bringet das ADALM-2000 die Leistung
+von Laborgeräten auf die Größe einer Handfläche. In Verbindung mit der Analog Devices
+<a href = "http://wiki.analog.com/university/tools/m2k/scopy"> Scopy </a> grafisch
+Anwendungssoftware, die auf einem Computer läuft, erhält der Benutzer die
+folgenden Instrumente:
+</p>
+<ul>
+<li> Zweikanal-Oszilloskop mit differentiellen Eingängen </li>
+<li> Zweikanaliger Arbiträrfunktionsgenerator </li>
+<li> Digitaler 16-Kanal-Logikanalysator (3.3V CMOS und 1.8V oder 5V tolerant, 100MS/s) </li>
+<li> 16-Kanal-Mustergenerator (3,3V CMOS, 100MS/s) </li>
+<li> 16-Kanal-Digital-I/O </li>
+<li> Zwei digitale Ein/Ausgabe-Triggersignale zum Verbinden mehrerer Instrumente (3,3V CMOS) </li>
+<li> Zweikanal-Voltmeter (AC, DC, ± 20V) </li>
+<li> Netzwerkanalysator - Bode, Nyquist, Nichols Diagramme. Bereich: 1 Hz bis 10 MHz </li>
+<li> Spektrumanalysator - Leistungsspektrum und spektrale Messungen (Grundrauschen, SFDR, SNR, THD, etc.) </li>
+<li> Digitale Busanalysatoren (SPI, I²C, UART, Parallel) </li>
+<li> Zwei programmierbare Netzteile (0 ... + 5V, 0 ... -5V) </li>
+</ul>
+<p>Klein genug, um in eine
 Hemdtasche zu passen, ist das M2k mit seiner Standard-Firmware ein völlig eigenständiges
 über USB betriebenes Gerät. Da M2k von LibIIO-Treibern betrieben wird, ist
 es OS X®, Windows® und Linux® unterstützt. Dies ermöglicht es Studierenden, auf
-einer Vielzahl von PC-Plattformen zu lernen und zu forschen.</p>
+einer Vielzahl von PC-Plattformen zu lernen und zu forschen.
+</p>
 </section>
 <hr>
 <section id="started">
@@ -74,12 +89,11 @@ einer Vielzahl von PC-Plattformen zu lernen und zu forschen.</p>
 Einrichten der Software auf Ihrem Host-PC und um das ADALM-2000
 Aktiv-Lernmodul in Betrieb zu nehmen.</p>
 <ul>
-<li><a href="https://wiki.analog.com/university/tools/pluto/matlab">Using the ADALM-2000 with MATLAB</a></li>
-<li><a href="https://wiki.analog.com/university/tools/pluto/gnuradio">Using the ADALM-2000 with GNU Radio</a></li>
-<li><a href="https://wiki.analog.com/university/tools/pluto/other">Using the ADALM-2000 with other tools</a></li>
+<li><a href="https://wiki.analog.com/university/tools/adalm2000/help_support">ADALM-2000 Support</a></li>
+<li><a href="https://wiki.analog.com/university/tools/adalm2000/users">ADALM-2000 for End Users</a></li>
 </ul>
-<p>Detaillierte Dokumentation finden Sie auf der <a href="https://wiki.analog.com/university/tools/pluto">Hauptdokumentationsseite</a> Informationen über die Einhaltung von Vorschriften und Sicherheitshinweise
-finden Sie <a href="https://wiki.analog.com/university/tools/pluto/common/regulatory_compliance">online</a>.</p>
+<p>Detaillierte Dokumentation finden Sie auf der <a href="https://wiki.analog.com/university/tools/m2k">Hauptdokumentationsseite</a> Informationen über die Einhaltung von Vorschriften und Sicherheitshinweise
+finden Sie <a href="https://wiki.analog.com/university/tools/m2k/common/regulatory_compliance">online</a>.</p>
 </section>
 <hr>
 <section id="firmware">
@@ -90,11 +104,11 @@ den Linux Kernel, die   Gerätetreiber- und Anwendungssoftware. Letztendlich
 alle Komponenten welche auf dem M2k ausgeführt werden, und die Kommunikation
 zwischen dem Gerät und dem USB-Host ermöglichen. Diese gebündelte Firmware ist
 mit einer spezifischen Versionsnummer versehen. Um Informationen zur
-Aktualisierung der Firmware zu aktualisieren, konsultieren Sie die <a href="https://wiki.analog.com/university/tools/pluto/common/firmware">Online-Dokumentation</a>.</p>
+Aktualisierung der Firmware zu aktualisieren, konsultieren Sie die <a href="https://wiki.analog.com/university/tools/m2k/common/firmware">Online-Dokumentation</a>.</p>
 <div id="versionsection" class="download">
 <p><strong>Status der M2k Firmware:</strong></p>
 <p><span id="versiontest">Benötige Javascript-Unterstützung zur Überprüfung</span></p>
-<p><a id="plutsdr-fw-download" class="button" href="https://github.com/analogdevicesinc/plutosdr-fw/releases/latest">
+<p><a id="m2k-fw-download" class="button" href="https://github.com/analogdevicesinc/m2k-fw/releases/latest">
 Überprüfe auf die neueste Version</a>
 </div>
 <br>
@@ -149,7 +163,7 @@ derzeit:</p>
 <td>#HOSTNAME#</td>
 </tr>
 <tr>
-<td>IP Address (PLUTO)</td>
+<td>IP Address (M2k)</td>
 <td>#IP#</td>
 </tr>
 <tr>
@@ -161,7 +175,7 @@ derzeit:</p>
 <td>#NETMASK#</td>
 </tr>
 <tr>
-<td>MAC Address (PLUTO)</td>
+<td>MAC Address (M2k)</td>
 <td>#MAC#</td>
 </tr>
 <tr>
@@ -205,13 +219,13 @@ derzeit:</p>
 </tbody>
 </table>
 
-<p>Um diese Einstellungen zu ändern, konsultieren Sie bitte die <a href="https://wiki.analog.com/university/tools/pluto/common/customizing">Online-Dokumentation</a>.</p>
+<p>Um diese Einstellungen zu ändern, konsultieren Sie bitte die <a href="https://wiki.analog.com/university/tools/adalm2000/common/customizing">Online-Dokumentation</a>.</p>
 </section>
 <hr>
 <section id="support">
 <a class="anchor" href="#top">Nach oben</a>
 <h3>Hilfe und Unterstützung</h3>
-<p>Hilfe und Unterstützung für den ADALM-2000 wird <a href="https://wiki.analog.com/university/tools/pluto/help_support">online</a> angeboten.</p>
+<p>Hilfe und Unterstützung für den ADALM-2000 wird <a href="https://wiki.analog.com/university/tools/adalm2000/help_support">online</a> angeboten.</p>
 </section>
 <hr>
 <section id="social">
