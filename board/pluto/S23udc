@@ -25,12 +25,16 @@ create_iiod_context_attributes() {
 	echo -e "hw_serial=$serial\n" >> /etc/libiio.ini
 	echo "fw_version=`grep device-fw /opt/VERSIONS | cut -d ' ' -f 2`" >> /etc/libiio.ini
 	if [ "$USBPID" == "0xb673" ]; then
+		# ADALM-PLUTO
 		for dev in /sys/bus/iio/devices/*; do
 			[ `cat ${dev}/name` == "ad9361-phy" ] && DEV_NAME=`basename ${dev}`
 		done
 
 		echo ad9361-phy,xo_correction=`cat /sys/bus/iio/devices/${DEV_NAME}/xo_correction` >> /etc/libiio.ini
 		echo ad9361-phy,model=`cat /sys/bus/iio/devices/${DEV_NAME}/of_node/compatible` | sed 's/adi,//g' >> /etc/libiio.ini
+
+	elif [ "$USBPID" == "0xb672" ]; then
+		cat /opt/${CALIBFILENAME} | grep ^cal,* >> /etc/libiio.ini
 	fi
 }
 

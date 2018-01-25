@@ -2,9 +2,21 @@
 #
 # Keep the main clock in powerdown until used
 #
+
+source /etc/device_config
+
+handle_calibration_files() {
+	if [[ -s /mnt_jffs2/${CALIBFILENAME} ]]; then
+		cp /mnt_jffs2/${CALIBFILENAME} /opt/${CALIBFILENAME}
+	elif [[ -s /mnt_jffs2/${CALIBFILENAME_FACTORY} ]]; then
+		cp /mnt_jffs2/${CALIBFILENAME_FACTORY} /opt/${CALIBFILENAME}
+	fi
+}
+
 case "$1" in
  start)
-	iio_attr -d m2k-fabric clk_powerdown 1
+	iio_attr -q -d m2k-fabric clk_powerdown 1
+	handle_calibration_files
 	;;
   stop)
 	;;

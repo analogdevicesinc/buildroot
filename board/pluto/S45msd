@@ -1,6 +1,8 @@
 #!/bin/sh
 # Server-side demuxing by default
 
+source /etc/device_config
+
 CONF=/opt/config.txt
 file=/sys/kernel/config/usb_gadget/composite_gadget/functions/mass_storage.0/lun.0/file
 img=/opt/vfat.img
@@ -22,14 +24,22 @@ patch_html_page() {
 	sed -i -e "s/#BUILD#/$BUILD/g" $2 /etc/motd
 }
 
+
 case "$1" in
 	start)
 		echo -n "Starting MSD Daemon: "
 		patch_html_page "/www/index.html /www/img/index_*.html" /www/img/version.js
 		losetup /dev/loop7 $img -o 512
 		mount /dev/loop7 /mnt
+
+		if [ "$TARGET" == "m2k" ]; then
+			cp /opt/${CALIBFILENAME} /mnt
+			md5sum /mnt/${CALIBFILENAME} > /opt/${CALIBFILENAME}.md5
+		fi
+
 		cp $CONF /mnt
 		md5sum /mnt/config.txt > /opt/config.md5
+
 		cp -a /www/* /mnt/
 		mv /mnt/index.html /mnt/info.html
 		sed -i -e "s/..\/index.html/..\/info.html/g" /mnt/img/index_*.html

@@ -221,6 +221,25 @@ do
 
 	md5sum -c /opt/config.md5 || process_ini $conf
 
+	if [ "$TARGET" == "m2k" ]; then
+		if [[ -s /mnt/${CALIBFILENAME} ]]; then
+			md5sum -c /opt/${CALIBFILENAME}.md5
+			if [ $? -ne 0 ]; then
+				cp  /mnt/${CALIBFILENAME} /mnt_jffs2/${CALIBFILENAME} && do_reset=1
+			fi
+
+		else
+			rm /mnt_jffs2/${CALIBFILENAME} && do_reset=1
+		fi
+
+		if [[ -s /mnt/${CALIBFILENAME_FACTORY} ]]; then
+			if [[ ! -s /mnt_jffs2/${CALIBFILENAME_FACTORY} ]]; then
+				cp /mnt/${CALIBFILENAME_FACTORY} /mnt_jffs2/${CALIBFILENAME_FACTORY}
+					do_reset=1
+			fi
+		fi
+	fi
+
 	if [[ $do_reset = 1 ]]
 	then
 		reset
