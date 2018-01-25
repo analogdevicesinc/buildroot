@@ -135,7 +135,7 @@ process_ini() {
 handle_boot_frm () {
 	FILE=$1
 	rm -f /mnt/BOOT_SUCCESS /mnt/BOOT_FAILED /mnt/FAILED_MTD_PARTITION_ERROR /mnt/FAILED_BOOT_CHSUM_ERROR
-	head -3 /proc/mtd > /opt/mtd
+	head -3 /proc/mtd | sed 's/00010000/00001000/g' > /opt/mtd
 
 	md5=`tail -c 33 ${FILE}`
 	head -c -33 ${FILE} > /opt/boot_and_env_and_mtdinfo.bin
