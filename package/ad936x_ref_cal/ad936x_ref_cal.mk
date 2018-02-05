@@ -5,10 +5,11 @@
 ################################################################################
 
 
-AD936X_REF_CAL_VERSION = 9d7601f3ad583091e4e06dc0008a5e05dcdf0701
+AD936X_REF_CAL_VERSION = 01747db5cd60ff64115a73ac1f3bb97911f5c58e
 AD936X_REF_CAL_SITE = https://github.com/analogdevicesinc/plutosdr_scripts.git
 AD936X_REF_CAL_SITE_METHOD = git
 AD936X_REF_CAL_LICENSE = GPLv2
+AD936X_REF_CAL_LICENSE_FILES = LICENSE
 AD936X_REF_CAL_DEPENDENCIES = libiio fftw
 
 define AD936X_REF_CAL_BUILD_CMDS
