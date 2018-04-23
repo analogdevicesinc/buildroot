@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-BUSYBOX_VERSION = 1.26.2
+BUSYBOX_VERSION = 1.27.2
 BUSYBOX_SITE = http://www.busybox.net/downloads
 BUSYBOX_SOURCE = busybox-$(BUSYBOX_VERSION).tar.bz2
 BUSYBOX_LICENSE = GPL-2.0
@@ -65,7 +65,7 @@ define BUSYBOX_PERMISSIONS
 # Set permissions on all applets with BB_SUID_REQUIRE and BB_SUID_MAYBE.
 # 12 Applets are pulled from applets.h using grep command :
 #  grep -r -e "APPLET.*BB_SUID_REQUIRE\|APPLET.*BB_SUID_MAYBE" \
-#  $(@D)/include/applets.h 
+#  $(@D)/include/applets.h
 # These applets are added to the device table and the makedev file
 # ignores the files with type 'F' ( optional files).
 	/usr/bin/wall 			 F 4755 0  0 - - - - -
@@ -181,10 +181,22 @@ define BUSYBOX_INSTALL_UDHCPC_SCRIPT
 endef
 
 ifeq ($(BR2_INIT_BUSYBOX),y)
+
 define BUSYBOX_SET_INIT
 	$(call KCONFIG_ENABLE_OPT,CONFIG_INIT,$(BUSYBOX_BUILD_CONFIG))
 endef
-endif
+
+ifeq ($(BR2_TARGET_GENERIC_GETTY),y)
+define BUSYBOX_SET_GETTY
+	$(SED) '/# GENERIC_SERIAL$$/s~^.*#~$(SYSTEM_GETTY_PORT)::respawn:/sbin/getty -L $(SYSTEM_GETTY_OPTIONS) $(SYSTEM_GETTY_PORT) $(SYSTEM_GETTY_BAUDRATE) $(SYSTEM_GETTY_TERM) #~' \
+		$(TARGET_DIR)/etc/inittab
+endef
+BUSYBOX_TARGET_FINALIZE_HOOKS += BUSYBOX_SET_GETTY
+endif # BR2_TARGET_GENERIC_GETTY
+
+BUSYBOX_TARGET_FINALIZE_HOOKS += SYSTEM_REMOUNT_ROOT_INITTAB
+
+endif # BR2_INIT_BUSYBOX
 
 ifeq ($(BR2_PACKAGE_BUSYBOX_SELINUX),y)
 BUSYBOX_DEPENDENCIES += host-pkgconf libselinux libsepol
@@ -209,7 +221,7 @@ define BUSYBOX_INSTALL_LOGGING_SCRIPT
 	if grep -q CONFIG_SYSLOGD=y $(@D)/.config; then \
 		$(INSTALL) -m 0755 -D package/busybox/S01logging \
 			$(TARGET_DIR)/etc/init.d/S01logging; \
-	else rm -f $(TARGET_DIR)/etc/init.d/S01logging; fi
+	fi
 endef
 
 ifeq ($(BR2_INIT_BUSYBOX),y)
@@ -236,6 +248,10 @@ define BUSYBOX_LINUX_PAM
 	$(call KCONFIG_ENABLE_OPT,CONFIG_PAM,$(BUSYBOX_BUILD_CONFIG))
 endef
 BUSYBOX_DEPENDENCIES += linux-pam
+else
+define BUSYBOX_LINUX_PAM
+	$(call KCONFIG_DISABLE_OPT,CONFIG_PAM,$(BUSYBOX_BUILD_CONFIG))
+endef
 endif
 
 # Telnet support

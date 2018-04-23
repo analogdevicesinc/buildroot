@@ -4,9 +4,11 @@ import subprocess
 
 import infra
 
+
 class Builder(object):
     def __init__(self, config, builddir, logtofile):
-        self.config = config
+        self.config = '\n'.join([line.lstrip() for line in
+                                 config.splitlines()]) + '\n'
         self.builddir = builddir
         self.logfile = infra.open_log_file(builddir, "build", logtofile)
 
@@ -17,6 +19,10 @@ class Builder(object):
         config_file = os.path.join(self.builddir, ".config")
         with open(config_file, "w+") as cf:
             cf.write(self.config)
+        # dump the defconfig to the logfile for easy debugging
+        self.logfile.write("> start defconfig\n" + self.config +
+                           "> end defconfig\n")
+        self.logfile.flush()
 
         cmd = ["make",
                "O={}".format(self.builddir),

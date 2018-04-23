@@ -4,10 +4,11 @@
 #
 ################################################################################
 
-NODEJS_VERSION = 8.1.2
+NODEJS_VERSION = 8.11.1
 NODEJS_SOURCE = node-v$(NODEJS_VERSION).tar.xz
 NODEJS_SITE = http://nodejs.org/dist/v$(NODEJS_VERSION)
-NODEJS_DEPENDENCIES = host-python host-nodejs zlib \
+NODEJS_DEPENDENCIES = host-python host-nodejs c-ares \
+	libhttpparser libuv zlib \
 	$(call qstrip,$(BR2_PACKAGE_NODEJS_MODULES_ADDITIONAL_DEPS))
 HOST_NODEJS_DEPENDENCIES = host-python host-zlib
 NODEJS_LICENSE = MIT (core code); MIT, Apache and BSD family licenses (Bundled components)
@@ -16,6 +17,9 @@ NODEJS_LICENSE_FILES = LICENSE
 NODEJS_CONF_OPTS = \
 	--without-snapshot \
 	--shared-zlib \
+	--shared-cares \
+	--shared-http-parser \
+	--shared-libuv \
 	--without-dtrace \
 	--without-etw \
 	--dest-os=linux
@@ -78,8 +82,6 @@ define HOST_NODEJS_INSTALL_CMDS
 		$(HOST_CONFIGURE_OPTS) \
 		NO_LOAD=cctest.target.mk \
 		PATH=$(@D)/bin:$(BR_PATH)
-
-	$(INSTALL) -m755 -D $(@D)/out/Release/mkpeephole $(HOST_DIR)/bin/mkpeephole
 endef
 
 ifeq ($(BR2_i386),y)
@@ -127,9 +129,6 @@ define NODEJS_CONFIGURE_CMDS
 		$(if $(NODEJS_MIPS_FPU_MODE),--with-mips-fpu-mode=$(NODEJS_MIPS_FPU_MODE)) \
 		$(NODEJS_CONF_OPTS) \
 	)
-
-	# use host version of mkpeephole
-	sed "s#<(mkpeephole_exec)#$(HOST_DIR)/bin/mkpeephole#g" -i $(@D)/deps/v8/src/v8.gyp
 endef
 
 define NODEJS_BUILD_CMDS

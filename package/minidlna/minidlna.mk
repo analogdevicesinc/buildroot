@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-MINIDLNA_VERSION = 1.2.0
-MINIDLNA_SITE = http://downloads.sourceforge.net/project/minidlna/minidlna/$(MINIDLNA_VERSION)
+MINIDLNA_VERSION = 1.2.1
+MINIDLNA_SITE = https://downloads.sourceforge.net/project/minidlna/minidlna/$(MINIDLNA_VERSION)
 MINIDLNA_LICENSE = GPL-2.0, BSD-3-Clause
 MINIDLNA_LICENSE_FILES = COPYING LICENCE.miniupnpd
 
@@ -29,7 +29,7 @@ define MINIDLNA_INSTALL_INIT_SYSV
 endef
 
 define MINIDLNA_INSTALL_INIT_SYSTEMD
-	$(INSTALL) -D -m 0755 package/minidlna/minidlnad.service \
+	$(INSTALL) -D -m 0644 package/minidlna/minidlnad.service \
 		$(TARGET_DIR)/usr/lib/systemd/system/minidlnad.service
 
 	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants

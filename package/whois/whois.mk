@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-WHOIS_VERSION = 5.2.14
-WHOIS_SITE = http://snapshot.debian.org/archive/debian/20161230T032015Z/pool/main/w/whois
+WHOIS_VERSION = 5.2.17
+WHOIS_SITE = http://snapshot.debian.org/archive/debian/20170727T214450Z/pool/main/w/whois
 WHOIS_SOURCE = whois_$(WHOIS_VERSION).tar.xz
 # take precedence over busybox implementation
 WHOIS_DEPENDENCIES = $(if $(BR2_PACKAGE_BUSYBOX),busybox) $(TARGET_NLS_DEPENDENCIES)
@@ -27,13 +27,22 @@ WHOIS_DEPENDENCIES += libidn
 WHOIS_MAKE_ENV += HAVE_LIBIDN=1
 endif
 
+ifeq ($(BR2_SYSTEM_ENABLE_NLS),y)
+WHOIS_BUILD_TARGETS =
+WHOIS_INSTALL_TARGETS = install
+else
+WHOIS_BUILD_TARGETS = Makefile.depend whois mkpasswd
+WHOIS_INSTALL_TARGETS = install-whois install-mkpasswd
+endif
+
 define WHOIS_BUILD_CMDS
-	$(WHOIS_MAKE_ENV) $(MAKE) $(WHOIS_MAKE_OPTS) -C $(@D)
+	$(WHOIS_MAKE_ENV) $(MAKE) $(WHOIS_MAKE_OPTS) \
+		$(WHOIS_BUILD_TARGETS) -C $(@D)
 endef
 
 define WHOIS_INSTALL_TARGET_CMDS
 	$(WHOIS_MAKE_ENV) $(MAKE) $(WHOIS_MAKE_OPTS) \
-		BASEDIR="$(TARGET_DIR)" install -C $(@D)
+		BASEDIR="$(TARGET_DIR)" $(WHOIS_INSTALL_TARGETS) -C $(@D)
 endef
 
 $(eval $(generic-package))

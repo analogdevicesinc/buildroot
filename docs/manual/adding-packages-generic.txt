@@ -315,7 +315,10 @@ information is (assuming the package name is +libfoo+) :
   ** +local+ for a local source code directory. One should use this
      when +LIBFOO_SITE+ specifies a local directory path containing
      the package source code. Buildroot copies the contents of the
-     source directory into the package's build directory.
+     source directory into the package's build directory. Note that
+     for +local+ packages, no patches are applied. If you need to
+     still patch the source code, use +LIBFOO_POST_RSYNC_HOOKS+, see
+     xref:hooks-rsync[].
 
 * +LIBFOO_GIT_SUBMODULES+ can be set to +YES+ to create an archive
   with the git submodules in the repository.  This is only available
@@ -449,6 +452,13 @@ information is (assuming the package name is +libfoo+) :
   processors can't be enlarged at run time. The default stack size for the
   FLAT binary format is only 4k bytes. If the application consumes more stack,
   append the required number here.
+
+* +LIBFOO_BIN_ARCH_EXCLUDE+ is a space-separated list of paths (relative
+  to the target directory) to ignore when checking that the package
+  installs correctly cross-compiled binaries. You seldom need to set this
+  variable, unless the package installs binary blobs outside the default
+  locations, `/lib/firmware`, `/usr/lib/firmware`, `/lib/modules`,
+  `/usr/lib/modules`, and `/usr/share`, which are automatically excluded.
 
 The recommended way to define these variables is to use the following
 syntax:

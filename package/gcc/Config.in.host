@@ -9,10 +9,10 @@ choice
 	  Select the version of gcc you wish to use.
 
 config BR2_GCC_VERSION_ARC
-	bool "gcc arc (6.x)"
+	bool "gcc arc (7.x)"
 	# Only supported architecture
 	depends on BR2_arc
-	select BR2_TOOLCHAIN_GCC_AT_LEAST_6
+	select BR2_TOOLCHAIN_GCC_AT_LEAST_7
 
 config BR2_GCC_VERSION_OR1K
 	bool "gcc or1k (5.x)"
@@ -22,54 +22,43 @@ config BR2_GCC_VERSION_OR1K
 
 config BR2_GCC_VERSION_4_9_X
 	bool "gcc 4.9.x"
+	depends on !BR2_ARCH_NEEDS_GCC_AT_LEAST_5
 	# Broken or unsupported architectures
-	depends on !BR2_arc && !BR2_bfin && !BR2_or1k
-	# Broken or unsupported ARM cores
-	depends on !BR2_cortex_a17 && !BR2_cortex_a72
-	# Unsupported MIPS cores
-	depends on !BR2_mips_interaptiv
-	# Unsupported for MIPS R5
-	depends on !BR2_MIPS_CPU_MIPS32R5 && !BR2_MIPS_CPU_MIPS64R5
-	# Unsupported for MIPS R6
-	depends on !BR2_MIPS_CPU_MIPS32R6 && !BR2_MIPS_CPU_MIPS64R6
-	# musl microblaze unsupported
+	depends on !BR2_arc
+	depends on !BR2_or1k
+	# musl on microblaze, ppc64 and mips64 unsupported
 	depends on !(BR2_TOOLCHAIN_USES_MUSL && (BR2_microblazeel || BR2_microblazebe))
-	# musl ppc64 unsupported
 	depends on !(BR2_TOOLCHAIN_USES_MUSL && (BR2_powerpc64 || BR2_powerpc64le))
-	# musl mips64 unsupported
 	depends on !(BR2_TOOLCHAIN_USES_MUSL && (BR2_mips64 || BR2_mips64el))
-	# PR60102 https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60102
+	# glibc >= 2.26 needs gcc >= 6.2
+	depends on !(BR2_TOOLCHAIN_USES_GLIBC && BR2_powerpc64le)
 	select BR2_TOOLCHAIN_GCC_AT_LEAST_4_9
 
 config BR2_GCC_VERSION_5_X
 	bool "gcc 5.x"
+	depends on !BR2_ARCH_NEEDS_GCC_AT_LEAST_6
 	# Broken or unsupported architectures
-	depends on !BR2_arc && !BR2_bfin && !BR2_or1k
-	# musl ppc64 unsupported
+	depends on !BR2_arc
+	depends on !BR2_or1k
+	# musl on ppc64 and mips64 unsupported
 	depends on !(BR2_TOOLCHAIN_USES_MUSL && (BR2_powerpc64 || BR2_powerpc64le))
-	# Unsupported MIPS cores
-	depends on !BR2_mips_interaptiv && !BR2_mips_m5150 && \
-		!BR2_mips_m6250 && !BR2_mips_i6400 && !BR2_mips_p6600
-	# musl mips64 unsupported
 	depends on !(BR2_TOOLCHAIN_USES_MUSL && (BR2_mips64 || BR2_mips64el))
+	# glibc >= 2.26 needs gcc >= 6.2
+	depends on !(BR2_TOOLCHAIN_USES_GLIBC && BR2_powerpc64le)
 	select BR2_TOOLCHAIN_GCC_AT_LEAST_5
 
 config BR2_GCC_VERSION_6_X
 	bool "gcc 6.x"
+	depends on !BR2_ARCH_NEEDS_GCC_AT_LEAST_7
 	# Broken or unsupported architectures
 	depends on !BR2_arc
 	depends on !BR2_or1k
-	# Unsupported MIPS cores
-	depends on !BR2_mips_m6250 && !BR2_mips_p6600
 	select BR2_TOOLCHAIN_GCC_AT_LEAST_6
 
 config BR2_GCC_VERSION_7_X
 	bool "gcc 7.x"
 	# Broken or unsupported architectures
-	depends on !BR2_arc
 	depends on !BR2_or1k
-	# Unsupported MIPS cores
-	depends on !BR2_mips_m6250 && !BR2_mips_p6600
 	select BR2_TOOLCHAIN_GCC_AT_LEAST_7
 
 endchoice
@@ -88,11 +77,11 @@ config BR2_GCC_SUPPORTS_FINEGRAINEDMTUNE
 config BR2_GCC_VERSION
 	string
 	default "4.9.4"     if BR2_GCC_VERSION_4_9_X
-	default "5.4.0"     if BR2_GCC_VERSION_5_X
-	default "6.3.0"     if BR2_GCC_VERSION_6_X
-	default "7.1.0"     if BR2_GCC_VERSION_7_X
-	default "arc-2017.03" if BR2_GCC_VERSION_ARC
-	default "musl-5.4.0" if BR2_GCC_VERSION_OR1K
+	default "5.5.0"     if BR2_GCC_VERSION_5_X
+	default "6.4.0"     if BR2_GCC_VERSION_6_X
+	default "7.3.0"     if BR2_GCC_VERSION_7_X
+	default "arc-2017.09-release" if BR2_GCC_VERSION_ARC
+	default "or1k-musl-5.4.0-20170218" if BR2_GCC_VERSION_OR1K
 
 config BR2_EXTRA_GCC_CONFIG_OPTIONS
 	string "Additional gcc options"
@@ -156,6 +145,10 @@ config BR2_GCC_ENABLE_LIBMUDFLAP
 
 config BR2_GCC_ENABLE_GRAPHITE
 	bool "Enable graphite support"
+	depends on BR2_TOOLCHAIN_GCC_AT_LEAST_5
 	help
 	  This option enables the graphite optimizations in the
 	  compiler.
+
+comment "graphite support needs gcc >= 5.x"
+	depends on !BR2_TOOLCHAIN_GCC_AT_LEAST_5

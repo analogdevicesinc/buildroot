@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-QEMU_VERSION = 2.8.0
-QEMU_SOURCE = qemu-$(QEMU_VERSION).tar.bz2
-QEMU_SITE = http://wiki.qemu.org/download
+QEMU_VERSION = 2.10.2
+QEMU_SOURCE = qemu-$(QEMU_VERSION).tar.xz
+QEMU_SITE = http://download.qemu.org
 QEMU_LICENSE = GPL-2.0, LGPL-2.1, MIT, BSD-3-Clause, BSD-2-Clause, Others/BSD-1c
 QEMU_LICENSE_FILES = COPYING COPYING.LIB
 # NOTE: there is no top-level license file for non-(L)GPL licenses;
@@ -212,6 +212,13 @@ else
 QEMU_OPTS += --disable-tools
 endif
 
+ifeq ($(BR2_PACKAGE_LIBSSH2),y)
+QEMU_OPTS += --enable-libssh2
+QEMU_DEPENDENCIES += libssh2
+else
+QEMU_OPTS += --disable-libssh2
+endif
+
 # Override CPP, as it expects to be able to call it like it'd
 # call the compiler.
 define QEMU_CONFIGURE_CMDS
@@ -238,7 +245,6 @@ define QEMU_CONFIGURE_CMDS
 			--disable-curses \
 			--disable-curl \
 			--disable-bluez \
-			--disable-uuid \
 			--disable-vde \
 			--disable-linux-aio \
 			--disable-cap-ng \

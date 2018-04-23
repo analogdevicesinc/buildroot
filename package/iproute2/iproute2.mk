@@ -4,12 +4,12 @@
 #
 ################################################################################
 
-IPROUTE2_VERSION = 4.11.0
+IPROUTE2_VERSION = 4.14.1
 IPROUTE2_SOURCE = iproute2-$(IPROUTE2_VERSION).tar.xz
 IPROUTE2_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/net/iproute2
 IPROUTE2_DEPENDENCIES = host-bison host-flex host-pkgconf \
 	$(if $(BR2_PACKAGE_LIBMNL),libmnl)
-IPROUTE2_LICENSE = GPL-2.0
+IPROUTE2_LICENSE = GPL-2.0+
 IPROUTE2_LICENSE_FILES = COPYING
 
 # If both iproute2 and busybox are selected, make certain we win
@@ -31,9 +31,8 @@ define IPROUTE2_WITH_IPTABLES
 endef
 else
 define IPROUTE2_WITH_IPTABLES
-	# em_ipset needs xtables, but configure misdetects it
-	echo "TC_CONFIG_IPSET:=n" >>$(@D)/Config
-	echo "TC_CONFIG_XT:=n" >>$(@D)/Config
+	# m_xt.so is built unconditionally
+	echo "TC_CONFIG_XT:=n" >>$(@D)/config.mk
 endef
 endif
 
@@ -42,7 +41,7 @@ ifeq ($(BR2_PACKAGE_BERKELEYDB_COMPAT185)$(BR2_TOOLCHAIN_HAS_THREADS),yy)
 IPROUTE2_DEPENDENCIES += berkeleydb
 else
 define IPROUTE2_DISABLE_ARPD
-	echo "HAVE_BERKELEY_DB:=n" >> $(@D)/Config
+	echo "HAVE_BERKELEY_DB:=n" >> $(@D)/config.mk
 endef
 endif
 

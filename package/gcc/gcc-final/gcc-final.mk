@@ -15,8 +15,9 @@ HOST_GCC_FINAL_DEPENDENCIES = \
 HOST_GCC_FINAL_EXCLUDES = $(HOST_GCC_EXCLUDES)
 HOST_GCC_FINAL_POST_EXTRACT_HOOKS += HOST_GCC_FAKE_TESTSUITE
 
-ifneq ($(ARCH_XTENSA_CORE_NAME),)
+ifneq ($(ARCH_XTENSA_OVERLAY_FILE),)
 HOST_GCC_FINAL_POST_EXTRACT_HOOKS += HOST_GCC_XTENSA_OVERLAY_EXTRACT
+HOST_GCC_FINAL_EXTRA_DOWNLOADS += $(ARCH_XTENSA_OVERLAY_URL)
 endif
 
 HOST_GCC_FINAL_POST_PATCH_HOOKS += HOST_GCC_APPLY_PATCHES
@@ -75,6 +76,11 @@ endif
 
 ifeq ($(BR2_bfin),y)
 HOST_GCC_FINAL_CONF_OPTS += --disable-symvers
+endif
+
+# libcilkrts does not support v8
+ifeq ($(BR2_sparc),y)
+HOST_GCC_FINAL_CONF_OPTS += --disable-libcilkrts
 endif
 
 # Disable shared libs like libstdc++ if we do static since it confuses linking

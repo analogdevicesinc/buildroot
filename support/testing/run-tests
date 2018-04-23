@@ -7,6 +7,7 @@ import multiprocessing
 
 from infra.basetest import BRTest
 
+
 def main():
     parser = argparse.ArgumentParser(description='Run Buildroot tests')
     parser.add_argument('testname', nargs='*',
@@ -28,6 +29,8 @@ def main():
                         help='number of testcases to run simultaneously')
     parser.add_argument('-j', '--jlevel', type=int,
                         help='BR2_JLEVEL to use for each testcase')
+    parser.add_argument('--timeout-multiplier', type=int, default=1,
+                        help='increase timeouts (useful for slow machines)')
 
     args = parser.parse_args()
 
@@ -55,6 +58,7 @@ def main():
             return 1
 
     BRTest.downloaddir = os.path.abspath(args.download)
+    os.putenv("BR2_DL_DIR", BRTest.downloaddir)
 
     if args.output is None:
         print "Missing output directory, please use -o/--output"
@@ -97,15 +101,23 @@ def main():
         # the user can override the auto calculated value
         BRTest.jlevel = args.jlevel
 
+    if args.timeout_multiplier < 1:
+        print "Invalid multiplier for timeout values"
+        print ""
+        parser.print_help()
+        return 1
+    BRTest.timeout_multiplier = args.timeout_multiplier
+
     nose2_args = ["-v",
                   "-N", str(args.testcases),
-                  "-s", "support/testing",
-                  "-c", "support/testing/conf/unittest.cfg"]
+                  "-s", test_dir,
+                  "-c", os.path.join(test_dir, "conf/unittest.cfg")]
 
     if len(args.testname) != 0:
         nose2_args += args.testname
 
     nose2.discover(argv=nose2_args)
+
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-SWUPDATE_VERSION = 2017.04
+SWUPDATE_VERSION = 2017.11
 SWUPDATE_SITE = $(call github,sbabic,swupdate,$(SWUPDATE_VERSION))
 SWUPDATE_LICENSE = GPL-2.0+, MIT, Public Domain
 SWUPDATE_LICENSE_FILES = COPYING
@@ -41,6 +41,10 @@ endif
 
 ifeq ($(BR2_PACKAGE_HAS_LUAINTERPRETER),y)
 SWUPDATE_DEPENDENCIES += luainterpreter host-pkgconf
+# defines the base name for the pkg-config file ("lua" or "luajit")
+define SWUPDATE_SET_LUA_VERSION
+	$(call KCONFIG_SET_OPT,CONFIG_LUAPKG,$(BR2_PACKAGE_PROVIDES_LUAINTERPRETER),$(SWUPDATE_BUILD_CONFIG))
+endef
 SWUPDATE_MAKE_ENV += HAVE_LUA=y
 else
 SWUPDATE_MAKE_ENV += HAVE_LUA=n
@@ -110,6 +114,7 @@ endef
 define SWUPDATE_KCONFIG_FIXUP_CMDS
 	$(SWUPDATE_PREFER_STATIC)
 	$(SWUPDATE_SET_BUILD_OPTIONS)
+	$(SWUPDATE_SET_LUA_VERSION)
 endef
 
 define SWUPDATE_BUILD_CMDS

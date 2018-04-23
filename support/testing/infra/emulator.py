@@ -5,10 +5,14 @@ import infra
 
 class Emulator(object):
 
-    def __init__(self, builddir, downloaddir, logtofile):
+    def __init__(self, builddir, downloaddir, logtofile, timeout_multiplier):
         self.qemu = None
         self.downloaddir = downloaddir
         self.logfile = infra.open_log_file(builddir, "run", logtofile)
+        # We use elastic runners on the cloud to runs our tests. Those runners
+        # can take a long time to run the emulator. Use a timeout multiplier
+        # when running the tests to avoid sporadic failures.
+        self.timeout_multiplier = timeout_multiplier
 
     # Start Qemu to boot the system
     #
@@ -65,7 +69,9 @@ class Emulator(object):
             qemu_cmd += ["-append", " ".join(kernel_cmdline)]
 
         self.logfile.write("> starting qemu with '%s'\n" % " ".join(qemu_cmd))
-        self.qemu = pexpect.spawn(qemu_cmd[0], qemu_cmd[1:], timeout=5)
+        self.qemu = pexpect.spawn(qemu_cmd[0], qemu_cmd[1:],
+                                  timeout=5 * self.timeout_multiplier,
+                                  env={"QEMU_AUDIO_DRV": "none"})
         # We want only stdout into the log to avoid double echo
         self.qemu.logfile_read = self.logfile
 
@@ -75,7 +81,7 @@ class Emulator(object):
         # The login prompt can take some time to appear when running multiple
         # instances in parallel, so set the timeout to a large value
         index = self.qemu.expect(["buildroot login:", pexpect.TIMEOUT],
-                                 timeout=60)
+                                 timeout=60 * self.timeout_multiplier)
         if index != 0:
             self.logfile.write("==> System does not boot")
             raise SystemError("System does not boot")
@@ -89,11 +95,13 @@ class Emulator(object):
             raise SystemError("Cannot login")
         self.run("dmesg -n 1")
 
-    # Run the given 'cmd' on the target
+    # Run the given 'cmd' with a 'timeout' on the target
     # return a tuple (output, exit_code)
-    def run(self, cmd):
+    def run(self, cmd, timeout=-1):
         self.qemu.sendline(cmd)
-        self.qemu.expect("# ")
+        if timeout != -1:
+            timeout *= self.timeout_multiplier
+        self.qemu.expect("# ", timeout=timeout)
         # Remove double carriage return from qemu stdout so str.splitlines()
         # works as expected.
         output = self.qemu.before.replace("\r\r", "\r").splitlines()[1:]

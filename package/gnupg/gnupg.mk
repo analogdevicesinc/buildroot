@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-GNUPG_VERSION = 1.4.21
+GNUPG_VERSION = 1.4.22
 GNUPG_SOURCE = gnupg-$(GNUPG_VERSION).tar.bz2
-GNUPG_SITE = ftp://ftp.gnupg.org/gcrypt/gnupg
+GNUPG_SITE = https://gnupg.org/ftp/gcrypt/gnupg
 GNUPG_LICENSE = GPL-3.0+
 GNUPG_LICENSE_FILES = COPYING
 GNUPG_DEPENDENCIES = zlib ncurses $(if $(BR2_PACKAGE_LIBICONV),libiconv)
@@ -17,6 +17,18 @@ GNUPG_CONF_OPTS = \
 	--disable-regex \
 	--enable-sha256 \
 	--enable-sha512
+
+HOST_GNUPG_DEPENDENCIES = host-zlib host-ncurses
+HOST_GNUPG_CONF_OPTS = \
+	--disable-rpath \
+	--enable-minimal \
+	--disable-regex \
+	--enable-sha256 \
+	--enable-sha512 \
+	--enable-aes \
+	--enable-rsa \
+	--without-libcurl \
+	--without-readline
 
 # gnupg doesn't support assembly for coldfire
 ifeq ($(BR2_m68k_cf),y)
@@ -68,3 +80,4 @@ GNUPG_POST_INSTALL_TARGET_HOOKS += GNUPG_REMOVE_GPGSPLIT
 endif
 
 $(eval $(autotools-package))
+$(eval $(host-autotools-package))
