@@ -1,6 +1,7 @@
 #!/bin/sh
 # args from BR2_ROOTFS_POST_SCRIPT_ARGS
 # $2    board name
+set -e
 
 INSTALL=install
 
