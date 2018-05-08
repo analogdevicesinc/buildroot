@@ -1,6 +1,7 @@
 #!/bin/sh
 # args from BR2_ROOTFS_POST_SCRIPT_ARGS
 # $2    board name
+set -e
 
 INSTALL=install
 
@@ -31,8 +32,8 @@ genimage                           \
 	--outputpath "${TARGET_DIR}/opt/" \
 	--config "${GENIMAGE_CFG}"
 
-rm ${TARGET_DIR}/opt/boot.vfat
-rm ${TARGET_DIR}/etc/init.d/S99iiod
+rm -f ${TARGET_DIR}/opt/boot.vfat
+rm -f ${TARGET_DIR}/etc/init.d/S99iiod
 
 mkdir -p ${TARGET_DIR}/www/img
 mkdir -p ${TARGET_DIR}/mnt_jffs2
