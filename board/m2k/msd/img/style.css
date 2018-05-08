@@ -118,3 +118,10 @@ a{
 .anchor{
 	float: right;
 }
+.boxed {
+	box-sizing: border-box;
+	padding: 10px;
+	border: 1px solid;
+	border-color: #636363;
+	border-radius: 5px;
+}
