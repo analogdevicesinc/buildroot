@@ -13,5 +13,5 @@
 *.rej
 *~
 *.pyc
-board/pluto/VERSIONS
-board/m2k/VERSIONS
+*.swp
+board/*/VERSIONS
