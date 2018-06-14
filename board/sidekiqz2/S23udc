@@ -52,7 +52,7 @@ case "$1" in
 	echo $serial > /etc/serial
 	sha1=`echo $serial | sha1sum`
 
-	echo 0x0456 > $GADGET/idVendor
+	echo 0x2FA2  > $GADGET/idVendor
 	echo $USBPID > $GADGET/idProduct
 
 	mkdir -p $GADGET/strings/0x409
