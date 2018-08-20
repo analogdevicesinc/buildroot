@@ -133,7 +133,7 @@ process_ini() {
 }
 
 handle_boot_frm () {
-	FILE=$1
+	FILE="$1"
 	rm -f /mnt/BOOT_SUCCESS /mnt/BOOT_FAILED /mnt/FAILED_MTD_PARTITION_ERROR /mnt/FAILED_BOOT_CHSUM_ERROR
 	head -3 /proc/mtd | sed 's/00010000/00001000/g' > /opt/mtd
 
@@ -170,8 +170,8 @@ handle_boot_frm () {
 
 
 handle_frimware_frm () {
-	FILE=$1
-	MAGIC=$2
+	FILE="$1"
+	MAGIC="$2"
 	rm -f /mnt/SUCCESS /mnt/FAILED /mnt/FAILED_FIRMWARE_CHSUM_ERROR
 	md5=`tail -c 33 ${FILE}`
 	head -c -33 ${FILE} > /opt/firmware.frm
@@ -180,7 +180,7 @@ handle_frimware_frm () {
 	if [ "$frm" = "$md5" ]
 	then
 		flash_indication_on
-		grep -q ${MAGIC}  /opt/firmware.frm && dd if=/opt/firmware.frm of=/dev/mtdblock3 bs=64k && fw_setenv fit_size ${FRM_SIZE} && do_reset=1 && touch /mnt/SUCCESS || touch /mnt/FAILED
+		grep -q "${MAGIC}"  /opt/firmware.frm && dd if=/opt/firmware.frm of=/dev/mtdblock3 bs=64k && fw_setenv fit_size ${FRM_SIZE} && do_reset=1 && touch /mnt/SUCCESS || touch /mnt/FAILED
 		flash_indication_off
 	else
 		echo $frm $md5 > /mnt/FAILED_FIRMWARE_CHSUM_ERROR
@@ -211,12 +211,12 @@ do
 
 	if [[ -s ${FIRMWARE} ]]
 	then 
-		handle_frimware_frm ${FIRMWARE} ${FRM_MAGIC}
+		handle_frimware_frm "${FIRMWARE}" "${FRM_MAGIC}"
 	fi
 
 	if [[ -s ${bootimage} ]]
 	then
-		handle_boot_frm ${bootimage}
+		handle_boot_frm "${bootimage}"
 	fi
 
 	md5sum -c /opt/config.md5 || process_ini $conf
