@@ -40,6 +40,7 @@ mkdir -p ${TARGET_DIR}/mnt_jffs2
 mkdir -p ${TARGET_DIR}/etc/wpa_supplicant/
 
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/update.sh ${TARGET_DIR}/sbin/
+${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/update_frm.sh ${TARGET_DIR}/sbin/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S10mdev ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S15watchdog ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/S16xadc ${TARGET_DIR}/etc/init.d/
