@@ -8,7 +8,7 @@ file=/sys/kernel/config/usb_gadget/composite_gadget/functions/mass_storage.0/lun
 img=/opt/vfat.img
 
 patch_html_page() {
-	LINUX=`uname -a | tr / -`
+	LINUX=`uname -a | tr / - | tr '\n' ';' ; echo -n $(nproc) "core(s)"`
 	MODEL=`cat /sys/firmware/devicetree/base/model | tr / -`
 	SERIAL=`cat /sys/kernel/config/usb_gadget/composite_gadget/strings/0x409/serialnumber`
 	MACHOST=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/rndis.0/host_addr`
