@@ -9,7 +9,12 @@ img=/opt/vfat.img
 
 patch_html_page() {
 	LINUX=`uname -a | tr / -`
-	MODEL=`cat /sys/firmware/devicetree/base/model | tr / -`
+	RADIO=`dmesg | grep ad9361_probe | sed -e 's/\s\s*/\n/g' | grep -i AD936[34] | sed 's/[()]//g' | tr [a-z] [A-Z] | tr / -`
+	if [ -z "$RADIO" ] ; then
+		MODEL=`cat /sys/firmware/devicetree/base/model | tr / -`
+	else
+		MODEL=`cat /sys/firmware/devicetree/base/model | tr / - | sed "s/AD936[34]/$RADIO/"`
+	fi
 	SERIAL=`cat /sys/kernel/config/usb_gadget/composite_gadget/strings/0x409/serialnumber`
 	MACHOST=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/rndis.0/host_addr`
 	MAC=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/rndis.0/dev_addr`
