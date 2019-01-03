@@ -43,7 +43,7 @@
 <p><a class="button" href="#firmware">Upgrade Firmware</a></p>
 <p><a class="button" href="#version">Version Info</a></p>
 <p><a class="button" href="#config">Config Settings</a></p>
-<p><a class="button" href="#wifi">Wifi Settings</a></p>
+<p><a class="button" href="#wifi">Wi-Fi Settings</a></p>
 <p><a class="button" href="#wired">Wired Settings</a></p>
 </div>
 </div>
@@ -67,21 +67,21 @@
 <h1>Welcome to the <strong>ADALM-PLUTO</strong> Active Learning Module</h1>
 <a href="http://www.analog.com/education"><img src="./img/prof_blue.png" alt="ADI Professor" style="float:left" /></a>
 <p style="margin-bottom:0em;">Thank you for purchasing the <a href="http://www.analog.com/plutosdr">ADALM-PLUTO</a> Active Learning Module (PlutoSDR). The easy to use PlutoSDR helps introduce the fundamentals of software-defined radio (SDR), radio frequency (RF), and wireless communications to everyone. Designed for users at all levels and all backgrounds, the PlutoSDR can be used as:</p>
-<ul style="margin-left:8em; margin-top:0em;"><li>a learning module for instructor-led or self-directed learning to develop a foundation in real-world RF and communications in the pursuit of science, technology, or engineering degrees.</li>
-<li>a tool for practicing engineers and industry practitioners who are interested in mastering the design, implementation, and experimentation of communication systems. The PlutoSDR can be used to examine how well the communications system operates in terms of successfully transmitting or recovering intercepted signals.</li>
-<li>a tool for practicing RF engineers who use <a href="https://en.wikipedia.org/wiki/Spectrum_analyzer">spectrum analyzers</a> or <a href="https://en.wikipedia.org/wiki/Signal_generator#Vector_signal_generator">vector signal generators</a> to capture or create and analyze RF signals. The Pluto SDR with the appropriate <a href="#framework">software tool</a> is capable of analyzing or generating digitally-modulated radio signals that may use any of a large number of formats used in modern communication systems.</li>
-<li>a complete reference design (hardware, HDL, embedded software, host software) for developers interested in creating their own products based on <a href="https://www.analog.com/en/applications/technology/sdr-radioverse-pavilion-home/wideband-transceivers.html">Analog Devices Wideband Transceivers</a>.</li></ul>
-<p>Based on the <a href="http://www.analog.com/AD9363">AD9363</a>, The PlutoSDR features independent receive and transmit channels that can be operated in full duplex. The PlutoSDR can generate or acquire RF analog signals from 325 MHz to 3800 MHz at up to 61.44 MegaSamples per second (MSPS). Small enough to fit in a shirt pocket, the PlutoSDR is completely self-contained and entirely USB powered with the default firmware. PlutoSDR is enabled by libiio drivers and supports OS X® , Windows®,  and Linux®,  allowing students to learn and explore on a variety of host platforms.</p>
+<ul style="margin-left:8em; margin-top:0em;"><li>A learning module for instructor-led or self-directed learning to develop a foundation in real-world RF and communications in the pursuit of science, technology, or engineering degrees.</li>
+<li>A tool for practicing engineers and industry practitioners who are interested in mastering the design, implementation, and experimentation of communication systems. The PlutoSDR can be used to examine how well the communications system operates in terms of successfully transmitting or recovering intercepted signals.</li>
+<li>A tool for practicing RF engineers who use <a href="https://en.wikipedia.org/wiki/Spectrum_analyzer">spectrum analyzers</a> or <a href="https://en.wikipedia.org/wiki/Signal_generator#Vector_signal_generator">vector signal generators</a> to capture or create and analyze RF signals. The PlutoSDR with the appropriate <a href="#framework">software tool</a> is capable of analyzing or generating digitally-modulated radio signals that may use any of a large number of formats used in modern communication systems.</li>
+<li>A complete reference design (hardware, HDL, embedded software, host software) for developers interested in creating their own products based on <a href="https://www.analog.com/en/applications/technology/sdr-radioverse-pavilion-home/wideband-transceivers.html">Analog Devices Wideband Transceivers</a>.</li></ul>
+<p>Based on the <a href="http://www.analog.com/AD9363">AD9363</a>, the PlutoSDR features independent receive and transmit channels that can be operated in full duplex. The PlutoSDR can generate or acquire RF analog signals from 325 MHz to 3800 MHz at up to 61.44 MegaSamples per second (MSPS). Small enough to fit in a shirt pocket, the PlutoSDR is completely self-contained and entirely USB powered with the default firmware. PlutoSDR is enabled by libiio drivers and supports macOS®, Windows®, and Linux®, allowing students to learn and explore on a variety of host platforms.</p>
 </section>
 <hr>
 <section id="started">
 <a class="anchor" href="#top">Back to top</a>
 <h3>Getting Started</h3>
-<p>The PlutoSDR <a href="https://wiki.analog.com/plutosdr">online documentation</a> provides instruction on how to set up the software on your <a href="https://wiki.analog.com/university/tools/pluto/drivers/windows">Windows</a>, <a href="https://wiki.analog.com/university/tools/pluto/drivers/linux">Linux</a>, or <a href="https://wiki.analog.com/university/tools/pluto/drivers/osx">OS-X</a> based host to use the PlutoSDR. For those who want to skip all that, install:</p>
+<p>The PlutoSDR <a href="https://wiki.analog.com/plutosdr">online documentation</a> provides instruction on how to set up the software on your <a href="https://wiki.analog.com/university/tools/pluto/drivers/windows">Windows</a>, <a href="https://wiki.analog.com/university/tools/pluto/drivers/linux">Linux</a>, or <a href="https://wiki.analog.com/university/tools/pluto/drivers/osx">macOS</a> based host to use the PlutoSDR. For those who want to skip all that, install:</p>
 <ul>
 <li id="hideupgrade">Upgrade your <a href="#firmware">Firmware</a>
-<li id="hidedriver">the Windows <a href="https://github.com/analogdevicesinc/plutosdr-m2k-drivers-win/">driver</a> : <a id="drivertest" href="https://github.com/analogdevicesinc/plutosdr-m2k-drivers-win/releases/latest">Latest Windows Driver</a></li>
-<li id="hidehorndis"><a href="https://joshuawise.com/horndis">HoRNDIS</a> for Mac OS X : <a id="horndistest" href="https://github.com/jwise/HoRNDIS/releases/latest">Latest Release</a></li>
+<li id="hidedriver">The Windows <a href="https://github.com/analogdevicesinc/plutosdr-m2k-drivers-win/">driver</a>: <a id="drivertest" href="https://github.com/analogdevicesinc/plutosdr-m2k-drivers-win/releases/latest">Latest Windows Driver</a></li>
+<li id="hidehorndis"><a href="https://joshuawise.com/horndis">HoRNDIS</a> for macOS: <a id="horndistest" href="https://github.com/jwise/HoRNDIS/releases/latest">Latest Release</a></li>
 <li>the <a href="https://github.com/analogdevicesinc/libiio">libiio</a> Library:
 <div id="hidelib" style="display:none">
 OS: <select id="os-select" onchange="libiio_type()"></select>
@@ -113,7 +113,7 @@ IIO context has 8 attributes:
 				attr  0: scale value: 6.433105468
 				attr  1: raw value: 778
 </pre>
-<p>If you are having issues installing the software, check out the <a href="http://www.sdrforengineers.com/#tutorials">on-line tutorials</a>. Once the software is running, you can enable Pluto SDR in your communications framework like MATLAB, by following along the <a href="http://www.sdrforengineers.com/#tutorials">on-line tutorials</a>.</p>
+<p>If you are having issues installing the software, check out the <a href="http://www.sdrforengineers.com/#tutorials">on-line tutorials</a>. Once the software is running, you can enable PlutoSDR in your communications framework like MATLAB, by following along the <a href="http://www.sdrforengineers.com/#tutorials">on-line tutorials</a>.</p>
 </section>
 <hr>
 <section id="framework">
@@ -130,15 +130,15 @@ IIO context has 8 attributes:
 </thead>
 <tbody>
 <tr>
-<td style="text-align:center"><a href="https://www.mathworks.com/discovery/sdr"><img src="img/mathworks_logo.png" alt="MathWorks logo"/></a></td><td><a href="https://www.mathworks.com/support/sysreq.html">Windows, Linux, OS-X</a></td>
+<td style="text-align:center"><a href="https://www.mathworks.com/discovery/sdr"><img src="img/mathworks_logo.png" alt="MathWorks logo"/></a></td><td><a href="https://www.mathworks.com/support/sysreq.html">Windows, Linux, macOS</a></td>
 <td>Communications Toolbox™ <a href="https://www.mathworks.com/hardware-support/adalm-pluto-radio.html">Support Package</a> for Analog Devices PlutoSDR (<a href="https://www.mathworks.com/help/supportpkg/plutoradio/getting-started-with-communications-system-toolbox-support-package-for-pluto-radio.html">doc</a>) enables you to use MATLAB® and Simulink® to prototype, verify, and test practical wireless systems. Request a <a href="https://www.mathworks.com/campaigns/products/trials.html?prodcode=CM">zero cost trial</a> and then use, study, modify, and/or distribute a variety of MATLAB and Simulink <a href="https://www.mathworks.com/examples/communications/category/plutoradio">examples</a>.</td>
 </tr>
 <tr>
-<td style="text-align:center;"><a href="https://www.gnuradio.org/"><img src="img/GNURadio_logo.png" alt="GNU Radio logo" /></a></td><td>Linux, OS-X</td>
+<td style="text-align:center;"><a href="https://www.gnuradio.org/"><img src="img/GNURadio_logo.png" alt="GNU Radio logo" /></a></td><td>Linux, macOS</td>
 <td>GNU Radio is a Free and Open-Source Toolkit for Software Radio, primarily supported on Linux operating systems. It has both generic IIO blocks, and <a href="https://wiki.analog.com/university/tools/pluto/gnuradio">PlutoSDR specific blocks</a></td>
 </tr>
 <tr>
-<td><a href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/cmd_line">IIO Command Line Tools</a></td><td>Windows, Linux, OS-X</td>
+<td><a href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/cmd_line">IIO Command Line Tools</a></td><td>Windows, Linux, macOS</td>
 <td><a href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_info">iio_info</a>,
 <a href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_attr">iio_attr</a>,
 <a href="https://wiki.analog.com/resources/tools-software/linux-software/libiio/iio_readdev">iio_readdev</a>,
@@ -157,11 +157,11 @@ for interacting with the PlutoSDR from your favorite shell.
 </tr>
 <tr>
 <td><a href="https://www.rtl-sdr.com/plutosdr-quickstart-guide/"><img src="img/SDR-Sharp.png" alt="SDR Sharp logo"></a></td><td>Windows</td>
-<td><a href="https://airspy.com/download/">SDR# (SDR Sharp)</a> is a popular SDR program for the <a href="https://airspy.com/">Airspy</a>, and supports the Pluto SDR with a <a href="https://github.com/Manawyrm/sdrsharp-plutosdr/releases/latest">third party</a> plugin. A complete installation <a href="https://www.rtl-sdr.com/plutosdr-quickstart-guide/">tutorial exists</a>.</td>
+<td><a href="https://airspy.com/download/">SDR# (SDR Sharp)</a> is a popular SDR program for the <a href="https://airspy.com/">Airspy</a>, and supports the PlutoSDR with a <a href="https://github.com/Manawyrm/sdrsharp-plutosdr/releases/latest">third party</a> plugin. A complete installation <a href="https://www.rtl-sdr.com/plutosdr-quickstart-guide/">tutorial exists</a>.</td>
 </tr>
 <tr>
 <td><a href="https://wiki.analog.com/university/tools/pluto/other">other tools</a>
-</td><td>Windows, Linux, OS-X</td>
+</td><td>Windows, Linux, macOS</td>
 <td>A variety of other tools and projects using the PlutoSDR</td>
 </tr>
 </tbody>
@@ -254,7 +254,7 @@ for interacting with the PlutoSDR from your favorite shell.
 </tbody>
 </table>
 <a class="anchor" href="#top">Back to top</a>
-<p id="wifi">WIFI <a href="./config.txt">Update</a></p>
+<p id="wifi">Wi-Fi <a href="./config.txt">Update</a></p>
 <table>
 <tbody>
 <tr>
@@ -292,7 +292,7 @@ for interacting with the PlutoSDR from your favorite shell.
 <section id="support">
 <a class="anchor" href="#top">Back to top</a>
 <h3>Help and Support</h3>
-<p>If you have any questions regarding the Pluto SDR or are experiencing any problems following the user guides, or experiments feel free to ask us a question. Questions can be asked on our <a href="http://ez.analog.com/university-program">Virtual Classroom</a>. Help and support for the PlutoSDR is provided exclusively <a href="https://wiki.analog.com/university/tools/pluto/help_support">online</a>. If you don't have an internet connection on this computer, please find one that does. </p>
+<p>If you have any questions regarding the PlutoSDR or are experiencing any problems following the user guides, or experiments feel free to ask us a question. Questions can be asked on our <a href="http://ez.analog.com/university-program">Virtual Classroom</a>. Help and support for the PlutoSDR is provided exclusively <a href="https://wiki.analog.com/university/tools/pluto/help_support">online</a>. If you don't have an internet connection on this computer, please find one that does. </p>
 </section>
 <hr>
 <section id="social">
