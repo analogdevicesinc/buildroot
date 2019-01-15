@@ -1,0 +1,16 @@
+Add MicroBlaze support.
+
+Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+---
+diff --git a/src/libaio.h b/src/libaio.h
+--- a/src/libaio.h
++++ b/src/libaio.h
+@@ -52,7 +52,7 @@ typedef enum io_iocb_cmd {
+ /* little endian, 32 bits */
+ #if defined(__i386__) || (defined(__arm__) && !defined(__ARMEB__)) || \
+     defined(__sh__) || defined(__bfin__) || defined(__MIPSEL__) || \
+-    defined(__cris__)
++    defined(__cris__) || defined(__microblaze__)
+ #define PADDED(x, y)	x; unsigned y
+ #define PADDEDptr(x, y)	x; unsigned y
+ #define PADDEDul(x, y)	unsigned long x; unsigned y
