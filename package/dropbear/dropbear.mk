@@ -133,4 +133,9 @@ define DROPBEAR_INSTALL_TARGET_CMDS
 	ln -snf /var/run/dropbear $(TARGET_DIR)/etc/dropbear
 endef
 
+HOST_DROPBEAR_MAKE = \
+	$(MAKE) STATIC=1 \
+	PROGRAMS="dropbearkey"
+
 $(eval $(autotools-package))
+$(eval $(host-autotools-package))
