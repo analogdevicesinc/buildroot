@@ -74,6 +74,7 @@ function GetDriverurl() {
 		latest_libiio = response;
 		var select = document.getElementById("os-select");
 		var suffix = "";
+		var os;
 		for (i = 0; i < latest_libiio.assets.length; i++) {
 			os = latest_libiio.assets[i].name.split('-')[2];
 			suffix = os.slice(-4);
@@ -127,6 +128,7 @@ function libiio_type() {
 	var os = document.getElementById("os-select").value;
 	select.onchange = null;
 	var i;
+	var j;
 	for (i = select.options.length - 1 ; i >= 0 ; i--) {
 		select.remove(i);
 	}
@@ -214,34 +216,74 @@ function libiio_url() {
 
 function CheckFrmVersion() {
 	GetDriverurl();
-	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-fw/releases/latest");
+	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-fw/releases");
 	req.fail(function() {
 		document.getElementById('versiontest').innerHTML = "Can't check right now, try manually";
+		document.getElementById('sysroot').innerHTML = "Latest SysRoot";
 	});
 	req.done(function(response) {
-		var VerOnGithub = response.name;
-		var res = versionCompare("#BUILD#", VerOnGithub);
-		var message;
-		if (res < 0) {
-			message = "Newer version available online (Version " + VerOnGithub + " )";
-			document.getElementById('versionsection').className = "download";
-		} else  if (res > 0) {
-			message = "Wow! Your Pluto Firmware Version #BUILD# is newer than (" + VerOnGithub + ") on Github.";
-			document.getElementById('versionsection').className = "";
-			document.getElementById('plutsdr-fw-download').style.visibility = "hidden";
-			document.getElementById('hideupgrade').style.display = "none";
-		} else if (res == 0) {
-			message = "Pluto is using the same version as latest release!";
-			document.getElementById('versionsection').className = "";
-			document.getElementById('plutsdr-fw-download').style.visibility = "hidden";
-			document.getElementById('hideupgrade').style.display = "none";
+		var VerOnGithub = response[0].name;
+		var VerLocal = "#BUILD#";
+		if (VerLocal.match(/BUILD/)) {
+			document.getElementById('versiontest').innerHTML = "Seems not to be deployed";
+			document.getElementById('sysroot').innerHTML = "Unknown SysRoot";
+			jQuery('#sysroot').removeAttr('href');
 		} else {
-			message = "Failure in comparing version, latest upstream is " + VerOnGithub;
-			document.getElementById('versionsection').className = "";
+			var res = versionCompare(VerLocal, VerOnGithub);
+			var message;
+			var sysroot_message;
+			var j;
+			var k;
+			var sysroot_url = null;
+			for (j = 0; j < response.length; j++) {
+				if (response[j].name.match(VerLocal+"$")) {
+					for (k = 0; k < response[j].assets.length; k++) {
+						if (response[j].assets[k].name.match(/sysroot/i)) {
+							sysroot_url = response[j].assets[k].browser_download_url;
+							break;
+						}
+					}
+					break;
+				}
+			}
+			if (res < 0) {
+				message = "Newer version available online (Version " + VerOnGithub + " )";
+				if (sysroot_url)
+					sysroot_message = "Old Sysroot for firmware " + VerLocal +
+						" (please upgrade firmware to " + VerOnGithub + ")";
+				else
+					sysroot_message = "No Sysroot for firmware " + VerLocal +
+						" (please upgrade firmware to " + VerOnGithub + ")";
+				document.getElementById('versionsection').className = "download";
+			} else  if (res > 0) {
+				message = "Wow! Your Pluto Firmware Version " + VerLocal +
+						" is newer than (" + VerOnGithub + ") on Github.";
+				sysroot_message = "Firmware " + VerLocal + " doesn't have pre-built SYSROOT";
+				jQuery('#sysroot').removeAttr('href');
+				document.getElementById('versionsection').className = "";
+				document.getElementById('plutsdr-fw-download').style.visibility = "hidden";
+				document.getElementById('hideupgrade').style.display = "none";
+			} else if (res == 0) {
+				message = "Pluto is using the same version as latest release!";
+				sysroot_message = "SYSROOT for firmware version " + VerOnGithub;
+				document.getElementById('versionsection').className = "";
+				document.getElementById('plutsdr-fw-download').style.visibility = "hidden";
+				document.getElementById('hideupgrade').style.display = "none";
+			} else {
+				message = "Failure in comparing version, latest upstream is " + VerOnGithub;
+				sysroot_message = "SYSROOT for firmware version " + VerOnGithub;
+				document.getElementById('versionsection').className = "";
+			}
+			document.getElementById('versiontest').innerHTML = message;
+			document.getElementById('plutsdr-fw-download').innerHTML = "Download version " + VerOnGithub;
+			jQuery('#plutsdr-fw-download').attr ('href', response[0].assets[0].browser_download_url);
+
+			document.getElementById('sysroot').innerHTML = sysroot_message;
+			if(sysroot_url)
+				jQuery('#sysroot').attr ('href', sysroot_url);
+			else
+				jQuery('#sysroot').removeAttr('href');
 		}
-		document.getElementById('versiontest').innerHTML = message;
-		document.getElementById('plutsdr-fw-download').innerHTML = "Download version " + VerOnGithub;
-		jQuery('#plutsdr-fw-download').attr ('href', response.assets[0].browser_download_url);
 	});
 }
 
