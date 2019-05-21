@@ -28,7 +28,7 @@ patch_html_page() {
 case "$1" in
 	start)
 		echo -n "Starting MSD Daemon: "
-		patch_html_page "/www/index.html /www/img/index_*.html" /www/img/version.js
+		patch_html_page /www/index.html /www/img/version.js
 		losetup /dev/loop7 $img -o 512
 		mount /dev/loop7 /mnt
 
@@ -42,7 +42,6 @@ case "$1" in
 
 		cp -a /www/* /mnt/
 		mv /mnt/index.html /mnt/info.html
-		sed -i -e "s/..\/index.html/..\/info.html/g" /mnt/img/index_*.html
 		umount /mnt
 		echo $img > $file
 
