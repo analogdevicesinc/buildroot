@@ -35,6 +35,7 @@
 <div class="dropdown-content">
 <p><a class="button" href="#firmware">Upgrade Firmware</a></p>
 <p><a class="button" href="#version">Version Info</a></p>
+<p><a class="button" href="#target">Custom Apps</a></p>
 <p><a class="button" href="#config">Config Settings</a></p>
 <p><a class="button" href="#wifi">Wi-Fi Settings</a></p>
 <p><a class="button" href="#wired">Wired Settings</a></p>
@@ -207,6 +208,44 @@ for interacting with the PlutoSDR from your favorite shell.
 <tr>
 <td>IIO</td>
 <td>#IIO#</td>
+</tr>
+</tbody>
+</table>
+<a class="anchor" href="#top">Back to top</a>
+<p id="target"><strong>Standalone Applications:</strong></p>
+<p><a href="https://wiki.analog.com/university/tools/pluto/devs/embedded_code">Custom C/C++ applications</a> can be created/compiled on a host with a <a href="https://releases.linaro.org/components/toolchain/binaries/">Linaro GNU Compiler Collection (GCC)</a> toolchain (with the appropriate flags), transferred over and run directly on the PlutoSDR.</p>
+<table>
+<tbody>
+<tr>
+<td>GCC Compiler <a href="https://collaborate.linaro.org/display/TCWGPUB/ARM+and+AArch64+Target+Triples">Target Triple</a></td>
+<td>#GCC_TRIPLE#</td>
+</tr>
+<tr>
+<td>GCC version</td>
+<td>#GCC_VERSION#</td>
+</tr>
+<tr>
+<td>Binutils version</td>
+<td>#BIN_VERSION#</td>
+</tr>
+<tr>
+<td>SysRoot</td>
+<td><a id="sysroot" href="https://github.com/analogdevicesinc/plutosdr-fw/releases/latest">Latest SYSROOT</a></td>
+</tr>
+</tbody>
+</table>
+<a class="anchor" href="#top">Back to top</a>
+<p id="userpass"><strong>Build Settings:</strong></p>
+<p>There are many settings which are set as part of the build configuration, and can not be changed without rebuilding the firmware.</p>
+<table>
+<tbody>
+<tr>
+<td>Username:</td>
+<td>root</td>
+</tr>
+<tr>
+<td>Password:</td>
+<td>#ROOTPASSWORD#</td>
 </tr>
 </tbody>
 </table>
