@@ -1,4 +1,8 @@
-# This file contains the definition of the toolchain wrapper build commands
+################################################################################
+#
+# definition of the toolchain wrapper build commands
+#
+################################################################################
 
 # We use --hash-style=both to increase the compatibility of the generated
 # binary with older platforms, except for MIPS, where the only acceptable
@@ -39,6 +43,20 @@ endif
 
 ifeq ($(BR2_CCACHE_USE_BASEDIR),y)
 TOOLCHAIN_WRAPPER_ARGS += -DBR_CCACHE_BASEDIR='"$(BASE_DIR)"'
+endif
+
+ifeq ($(BR2_RELRO_PARTIAL),y)
+TOOLCHAIN_WRAPPER_ARGS += -DBR2_RELRO_PARTIAL
+else ifeq ($(BR2_RELRO_FULL),y)
+TOOLCHAIN_WRAPPER_ARGS += -DBR2_RELRO_FULL
+endif
+
+ifeq ($(BR2_SSP_REGULAR),y)
+TOOLCHAIN_WRAPPER_ARGS += -DBR_SSP_REGULAR
+else ifeq ($(BR2_SSP_STRONG),y)
+TOOLCHAIN_WRAPPER_ARGS += -DBR_SSP_STRONG
+else ifeq ($(BR2_SSP_ALL),y)
+TOOLCHAIN_WRAPPER_ARGS += -DBR_SSP_ALL
 endif
 
 define TOOLCHAIN_WRAPPER_BUILD

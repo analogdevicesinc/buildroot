@@ -11,27 +11,30 @@ if test $? != 0 ; then
 	exit 1
 fi
 
-# sanity check for CWD in LD_LIBRARY_PATH
-# try not to rely on egrep..
-if test -n "$LD_LIBRARY_PATH" ; then
-	echo TRiGGER_start"$LD_LIBRARY_PATH"TRiGGER_end | grep '::' >/dev/null 2>&1 ||
-	echo TRiGGER_start"$LD_LIBRARY_PATH"TRiGGER_end | grep ':\.:' >/dev/null 2>&1 ||
-	echo TRiGGER_start"$LD_LIBRARY_PATH"TRiGGER_end | grep 'TRiGGER_start:' >/dev/null 2>&1 ||
-	echo TRiGGER_start"$LD_LIBRARY_PATH"TRiGGER_end | grep 'TRiGGER_start\.:' >/dev/null 2>&1 ||
-	echo TRiGGER_start"$LD_LIBRARY_PATH"TRiGGER_end | grep ':TRiGGER_end' >/dev/null 2>&1 ||
-	echo TRiGGER_start"$LD_LIBRARY_PATH"TRiGGER_end | grep ':\.TRiGGER_end' >/dev/null 2>&1 ||
-	echo TRiGGER_start"$LD_LIBRARY_PATH"TRiGGER_end | grep 'TRiGGER_start\.TRiGGER_end' >/dev/null 2>&1
-	if test $? = 0; then
-		echo
-		echo "You seem to have the current working directory in your"
-		echo "LD_LIBRARY_PATH environment variable. This doesn't work."
-		exit 1;
-	fi
-fi;
+# Sanity check for CWD in LD_LIBRARY_PATH
+case ":${LD_LIBRARY_PATH:-unset}:" in
+(*::*|*:.:*)
+	echo
+	echo "You seem to have the current working directory in your"
+	echo "LD_LIBRARY_PATH environment variable. This doesn't work."
+	exit 1
+	;;
+esac
 
-# PATH should not contain a newline, otherwise it fails in spectacular ways
-# as soon as PATH is referenced in a package rule
-case "${PATH}" in
+# Sanity check for CWD in PATH. Having the current working directory
+# in the PATH makes various packages (e.g. toolchain, coreutils...)
+# build process break.
+# PATH should not contain a newline, otherwise it fails in spectacular
+# ways as soon as PATH is referenced in a package rule
+# An empty PATH is technically possible, but in practice we would not
+# even arrive here if that was the case.
+case ":${PATH:-unset}:" in
+(*::*|*:.:*)
+	echo
+	echo "You seem to have the current working directory in your"
+	echo "PATH environment variable. This doesn't work."
+	exit 1
+	;;
 (*"
 "*)	printf "\n"
 	# Break the '\n' sequence, or a \n is printed (which is not what we want).
@@ -40,22 +43,6 @@ case "${PATH}" in
 	exit 1
 	;;
 esac
-
-# sanity check for CWD in PATH. Having the current working directory
-# in the PATH makes the toolchain build process break.
-# try not to rely on egrep..
-if test -n "$PATH" ; then
-	echo TRiGGER_start"$PATH"TRiGGER_end | grep ':\.:' >/dev/null 2>&1 ||
-	echo TRiGGER_start"$PATH"TRiGGER_end | grep 'TRiGGER_start\.:' >/dev/null 2>&1 ||
-	echo TRiGGER_start"$PATH"TRiGGER_end | grep ':\.TRiGGER_end' >/dev/null 2>&1 ||
-	echo TRiGGER_start"$PATH"TRiGGER_end | grep 'TRiGGER_start\.TRiGGER_end' >/dev/null 2>&1
-	if test $? = 0; then
-		echo
-		echo "You seem to have the current working directory in your"
-		echo "PATH environment variable. This doesn't work."
-		exit 1;
-	fi
-fi;
 
 if test -n "$PERL_MM_OPT" ; then
 	echo
@@ -194,6 +181,14 @@ if test "${missing_progs}" = "yes" ; then
 	exit 1
 fi
 
+# Check that the python version is at least 2.7
+PYTHON_VERSION=$(python -V 2>&1 |awk '{ split($2, v, "."); print v[1] v[2] }')
+if [ $PYTHON_VERSION -lt 27 ]; then
+	echo
+	echo "You have '$(python -V 2>&1)' installed.  Python >= 2.7 is required"
+	exit 1;
+fi
+
 if grep ^BR2_NEEDS_HOST_UTF8_LOCALE=y $BR2_CONFIG > /dev/null; then
 	if ! which locale > /dev/null ; then
 		echo
@@ -235,6 +230,8 @@ if grep -q ^BR2_HOSTARCH_NEEDS_IA32_LIBS=y $BR2_CONFIG ; then
 		echo "If you're running a Debian/Ubuntu distribution, install the libc6-i386,"
 		echo "lib32stdc++6, and lib32z1 packages (or alternatively libc6:i386,"
 		echo "libstdc++6:i386, and zlib1g:i386)."
+		echo "If you're running a RedHat/Fedora distribution, install the glibc.i686 and"
+		echo "zlib.i686 packages."
 		echo "For other distributions, refer to the documentation on how to install the 32 bits"
 		echo "compatibility libraries."
 		exit 1
@@ -267,6 +264,10 @@ required_perl_modules="$required_perl_modules Thread::Queue" # Used by host-auto
 if grep -q ^BR2_PACKAGE_MPV=y $BR2_CONFIG ; then
     required_perl_modules="$required_perl_modules Math::BigInt"
     required_perl_modules="$required_perl_modules Math::BigRat"
+fi
+
+if grep -q ^BR2_PACKAGE_WHOIS=y $BR2_CONFIG ; then
+    required_perl_modules="$required_perl_modules autodie"
 fi
 
 # This variable will keep the modules that are missing in your system.

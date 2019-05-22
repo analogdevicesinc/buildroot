@@ -4,18 +4,24 @@
 #
 ################################################################################
 
-BLUEZ5_UTILS_VERSION = 5.48
+# Keep the version and patches in sync with bluez5_utils-headers
+BLUEZ5_UTILS_VERSION = 5.50
 BLUEZ5_UTILS_SOURCE = bluez-$(BLUEZ5_UTILS_VERSION).tar.xz
 BLUEZ5_UTILS_SITE = $(BR2_KERNEL_MIRROR)/linux/bluetooth
 BLUEZ5_UTILS_INSTALL_STAGING = YES
-BLUEZ5_UTILS_DEPENDENCIES = dbus libglib2
 BLUEZ5_UTILS_LICENSE = GPL-2.0+, LGPL-2.1+
 BLUEZ5_UTILS_LICENSE_FILES = COPYING COPYING.LIB
+
+BLUEZ5_UTILS_DEPENDENCIES = \
+	$(if $(BR2_PACKAGE_BLUEZ5_UTILS_HEADERS),bluez5_utils-headers) \
+	dbus \
+	libglib2
 
 BLUEZ5_UTILS_CONF_OPTS = \
 	--enable-tools \
 	--enable-library \
-	--disable-cups
+	--disable-cups \
+	--with-dbusconfdir=/etc
 
 ifeq ($(BR2_PACKAGE_BLUEZ5_UTILS_OBEX),y)
 BLUEZ5_UTILS_CONF_OPTS += --enable-obex
@@ -39,14 +45,14 @@ BLUEZ5_UTILS_CONF_OPTS += --disable-experimental
 endif
 
 # enable health plugin
-ifeq ($(BR2_PACKAGE_BLUEZ5_PLUGINS_HEALTH),y)
+ifeq ($(BR2_PACKAGE_BLUEZ5_UTILS_PLUGINS_HEALTH),y)
 BLUEZ5_UTILS_CONF_OPTS += --enable-health
 else
 BLUEZ5_UTILS_CONF_OPTS += --disable-health
 endif
 
 # enable midi profile
-ifeq ($(BR2_PACKAGE_BLUEZ5_PLUGINS_MIDI),y)
+ifeq ($(BR2_PACKAGE_BLUEZ5_UTILS_PLUGINS_MIDI),y)
 BLUEZ5_UTILS_CONF_OPTS += --enable-midi
 BLUEZ5_UTILS_DEPENDENCIES += alsa-lib
 else
@@ -54,21 +60,21 @@ BLUEZ5_UTILS_CONF_OPTS += --disable-midi
 endif
 
 # enable nfc plugin
-ifeq ($(BR2_PACKAGE_BLUEZ5_PLUGINS_NFC),y)
+ifeq ($(BR2_PACKAGE_BLUEZ5_UTILS_PLUGINS_NFC),y)
 BLUEZ5_UTILS_CONF_OPTS += --enable-nfc
 else
 BLUEZ5_UTILS_CONF_OPTS += --disable-nfc
 endif
 
 # enable sap plugin
-ifeq ($(BR2_PACKAGE_BLUEZ5_PLUGINS_SAP),y)
+ifeq ($(BR2_PACKAGE_BLUEZ5_UTILS_PLUGINS_SAP),y)
 BLUEZ5_UTILS_CONF_OPTS += --enable-sap
 else
 BLUEZ5_UTILS_CONF_OPTS += --disable-sap
 endif
 
 # enable sixaxis plugin
-ifeq ($(BR2_PACKAGE_BLUEZ5_PLUGINS_SIXAXIS),y)
+ifeq ($(BR2_PACKAGE_BLUEZ5_UTILS_PLUGINS_SIXAXIS),y)
 BLUEZ5_UTILS_CONF_OPTS += --enable-sixaxis
 else
 BLUEZ5_UTILS_CONF_OPTS += --disable-sixaxis

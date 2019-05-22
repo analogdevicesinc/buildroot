@@ -11,6 +11,25 @@
 #
 ################################################################################
 
+# Macro to update back the custom (def)config file
+# $(1): file to copy from
+define kconfig-package-update-config
+	@$(if $($(PKG)_KCONFIG_FRAGMENT_FILES), \
+		echo "Unable to perform $(@) when fragment files are set"; exit 1)
+	@$(if $($(PKG)_KCONFIG_DEFCONFIG), \
+		echo "Unable to perform $(@) when using a defconfig rule"; exit 1)
+	$(Q)if [ -d $($(PKG)_KCONFIG_FILE) ]; then \
+		echo "Unable to perform $(@) when $($(PKG)_KCONFIG_FILE) is a directory"; \
+		exit 1; \
+	fi
+	$(Q)mkdir -p $(dir $($(PKG)_KCONFIG_FILE))
+	cp -f $($(PKG)_DIR)/$(1) $($(PKG)_KCONFIG_FILE)
+	$(Q)touch --reference $($(PKG)_DIR)/$($(PKG)_KCONFIG_DOTCONFIG) $($(PKG)_KCONFIG_FILE)
+endef
+
+PKG_KCONFIG_COMMON_OPTS = \
+	HOSTCC=$(HOSTCC_NOCCACHE)
+
 ################################################################################
 # inner-kconfig-package -- generates the make targets needed to support a
 # kconfig package
@@ -24,6 +43,10 @@
 ################################################################################
 
 define inner-kconfig-package
+
+# Register the kconfig dependencies as regular dependencies, so that
+# they are also accounted for in the generated graphs.
+$(2)_DEPENDENCIES += $$($(2)_KCONFIG_DEPENDENCIES)
 
 # Call the generic package infrastructure to generate the necessary
 # make targets.
@@ -59,7 +82,8 @@ $$($(2)_KCONFIG_FILE) $$($(2)_KCONFIG_FRAGMENT_FILES): | $(1)-patch
 	done
 
 $(2)_KCONFIG_MAKE = \
-	$$($(2)_MAKE_ENV) $$(MAKE) -C $$($(2)_DIR) $$($(2)_KCONFIG_OPTS)
+	$$($(2)_MAKE_ENV) $$(MAKE) -C $$($(2)_DIR) \
+		$$(PKG_KCONFIG_COMMON_OPTS) $$($(2)_KCONFIG_OPTS)
 
 # $(2)_KCONFIG_MAKE may already rely on shell expansion. As the $() syntax
 # of the shell conflicts with Make's own syntax, this means that backticks
@@ -104,6 +128,11 @@ $$($(2)_DIR)/$$($(2)_KCONFIG_DOTCONFIG): $$($(2)_KCONFIG_FILE) $$($(2)_KCONFIG_F
 # already implied, but if we only have a _KCONFIG_DEFCONFIG we have to add
 # it explicitly. It doesn't hurt to always have it though.
 $$($(2)_DIR)/$$($(2)_KCONFIG_DOTCONFIG): | $(1)-patch
+
+# Some packages may need additional tools to be present by the time their
+# kconfig structure is parsed (e.g. the linux kernel may need to call to
+# the compiler to test its features).
+$$($(2)_DIR)/$$($(2)_KCONFIG_DOTCONFIG): | $$($(2)_KCONFIG_DEPENDENCIES)
 
 # In order to get a usable, consistent configuration, some fixup may be needed.
 # The exact rules are specified by the package .mk file.
@@ -150,7 +179,9 @@ endif
 # nconfig, gconfig, xconfig).
 # So we simply remove our PATH and PKG_CONFIG_* variables.
 $(2)_CONFIGURATOR_MAKE_ENV = \
-	$$(filter-out PATH=% PKG_CONFIG=% PKG_CONFIG_SYSROOT_DIR=% PKG_CONFIG_LIBDIR=%,$$($(2)_MAKE_ENV)) \
+	$$(filter-out PATH=% PKG_CONFIG=% PKG_CONFIG_SYSROOT_DIR=% \
+	   PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=% PKG_CONFIG_ALLOW_SYSTEM_LIBS=% \
+	   PKG_CONFIG_LIBDIR=%,$$($(2)_MAKE_ENV)) \
 	PKG_CONFIG_PATH="$(HOST_PKG_CONFIG_PATH)"
 
 # Configuration editors (menuconfig, ...)
@@ -170,7 +201,7 @@ $(2)_CONFIGURATOR_MAKE_ENV = \
 $$(addprefix $(1)-,$$($(2)_KCONFIG_EDITORS)): $(1)-%: $$($(2)_DIR)/.kconfig_editor_%
 $$($(2)_DIR)/.kconfig_editor_%: $$($(2)_DIR)/.stamp_kconfig_fixup_done
 	$$($(2)_CONFIGURATOR_MAKE_ENV) $$(MAKE) -C $$($(2)_DIR) \
-		$$($(2)_KCONFIG_OPTS) $$(*)
+		$$(PKG_KCONFIG_COMMON_OPTS) $$($(2)_KCONFIG_OPTS) $$(*)
 	rm -f $$($(2)_DIR)/.stamp_{kconfig_fixup_done,configured,built}
 	rm -f $$($(2)_DIR)/.stamp_{target,staging,images}_installed
 	$$($(2)_FIXUP_DOT_CONFIG)
@@ -199,30 +230,22 @@ $(1)-check-configuration-done:
 
 $(1)-savedefconfig: $(1)-check-configuration-done
 	$$($(2)_MAKE_ENV) $$(MAKE) -C $$($(2)_DIR) \
-		$$($(2)_KCONFIG_OPTS) savedefconfig
+		$$(PKG_KCONFIG_COMMON_OPTS) $$($(2)_KCONFIG_OPTS) savedefconfig
 
 # Target to copy back the configuration to the source configuration file
 # Even though we could use 'cp --preserve-timestamps' here, the separate
 # cp and 'touch --reference' is used for symmetry with $(1)-update-defconfig.
+$(1)-update-config: PKG=$(2)
 $(1)-update-config: $(1)-check-configuration-done
-	@$$(if $$($(2)_KCONFIG_FRAGMENT_FILES), \
-		echo "Unable to perform $(1)-update-config when fragment files are set"; exit 1)
-	@$$(if $$($(2)_KCONFIG_DEFCONFIG), \
-		echo "Unable to perform $(1)-update-config when using a defconfig rule"; exit 1)
-	cp -f $$($(2)_DIR)/$$($(2)_KCONFIG_DOTCONFIG) $$($(2)_KCONFIG_FILE)
-	touch --reference $$($(2)_DIR)/$$($(2)_KCONFIG_DOTCONFIG) $$($(2)_KCONFIG_FILE)
+	$$(call kconfig-package-update-config,$$($(2)_KCONFIG_DOTCONFIG))
 
 # Note: make sure the timestamp of the stored configuration is not newer than
 # the .config to avoid a useless rebuild. Note that, contrary to
 # $(1)-update-config, the reference for 'touch' is _not_ the file from which
 # we copy.
+$(1)-update-defconfig: PKG=$(2)
 $(1)-update-defconfig: $(1)-savedefconfig
-	@$$(if $$($(2)_KCONFIG_FRAGMENT_FILES), \
-		echo "Unable to perform $(1)-update-defconfig when fragment files are set"; exit 1)
-	@$$(if $$($(2)_KCONFIG_DEFCONFIG), \
-		echo "Unable to perform $(1)-update-defconfig when using a defconfig rule"; exit 1)
-	cp -f $$($(2)_DIR)/defconfig $$($(2)_KCONFIG_FILE)
-	touch --reference $$($(2)_DIR)/$$($(2)_KCONFIG_DOTCONFIG) $$($(2)_KCONFIG_FILE)
+	$$(call kconfig-package-update-config,defconfig)
 
 endif # package enabled
 

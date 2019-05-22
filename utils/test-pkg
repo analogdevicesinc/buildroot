@@ -2,30 +2,47 @@
 set -e
 
 TOOLCHAINS_CSV='support/config-fragments/autobuild/toolchain-configs.csv'
+TEMP_CONF=""
+
+do_clean() {
+    if [ ! -z "${TEMP_CONF}" ]; then
+        rm -f "${TEMP_CONF}"
+    fi
+}
 
 main() {
     local o O opts
-    local cfg dir pkg random toolchains_dir toolchain
+    local cfg dir pkg random toolchains_dir toolchain all number mode
     local ret nb nb_skip nb_fail nb_legal nb_tc build_dir
     local -a toolchains
+    local pkg_br_name
 
-    o='hc:d:p:r:t:'
+    o='hac:d:n:p:r:t:'
     O='help,config-snippet:build-dir:package:,random:,toolchains-dir:'
     opts="$(getopt -n "${my_name}" -o "${o}" -l "${O}" -- "${@}")"
     eval set -- "${opts}"
 
     random=0
+    all=0
+    number=0
+    mode=0
     toolchains_csv="${TOOLCHAINS_CSV}"
     while [ ${#} -gt 0 ]; do
         case "${1}" in
         (-h|--help)
             help; exit 0
             ;;
+        (-a|--all)
+            all=1; shift 1
+            ;;
         (-c|--config-snippet)
             cfg="${2}"; shift 2
             ;;
         (-d|--build-dir)
             dir="${2}"; shift 2
+            ;;
+        (-n|--number)
+            number="${2}"; shift 2
             ;;
         (-p|--package)
             pkg="${2}"; shift 2
@@ -41,8 +58,15 @@ main() {
             ;;
         esac
     done
+
+    trap do_clean INT TERM HUP EXIT
+
     if [ -z "${cfg}" ]; then
-        printf "error: no config snippet specified\n" >&2; exit 1
+        pkg_br_name="${pkg//-/_}"
+        pkg_br_name="BR2_PACKAGE_${pkg_br_name^^}"
+        TEMP_CONF=$(mktemp /tmp/test-${pkg}-config.XXXXXX)
+        echo "${pkg_br_name}=y" > ${TEMP_CONF}
+        cfg="${TEMP_CONF}"
     fi
     if [ ! -e "${cfg}" ]; then
         printf "error: %s: no such file\n" "${cfg}" >&2; exit 1
@@ -51,15 +75,37 @@ main() {
         dir="${HOME}/br-test-pkg"
     fi
 
+    if [ ${random} -gt 0 ]; then
+        mode=$((mode+1))
+    fi
+
+    if [ ${number} -gt 0 ]; then
+        mode=$((mode+1))
+    fi
+
+    if [ ${all} -eq 1 ]; then
+        mode=$((mode+1))
+    fi
+
+    # Default mode is to test the N first toolchains, which have been
+    # chosen to be a good selection of toolchains.
+    if [ ${mode} -eq 0 ] ; then
+        number=6
+    elif [ ${mode} -gt 1 ] ; then
+        printf "error: --all, --number and --random are mutually exclusive\n" >&2; exit 1
+    fi
+
     # Extract the URLs of the toolchains; drop internal toolchains
     # E.g.: http://server/path/to/name.config,arch,libc
     #  -->  http://server/path/to/name.config
     toolchains=($(sed -r -e 's/,.*//; /internal/d; /^#/d; /^$/d;' "${toolchains_csv}" \
                   |if [ ${random} -gt 0 ]; then \
                       sort -R |head -n ${random}
-                   else
-                      cat
-                   fi |sort
+                  elif [ ${number} -gt 0 ]; then \
+                      head -n ${number}
+                  else
+                      sort
+                  fi
                  )
                )
 
@@ -98,9 +144,9 @@ build_one() {
 
     mkdir -p "${dir}"
 
-    support/kconfig/merge_config.sh -O "${dir}" \
+    CONFIG_= support/kconfig/merge_config.sh -O "${dir}" \
         "${toolchainconfig}" "support/config-fragments/minimal.config" "${cfg}" \
-        > /dev/null
+        >> "${dir}/logfile" 2>&1
     # We want all the options from the snippet to be present as-is (set
     # or not set) in the actual .config; if one of them is not, it means
     # some dependency from the toolchain or arch is not available, in
@@ -121,7 +167,7 @@ build_one() {
     fi
 
     # shellcheck disable=SC2086
-    if ! make O="${dir}" ${pkg} >> "${dir}/logfile" 2>&1; then
+    if ! BR_FORCE_CHECK_DEPENDENCIES=YES make O="${dir}" ${pkg} >> "${dir}/logfile" 2>&1; then
         return 2
     fi
 
@@ -154,6 +200,10 @@ toolchain config fragment and the required host architecture, separated by a
 comma. The config fragments should contain only the toolchain and architecture
 settings.
 
+By default, a useful subset of toolchains is tested. If needed, all
+toolchains can be tested (-a), an arbitrary number of toolchains (-n
+in order, -r for random).
+
 Options:
 
     -h, --help
@@ -170,9 +220,16 @@ Options:
         Test-build the package PKG, by running 'make PKG'; if not specified,
         just runs 'make'.
 
+    -a, --all
+        Test all toolchains, instead of the default subset defined by
+        Buildroot developers.
+
+    -n N, --number N
+        Test N toolchains, in the order defined in the toolchain CSV
+        file.
+
     -r N, --random N
-        Limit the tests to the N randomly selected toolchains, instead of
-        building with all toolchains.
+        Limit the tests to the N randomly selected toolchains.
 
     -t CSVFILE, --toolchains-csv CSVFILE
         CSV file containing the paths to config fragments of toolchains to

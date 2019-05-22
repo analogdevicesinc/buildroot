@@ -1,4 +1,6 @@
 # Locally calculated after checking pgp signature
-sha256 d59a745ad2c522970660bb30d38601f9457b151b322e01fa20a5a0da0f55df07  wget-1.19.2.tar.lz
+# https://ftp.gnu.org/gnu/wget/wget-1.20.3.tar.lz.sig
+# with key 1CB27DBC98614B2D5841646D08302DB6A2670428
+sha256 69607ce8216c2d1126b7a872db594b3f21e511e660e07ca1f81be96650932abb  wget-1.20.3.tar.lz
 # Locally calculated
-sha256 8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903  COPYING
+sha256 e79e9c8a0c85d735ff98185918ec94ed7d175efc377012787aebcf3b80f0d90b  COPYING

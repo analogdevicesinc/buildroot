@@ -9,11 +9,6 @@ SYSKLOGD_SITE = http://www.infodrom.org/projects/sysklogd/download
 SYSKLOGD_LICENSE = GPL-2.0+
 SYSKLOGD_LICENSE_FILES = COPYING
 
-# Override BusyBox implementations if BusyBox is enabled.
-ifeq ($(BR2_PACKAGE_BUSYBOX),y)
-SYSKLOGD_DEPENDENCIES = busybox
-endif
-
 # Override SKFLAGS which is used as CFLAGS.
 define SYSKLOGD_BUILD_CMDS
 	$(MAKE) $(TARGET_CONFIGURE_OPTS) SKFLAGS="$(TARGET_CFLAGS) -DSYSV" \
@@ -28,8 +23,10 @@ define SYSKLOGD_INSTALL_TARGET_CMDS
 endef
 
 define SYSKLOGD_INSTALL_INIT_SYSV
-	$(INSTALL) -m 755 -D package/sysklogd/S01logging \
-		$(TARGET_DIR)/etc/init.d/S01logging
+	$(INSTALL) -m 755 -D package/sysklogd/S01syslogd \
+		$(TARGET_DIR)/etc/init.d/S01syslogd
+	$(INSTALL) -m 755 -D package/sysklogd/S02klogd \
+		$(TARGET_DIR)/etc/init.d/S02klogd
 endef
 
 define SYSKLOGD_INSTALL_INIT_SYSTEMD
