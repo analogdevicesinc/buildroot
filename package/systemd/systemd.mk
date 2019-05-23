@@ -4,51 +4,44 @@
 #
 ################################################################################
 
-SYSTEMD_VERSION = 237
+SYSTEMD_VERSION = 240
 SYSTEMD_SITE = $(call github,systemd,systemd,v$(SYSTEMD_VERSION))
 SYSTEMD_LICENSE = LGPL-2.1+, GPL-2.0+ (udev), Public Domain (few source files, see README)
 SYSTEMD_LICENSE_FILES = LICENSE.GPL2 LICENSE.LGPL2.1 README
 SYSTEMD_INSTALL_STAGING = YES
 SYSTEMD_DEPENDENCIES = \
+	$(if $(BR2_PACKAGE_BASH_COMPLETION),bash-completion) \
 	host-gperf \
 	host-intltool \
-	host-meson \
 	kmod \
 	libcap \
 	util-linux
 
 SYSTEMD_PROVIDES = udev
 
-# Make sure that systemd will always be built after busybox so that we have
-# a consistent init setup between two builds
-ifeq ($(BR2_PACKAGE_BUSYBOX),y)
-SYSTEMD_DEPENDENCIES += busybox
-endif
-
 SYSTEMD_CONF_OPTS += \
-	--prefix=/usr \
-	--libdir='/usr/lib' \
-	--buildtype $(if $(BR2_ENABLE_DEBUG),debug,release) \
-	--cross-file $(HOST_DIR)/etc/meson/cross-compilation.conf \
 	-Drootlibdir='/usr/lib' \
 	-Dblkid=true \
 	-Dman=false \
 	-Dima=false \
-	-Dlibcryptsetup=false \
 	-Defi=false \
 	-Dgnu-efi=false \
 	-Dldconfig=false \
 	-Ddefault-dnssec=no \
 	-Dtests=false \
+	-Dsplit-bin=true \
+	-Dsplit-usr=false \
 	-Dsystem-uid-max=999 \
 	-Dsystem-gid-max=999 \
 	-Dtelinit-path=$(TARGET_DIR)/sbin/telinit \
-	-Dkill-path=/usr/bin/kill \
 	-Dkmod-path=/usr/bin/kmod \
 	-Dkexec-path=/usr/sbin/kexec \
 	-Dsulogin-path=/usr/sbin/sulogin \
 	-Dmount-path=/usr/bin/mount \
-	-Dumount-path=/usr/bin/umount
+	-Dumount-path=/usr/bin/umount \
+	-Dnobody-group=nogroup \
+	-Didn=true \
+	-Dnss-systemd=true
 
 ifeq ($(BR2_PACKAGE_ACL),y)
 SYSTEMD_DEPENDENCIES += acl
@@ -64,11 +57,36 @@ else
 SYSTEMD_CONF_OPTS += -Daudit=false
 endif
 
-ifeq ($(BR2_PACKAGE_LIBIDN),y)
-SYSTEMD_DEPENDENCIES += libidn
-SYSTEMD_CONF_OPTS += -Dlibidn=true
+ifeq ($(BR2_PACKAGE_CRYPTSETUP),y)
+SYSTEMD_DEPENDENCIES += cryptsetup
+SYSTEMD_CONF_OPTS += -Dlibcryptsetup=true
 else
-SYSTEMD_CONF_OPTS += -Dlibidn=false
+SYSTEMD_CONF_OPTS += -Dlibcryptsetup=false
+endif
+
+ifeq ($(BR2_PACKAGE_ELFUTILS),y)
+SYSTEMD_DEPENDENCIES += elfutils
+SYSTEMD_CONF_OPTS += -Delfutils=true
+else
+SYSTEMD_CONF_OPTS += -Delfutils=false
+endif
+
+ifeq ($(BR2_PACKAGE_IPTABLES),y)
+SYSTEMD_DEPENDENCIES += iptables
+SYSTEMD_CONF_OPTS += -Dlibiptc=true
+else
+SYSTEMD_CONF_OPTS += -Dlibiptc=false
+endif
+
+# Both options can't be selected at the same time so prefer libidn2
+ifeq ($(BR2_PACKAGE_LIBIDN2),y)
+SYSTEMD_DEPENDENCIES += libidn2
+SYSTEMD_CONF_OPTS += -Dlibidn2=true -Dlibidn=false
+else ifeq ($(BR2_PACKAGE_LIBIDN),y)
+SYSTEMD_DEPENDENCIES += libidn
+SYSTEMD_CONF_OPTS += -Dlibidn=true -Dlibidn2=false
+else
+SYSTEMD_CONF_OPTS += -Dlibidn=false -Dlibidn2=false
 endif
 
 ifeq ($(BR2_PACKAGE_LIBSECCOMP),y)
@@ -106,6 +124,13 @@ else
 SYSTEMD_CONF_OPTS += -Dpam=false
 endif
 
+ifeq ($(BR2_PACKAGE_VALGRIND),y)
+SYSTEMD_DEPENDENCIES += valgrind
+SYSTEMD_CONF_OPTS += -Dvalgrind=true
+else
+SYSTEMD_CONF_OPTS += -Dvalgrind=false
+endif
+
 ifeq ($(BR2_PACKAGE_XZ),y)
 SYSTEMD_DEPENDENCIES += xz
 SYSTEMD_CONF_OPTS += -Dxz=true
@@ -132,6 +157,13 @@ SYSTEMD_DEPENDENCIES += libgcrypt
 SYSTEMD_CONF_OPTS += -Dgcrypt=true
 else
 SYSTEMD_CONF_OPTS += -Dgcrypt=false
+endif
+
+ifeq ($(BR2_PACKAGE_PCRE2),y)
+SYSTEMD_DEPENDENCIES += pcre2
+SYSTEMD_CONF_OPTS += -Dpcre2=true
+else
+SYSTEMD_CONF_OPTS += -Dpcre2=false
 endif
 
 ifeq ($(BR2_PACKAGE_SYSTEMD_JOURNAL_GATEWAY),y)
@@ -239,9 +271,9 @@ SYSTEMD_CONF_OPTS += -Dhostnamed=false
 endif
 
 ifeq ($(BR2_PACKAGE_SYSTEMD_MYHOSTNAME),y)
-SYSTEMD_CONF_OPTS += -Dmyhostname=true
+SYSTEMD_CONF_OPTS += -Dnss-myhostname=true
 else
-SYSTEMD_CONF_OPTS += -Dmyhostname=false
+SYSTEMD_CONF_OPTS += -Dnss-myhostname=false
 endif
 
 ifeq ($(BR2_PACKAGE_SYSTEMD_TIMEDATED),y)
@@ -265,6 +297,7 @@ endif
 
 ifeq ($(BR2_PACKAGE_SYSTEMD_POLKIT),y)
 SYSTEMD_CONF_OPTS += -Dpolkit=true
+SYSTEMD_DEPENDENCIES += polkit
 else
 SYSTEMD_CONF_OPTS += -Dpolkit=false
 endif
@@ -329,6 +362,7 @@ define SYSTEMD_INSTALL_INIT_HOOK
 	ln -fs ../bin/systemctl $(TARGET_DIR)/sbin/halt
 	ln -fs ../bin/systemctl $(TARGET_DIR)/sbin/poweroff
 	ln -fs ../bin/systemctl $(TARGET_DIR)/sbin/reboot
+	ln -fs ../bin/systemctl $(TARGET_DIR)/sbin/shutdown
 	ln -fs ../../../lib/systemd/system/multi-user.target \
 		$(TARGET_DIR)/etc/systemd/system/default.target
 endef
@@ -363,19 +397,26 @@ endef
 
 ifneq ($(call qstrip,$(BR2_TARGET_GENERIC_GETTY_PORT)),)
 # systemd needs getty.service for VTs and serial-getty.service for serial ttys
+# note that console-getty.service should be used on /dev/console as it should not have dependencies
 # also patch the file to use the correct baud-rate, the default baudrate is 115200 so look for that
 define SYSTEMD_INSTALL_SERVICE_TTY
-	if echo $(BR2_TARGET_GENERIC_GETTY_PORT) | egrep -q 'tty[0-9]*$$'; \
+	if [ $(BR2_TARGET_GENERIC_GETTY_PORT) = "console" ]; \
 	then \
-		SERVICE="getty"; \
+		TARGET="console-getty.service"; \
+		LINK_NAME="console-getty.service"; \
+	elif echo $(BR2_TARGET_GENERIC_GETTY_PORT) | egrep -q 'tty[0-9]*$$'; \
+	then \
+		TARGET="getty@.service"; \
+		LINK_NAME="getty@$(call qstrip,$(BR2_TARGET_GENERIC_GETTY_PORT)).service"; \
 	else \
-		SERVICE="serial-getty"; \
+		TARGET="serial-getty@.service"; \
+		LINK_NAME="serial-getty@$(call qstrip,$(BR2_TARGET_GENERIC_GETTY_PORT)).service"; \
 	fi; \
-	ln -fs ../../../../lib/systemd/system/$${SERVICE}@.service \
-		$(TARGET_DIR)/etc/systemd/system/getty.target.wants/$${SERVICE}@$(BR2_TARGET_GENERIC_GETTY_PORT).service; \
+	ln -fs ../../../../lib/systemd/system/$${TARGET} \
+		$(TARGET_DIR)/etc/systemd/system/getty.target.wants/$${LINK_NAME}; \
 	if [ $(call qstrip,$(BR2_TARGET_GENERIC_GETTY_BAUDRATE)) -gt 0 ] ; \
 	then \
-		$(SED) 's,115200,$(BR2_TARGET_GENERIC_GETTY_BAUDRATE),' $(TARGET_DIR)/lib/systemd/system/$${SERVICE}@.service; \
+		$(SED) 's,115200,$(BR2_TARGET_GENERIC_GETTY_BAUDRATE),' $(TARGET_DIR)/lib/systemd/system/$${TARGET}; \
 	fi
 endef
 endif
@@ -387,28 +428,7 @@ define SYSTEMD_INSTALL_INIT_SYSTEMD
 	$(SYSTEMD_INSTALL_NETWORK_CONFS)
 endef
 
-SYSTEMD_NINJA_OPTS = $(if $(VERBOSE),-v) -j$(PARALLEL_JOBS)
+SYSTEMD_CONF_ENV = $(HOST_UTF8_LOCALE_ENV)
+SYSTEMD_NINJA_ENV = $(HOST_UTF8_LOCALE_ENV)
 
-SYSTEMD_ENV = $(TARGET_MAKE_ENV) $(HOST_UTF8_LOCALE_ENV)
-
-define SYSTEMD_CONFIGURE_CMDS
-	rm -rf $(@D)/build
-	mkdir -p $(@D)/build
-	$(SYSTEMD_ENV) meson $(SYSTEMD_CONF_OPTS) $(@D) $(@D)/build
-endef
-
-define SYSTEMD_BUILD_CMDS
-	$(SYSTEMD_ENV) ninja $(SYSTEMD_NINJA_OPTS) -C $(@D)/build
-endef
-
-define SYSTEMD_INSTALL_TARGET_CMDS
-	$(SYSTEMD_ENV) DESTDIR=$(TARGET_DIR) ninja $(SYSTEMD_NINJA_OPTS) \
-		-C $(@D)/build install
-endef
-
-define SYSTEMD_INSTALL_STAGING_CMDS
-	$(SYSTEMD_ENV) DESTDIR=$(STAGING_DIR) ninja $(SYSTEMD_NINJA_OPTS) \
-		-C $(@D)/build install
-endef
-
-$(eval $(generic-package))
+$(eval $(meson-package))

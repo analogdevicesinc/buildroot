@@ -4,12 +4,18 @@
 #
 ################################################################################
 
-SWUPDATE_VERSION = 2017.11
+SWUPDATE_VERSION = 2018.11
 SWUPDATE_SITE = $(call github,sbabic,swupdate,$(SWUPDATE_VERSION))
-SWUPDATE_LICENSE = GPL-2.0+, MIT, Public Domain
-SWUPDATE_LICENSE_FILES = COPYING
+SWUPDATE_LICENSE = GPL-2.0+ with OpenSSL exception, LGPL-2.1+, MIT
+SWUPDATE_LICENSE_FILES = Licenses/Exceptions Licenses/gpl-2.0.txt \
+	Licenses/lgpl-2.1.txt Licenses/mit.txt
 
-# swupdate bundles its own version of mongoose (version 3.8)
+# swupdate uses $CROSS-cc instead of $CROSS-gcc, which is not
+# available in all external toolchains, and use CC for linking. Ensure
+# TARGET_CC is used for both.
+SWUPDATE_MAKE_ENV = CC="$(TARGET_CC)" LD="$(TARGET_CC)"
+
+# swupdate bundles its own version of mongoose (version 6.11)
 
 ifeq ($(BR2_PACKAGE_JSON_C),y)
 SWUPDATE_DEPENDENCIES += json-c
@@ -39,7 +45,7 @@ else
 SWUPDATE_MAKE_ENV += HAVE_LIBCURL=n
 endif
 
-ifeq ($(BR2_PACKAGE_HAS_LUAINTERPRETER),y)
+ifeq ($(BR2_PACKAGE_HAS_LUAINTERPRETER):$(BR2_STATIC_LIBS),y:)
 SWUPDATE_DEPENDENCIES += luainterpreter host-pkgconf
 # defines the base name for the pkg-config file ("lua" or "luajit")
 define SWUPDATE_SET_LUA_VERSION
@@ -125,7 +131,7 @@ define SWUPDATE_INSTALL_TARGET_CMDS
 	$(INSTALL) -D -m 0755 $(@D)/swupdate $(TARGET_DIR)/usr/bin/swupdate
 	$(if $(BR2_PACKAGE_SWUPDATE_INSTALL_WEBSITE), \
 		mkdir -p $(TARGET_DIR)/var/www/swupdate; \
-		cp -dpf $(@D)/www/* $(TARGET_DIR)/var/www/swupdate)
+		cp -dpfr $(@D)/examples/www/v2/* $(TARGET_DIR)/var/www/swupdate)
 endef
 
 # Checks to give errors that the user can understand

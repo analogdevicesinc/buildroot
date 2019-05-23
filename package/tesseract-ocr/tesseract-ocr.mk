@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-TESSERACT_OCR_VERSION = 3.05.00
-TESSERACT_OCR_DATA_VERSION = 3.04.00
+TESSERACT_OCR_VERSION = 4.0.0
+TESSERACT_OCR_DATA_VERSION = 4.0.0
 TESSERACT_OCR_SITE = $(call github,tesseract-ocr,tesseract,$(TESSERACT_OCR_VERSION))
 TESSERACT_OCR_LICENSE = Apache-2.0
 TESSERACT_OCR_LICENSE_FILES = COPYING
@@ -19,6 +19,7 @@ TESSERACT_OCR_AUTORECONF = YES
 TESSERACT_OCR_DEPENDENCIES = leptonica host-pkgconf
 TESSERACT_OCR_INSTALL_STAGING = YES
 TESSERACT_OCR_CONF_ENV = \
+	ac_cv_prog_have_asciidoc=false \
 	LIBLEPT_HEADERSDIR=$(STAGING_DIR)/usr/include/leptonica
 TESSERACT_OCR_CONF_OPTS = \
 	--disable-opencl
@@ -62,7 +63,7 @@ TESSERACT_OCR_PRE_CONFIGURE_HOOKS += TESSERACT_OCR_PRECONFIGURE
 # Language data files installation
 define TESSERACT_OCR_INSTALL_LANG_DATA
 	$(foreach langfile,$(TESSERACT_OCR_DATA_FILES), \
-		$(INSTALL) -D -m 0644 $(DL_DIR)/$(langfile) \
+		$(INSTALL) -D -m 0644 $(TESSERACT_OCR_DL_DIR)/$(langfile) \
 			$(TARGET_DIR)/usr/share/tessdata/$(langfile)
 	)
 endef

@@ -21,6 +21,7 @@ class TestRustBase(infra.basetest.BRTest):
     def build_test_prog(self):
         hostdir = os.path.join(self.builddir, 'host')
         env = os.environ.copy()
+        env["USER"] = "br-user"
         env["PATH"] = "{}:".format(os.path.join(hostdir, 'bin')) + env["PATH"]
         env["CARGO_HOME"] = os.path.join(hostdir, 'usr', 'share', 'cargo')
         env["RUST_TARGET_PATH"] = os.path.join(hostdir, 'etc', 'rustc')
@@ -56,25 +57,25 @@ class TestRustBase(infra.basetest.BRTest):
 
 class TestRustBin(TestRustBase):
     config = \
-             """
-             BR2_arm=y
-             BR2_cortex_a9=y
-             BR2_ARM_ENABLE_NEON=y
-             BR2_ARM_ENABLE_VFP=y
-             BR2_TOOLCHAIN_EXTERNAL=y
-             BR2_TARGET_GENERIC_GETTY_PORT="ttyAMA0"
-             BR2_SYSTEM_DHCP="eth0"
-             BR2_LINUX_KERNEL=y
-             BR2_LINUX_KERNEL_CUSTOM_VERSION=y
-             BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="4.11.3"
-             BR2_LINUX_KERNEL_DEFCONFIG="vexpress"
-             BR2_LINUX_KERNEL_DTS_SUPPORT=y
-             BR2_LINUX_KERNEL_INTREE_DTS_NAME="vexpress-v2p-ca9"
-             BR2_TARGET_ROOTFS_CPIO=y
-             # BR2_TARGET_ROOTFS_TAR is not set
-             BR2_PACKAGE_HOST_CARGO=y
-             BR2_PACKAGE_HOST_RUSTC=y
-             """
+        """
+        BR2_arm=y
+        BR2_cortex_a9=y
+        BR2_ARM_ENABLE_NEON=y
+        BR2_ARM_ENABLE_VFP=y
+        BR2_TOOLCHAIN_EXTERNAL=y
+        BR2_TARGET_GENERIC_GETTY_PORT="ttyAMA0"
+        BR2_SYSTEM_DHCP="eth0"
+        BR2_LINUX_KERNEL=y
+        BR2_LINUX_KERNEL_CUSTOM_VERSION=y
+        BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="4.11.3"
+        BR2_LINUX_KERNEL_DEFCONFIG="vexpress"
+        BR2_LINUX_KERNEL_DTS_SUPPORT=y
+        BR2_LINUX_KERNEL_INTREE_DTS_NAME="vexpress-v2p-ca9"
+        BR2_TARGET_ROOTFS_CPIO=y
+        # BR2_TARGET_ROOTFS_TAR is not set
+        BR2_PACKAGE_HOST_CARGO=y
+        BR2_PACKAGE_HOST_RUSTC=y
+        """
 
     def test_run(self):
         self.build_test_prog()
@@ -85,26 +86,26 @@ class TestRustBin(TestRustBase):
 
 class TestRust(TestRustBase):
     config = \
-             """
-             BR2_arm=y
-             BR2_cortex_a9=y
-             BR2_ARM_ENABLE_NEON=y
-             BR2_ARM_ENABLE_VFP=y
-             BR2_TOOLCHAIN_EXTERNAL=y
-             BR2_TARGET_GENERIC_GETTY_PORT="ttyAMA0"
-             BR2_SYSTEM_DHCP="eth0"
-             BR2_LINUX_KERNEL=y
-             BR2_LINUX_KERNEL_CUSTOM_VERSION=y
-             BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="4.11.3"
-             BR2_LINUX_KERNEL_DEFCONFIG="vexpress"
-             BR2_LINUX_KERNEL_DTS_SUPPORT=y
-             BR2_LINUX_KERNEL_INTREE_DTS_NAME="vexpress-v2p-ca9"
-             BR2_TARGET_ROOTFS_CPIO=y
-             # BR2_TARGET_ROOTFS_TAR is not set
-             BR2_PACKAGE_HOST_CARGO=y
-             BR2_PACKAGE_HOST_RUSTC=y
-             BR2_PACKAGE_HOST_RUST=y
-             """
+        """
+        BR2_arm=y
+        BR2_cortex_a9=y
+        BR2_ARM_ENABLE_NEON=y
+        BR2_ARM_ENABLE_VFP=y
+        BR2_TOOLCHAIN_EXTERNAL=y
+        BR2_TARGET_GENERIC_GETTY_PORT="ttyAMA0"
+        BR2_SYSTEM_DHCP="eth0"
+        BR2_LINUX_KERNEL=y
+        BR2_LINUX_KERNEL_CUSTOM_VERSION=y
+        BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE="4.11.3"
+        BR2_LINUX_KERNEL_DEFCONFIG="vexpress"
+        BR2_LINUX_KERNEL_DTS_SUPPORT=y
+        BR2_LINUX_KERNEL_INTREE_DTS_NAME="vexpress-v2p-ca9"
+        BR2_TARGET_ROOTFS_CPIO=y
+        # BR2_TARGET_ROOTFS_TAR is not set
+        BR2_PACKAGE_HOST_CARGO=y
+        BR2_PACKAGE_HOST_RUSTC=y
+        BR2_PACKAGE_HOST_RUST=y
+        """
 
     def test_run(self):
         self.build_test_prog()
