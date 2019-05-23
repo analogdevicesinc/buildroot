@@ -71,6 +71,10 @@ define DROPBEAR_ENABLE_REVERSE_DNS
 	echo '#define DO_HOST_LOOKUP 1'                 >> $(@D)/localoptions.h
 endef
 
+define DROPBEAR_ENABLE_MOTD
+	echo '#define DO_MOTD 1'                        >> $(@D)/localoptions.h
+endef
+
 define DROPBEAR_BUILD_FEATURED
 	echo '#define DROPBEAR_SMALL_CODE 0'            >> $(@D)/localoptions.h
 	echo '#define DROPBEAR_TWOFISH128 1'            >> $(@D)/localoptions.h
@@ -122,6 +126,10 @@ endif
 
 ifneq ($(BR2_PACKAGE_DROPBEAR_LASTLOG),y)
 DROPBEAR_CONF_OPTS += --disable-lastlog
+endif
+
+ifeq ($(BR2_PACKAGE_DROPBEAR_MOTD),y)
+DROPBEAR_POST_EXTRACT_HOOKS += DROPBEAR_ENABLE_MOTD
 endif
 
 define DROPBEAR_INSTALL_TARGET_CMDS
