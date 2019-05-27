@@ -6,7 +6,7 @@ source /etc/device_config
 case "$1" in
 	start)
 		echo -n "Starting dhcpd Daemon & httpd Server: "
-		start-stop-daemon -S -b -q -m -p /var/run/udhcpd.pid -x /usr/sbin/udhcpd -- $UDHCPD_CONF
+		start-stop-daemon -S -q -p /var/run/udhcpd.pid -x /usr/sbin/udhcpd -- $UDHCPD_CONF
 		httpd -h /www
 		[ $? = 0 ] && echo "OK" || echo "FAIL"
 		;;
