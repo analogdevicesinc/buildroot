@@ -134,7 +134,7 @@ define DROPBEAR_INSTALL_TARGET_CMDS
 endef
 
 HOST_DROPBEAR_MAKE = \
-	$(MAKE) STATIC=1 \
+	$(MAKE) \
 	PROGRAMS="dropbearkey"
 
 $(eval $(autotools-package))
