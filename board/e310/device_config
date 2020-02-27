@@ -1,0 +1,15 @@
+#S23udc
+PRODUCT="E310"
+USBPID=0x5a02
+ENDPOINTS=3
+
+#S40network / S41network
+UDHCPD_CONF=/etc/udhcpd.conf
+CONF=/opt/config.txt
+IFAC=/etc/network/interfaces
+
+#update.sh
+TARGET=e310
+FIRMWARE=/mnt/e310.frm
+FRM_MAGIC="ITB E310"
+
