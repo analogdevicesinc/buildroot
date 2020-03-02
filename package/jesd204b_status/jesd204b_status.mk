@@ -5,7 +5,7 @@
 ################################################################################
 
 
-JESD204B_STATUS_VERSION = 45a0eb36c480f11bc0799991a6663d5ff8fb3936
+JESD204B_STATUS_VERSION = ff01bf5e218f8614fa857afee0e961d9f82c4db3
 JESD204B_STATUS_SITE = https://github.com/analogdevicesinc/jesd-eye-scan-gtk.git
 JESD204B_STATUS_SITE_METHOD = git
 JESD204B_STATUS_LICENSE = BSD
