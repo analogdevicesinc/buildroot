@@ -1,0 +1,8 @@
+config BR2_PACKAGE_NH7020_BOX
+	bool "NH7020_box"
+	depends on BR2_PACKAGE_QT5
+	depends on BR2_PACKAGE_QT5BASE_GUI
+	depends on BR2_PACKAGE_QT5BASE_WIDGETS
+	select BR2_PACKAGE_LIBIIO
+	help
+	  NH7020 box QT5

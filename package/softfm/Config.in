@@ -1,0 +1,6 @@
+config BR2_PACKAGE_SOFTFM
+	bool "NH7020_softfm"
+	select BR2_PACKAGE_LIBIIO
+	depends on BR2_TOOLCHAIN_HAS_THREADS
+	help
+	  soft fm examples for NH7020

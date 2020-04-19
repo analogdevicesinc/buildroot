@@ -17,6 +17,11 @@ sed -i '/hostname/a\
 
 sed -i -e '/::sysinit:\/bin\/hostname -F \/etc\/hostname/d' ${TARGET_DIR}/etc/inittab
 
+#only adau1761 needs set alsa mixer
+#grep -qE '^::sysinit:alsactl restore' ${TARGET_DIR}/etc/inittab || \
+#sed -i '/# USB console/a\
+#::sysinit:alsactl restore -c 0 -f \/etc\/adau1761.state' ${TARGET_DIR}/etc/inittab
+
 BOARD_DIR="$(dirname $0)"
 BOARD_NAME="$(basename ${BOARD_DIR})"
 GENIMAGE_CFG="${BOARD_DIR}/genimage-msd.cfg"
@@ -58,6 +63,7 @@ ${INSTALL} -D -m 0755 ${BOARD_DIR}/S23udc ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/S40network ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/S41network ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/S45msd ${TARGET_DIR}/etc/init.d/
+${INSTALL} -D -m 0755 ${BOARD_DIR}/S52oled ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/fw_env.config ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/VERSIONS ${TARGET_DIR}/opt/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/device_reboot ${TARGET_DIR}/usr/sbin/
@@ -74,9 +80,15 @@ ${INSTALL} -D -m 0644 ${BOARD_DIR}/msd/*.html ${TARGET_DIR}/www/
 
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/wpa_supplicant/* ${TARGET_DIR}/etc/wpa_supplicant/
 
+#only adau1761 needs load firmware and state file
+#${INSTALL} -D -m 0755 ${BOARD_DIR}/adau1761.bin ${TARGET_DIR}/lib/firmware/adau1761.bin
+#${INSTALL} -D -m 0755 ${BOARD_DIR}/adau1761.state ${TARGET_DIR}/etc/adau1761.state
+${INSTALL} -D -m 0755 ${BOARD_DIR}/fm_radio.sh ${TARGET_DIR}/usr/sbin/
+
 ln -sf ../../wpa_supplicant/ifupdown.sh ${TARGET_DIR}/etc/network/if-up.d/wpasupplicant
 ln -sf ../../wpa_supplicant/ifupdown.sh ${TARGET_DIR}/etc/network/if-down.d/wpasupplicant
 ln -sf ../../wpa_supplicant/ifupdown.sh ${TARGET_DIR}/etc/network/if-pre-up.d/wpasupplicant
 ln -sf ../../wpa_supplicant/ifupdown.sh ${TARGET_DIR}/etc/network/if-post-down.d/wpasupplicant
 
+ln -sf device_reboot ${TARGET_DIR}/usr/sbin/pluto_reboot
 ln -sf device_reboot ${TARGET_DIR}/usr/sbin/nh7020_reboot

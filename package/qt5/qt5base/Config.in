@@ -58,7 +58,7 @@ config BR2_PACKAGE_QT5BASE_CONCURRENT
 	  This options enables the Qt5Concurrent library.
 
 config BR2_PACKAGE_QT5BASE_SQL
-	def_bool y
+	def_bool n
 
 if BR2_PACKAGE_QT5BASE_SQL
 config BR2_PACKAGE_QT5BASE_MYSQL
@@ -113,7 +113,7 @@ endchoice
 endif
 
 config BR2_PACKAGE_QT5BASE_TEST
-	def_bool y
+	def_bool n
 
 config BR2_PACKAGE_QT5BASE_XML
 	def_bool y
@@ -225,7 +225,7 @@ config BR2_PACKAGE_QT5BASE_DEFAULT_QPA
 
 config BR2_PACKAGE_QT5BASE_PRINTSUPPORT
 	depends on BR2_PACKAGE_QT5BASE_WIDGETS
-	def_bool y
+	def_bool n
 
 config BR2_PACKAGE_QT5BASE_FONTCONFIG
 	bool "fontconfig support"

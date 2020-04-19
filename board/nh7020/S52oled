@@ -1,0 +1,49 @@
+#! /bin/sh
+
+[ -f /usr/sbin/rfsom-box-gui ] || exit 0
+
+start() {
+	printf "Starting OLED Display: "
+	
+	QT_QPA_EVDEV_KEYBOARD_PARAMETERS=/dev/input/event1:grab=1 \
+	QT_QPA_EVDEV_MOUSE_PARAMETERS=/dev/input/event0:grab=1 \
+	QT_QPA_FB_DRM=1 \
+	QT_QPA_FB_HIDECURSOR=0 \
+	QT_QPA_FB_TSLIB=1 \
+	QT_QPA_FONTDIR=/home/analog/Qt/fonts \
+	QT_QPA_PLATFORM=linuxfb \
+	QT_QPA_GENERIC_PLUGINS=evdevmouse,evdevkeyboard \
+	FRAMEBUFFER=/dev/fb0 \
+        /usr/sbin/rfsom-box-gui > /var/log/rfsom-box-gui 2>&1 &
+	echo "done"
+}
+
+
+stop() {
+	printf "Stopping OLED Display: "
+	killall rfsom-box-gui
+	echo "done"
+}
+
+restart() {
+	stop
+	start
+}
+
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|reload|restart}"
+	exit 1
+esac
+
+exit $?

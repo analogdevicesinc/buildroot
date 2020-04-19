@@ -2214,6 +2214,8 @@ menu "Applications and Tools for PlutoSDR, M2k & SidekiqZ2"
 	source "package/poll_sysfs/Config.in"
 	source "package/ad936x_ref_cal/Config.in"
 	source "package/iio_rf_swap/Config.in"
+	source "package/nh7020_box/Config.in"
+	source "package/softfm/Config.in"
 endmenu
 
 menu "Applications and Tools for the JESD204B Interface Framework"
