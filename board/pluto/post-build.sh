@@ -45,11 +45,13 @@ genimage                           \
 
 rm -f ${TARGET_DIR}/opt/boot.vfat
 rm -f ${TARGET_DIR}/etc/init.d/S99iiod
+rm -Rf ${TARGET_DIR}/etc/dropbear
 
 mkdir -p ${TARGET_DIR}/www/img
 mkdir -p ${TARGET_DIR}/etc/wpa_supplicant/
 mkdir -p ${TARGET_DIR}/mnt/jffs2
 mkdir -p ${TARGET_DIR}/mnt/msd
+mkdir -p ${TARGET_DIR}/etc/dropbear
 
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/update.sh ${TARGET_DIR}/sbin/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/update_frm.sh ${TARGET_DIR}/sbin/
@@ -65,6 +67,9 @@ ${INSTALL} -D -m 0755 ${BOARD_DIR}/S45msd ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/fw_env.config ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/VERSIONS ${TARGET_DIR}/opt/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/device_reboot ${TARGET_DIR}/usr/sbin/
+${INSTALL} -D -m 0755 ${BOARD_DIR}/device_passwd ${TARGET_DIR}/usr/sbin/
+${INSTALL} -D -m 0755 ${BOARD_DIR}/device_persistent_keys ${TARGET_DIR}/usr/sbin/
+${INSTALL} -D -m 0755 ${BOARD_DIR}/device_format_jffs2 ${TARGET_DIR}/usr/sbin/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/motd ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/test_ensm_pinctrl.sh ${TARGET_DIR}/usr/sbin/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/device_config ${TARGET_DIR}/etc/
