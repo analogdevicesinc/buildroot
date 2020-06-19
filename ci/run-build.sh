@@ -56,7 +56,7 @@ _check_defconfig_vivado() {
 
 	if [ "$vivado_ver" = "2019_1" ] ; then
 		gcc_ver=8
-		ker_ver=4_19
+		ker_ver=4_14
 	elif [ "$vivado_ver" = "2018_3" ] ; then
 		gcc_ver=7
 		ker_ver=4_14
