@@ -6,10 +6,10 @@
 source /etc/device_config
 
 handle_calibration_files() {
-	if [[ -s /mnt_jffs2/${CALIBFILENAME} ]]; then
-		cp /mnt_jffs2/${CALIBFILENAME} /opt/${CALIBFILENAME}
-	elif [[ -s /mnt_jffs2/${CALIBFILENAME_FACTORY} ]]; then
-		cp /mnt_jffs2/${CALIBFILENAME_FACTORY} /opt/${CALIBFILENAME}
+	if [[ -s /mnt/jffs2/${CALIBFILENAME} ]]; then
+		cp /mnt/jffs2/${CALIBFILENAME} /opt/${CALIBFILENAME}
+	elif [[ -s /mnt/jffs2/${CALIBFILENAME_FACTORY} ]]; then
+		cp /mnt/jffs2/${CALIBFILENAME_FACTORY} /opt/${CALIBFILENAME}
 	fi
 }
 

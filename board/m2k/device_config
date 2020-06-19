@@ -10,7 +10,7 @@ IFAC=/etc/network/interfaces
 
 #update.sh
 TARGET=m2k
-FIRMWARE=/mnt/m2k.frm
+FIRMWARE=/mnt/msd/m2k.frm
 FRM_MAGIC="ITB M2k (ADALM-2000)"
 CALIBFILENAME=m2k-calib.ini
 CALIBFILENAME_FACTORY=m2k-calib-factory.ini

@@ -30,19 +30,19 @@ case "$1" in
 		echo -n "Starting MSD Daemon: "
 		patch_html_page /www/index.html /www/img/version.js
 		losetup /dev/loop7 $img -o 512
-		mount /dev/loop7 /mnt
+		mount /dev/loop7 /mnt/msd
 
 		if [ "$TARGET" == "m2k" ]; then
 			cp /opt/${CALIBFILENAME} /mnt
-			md5sum /mnt/${CALIBFILENAME} > /opt/${CALIBFILENAME}.md5
+			md5sum /mnt/msd/${CALIBFILENAME} > /opt/${CALIBFILENAME}.md5
 		fi
 
-		cp $CONF /mnt
-		md5sum /mnt/config.txt > /opt/config.md5
+		cp $CONF /mnt/msd
+		md5sum /mnt/msd/config.txt > /opt/config.md5
 
-		cp -a /www/* /mnt/
-		mv /mnt/index.html /mnt/info.html
-		umount /mnt
+		cp -a /www/* /mnt/msd
+		mv /mnt/msd/index.html /mnt/msd/info.html
+		umount /mnt/msd
 		echo $img > $file
 
 		start-stop-daemon -S -b -q -m -p /var/run/update.pid -x /bin/sh -- /sbin/update.sh

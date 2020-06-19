@@ -49,6 +49,7 @@ rm -f ${TARGET_DIR}/etc/init.d/S99iiod
 mkdir -p ${TARGET_DIR}/www/img
 mkdir -p ${TARGET_DIR}/etc/wpa_supplicant/
 mkdir -p ${TARGET_DIR}/mnt/jffs2
+mkdir -p ${TARGET_DIR}/mnt/msd
 
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/update.sh ${TARGET_DIR}/sbin/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/update_frm.sh ${TARGET_DIR}/sbin/
