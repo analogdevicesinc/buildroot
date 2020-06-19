@@ -10,6 +10,6 @@ IFAC=/etc/network/interfaces
 
 #update.sh
 TARGET=plutosdr
-FIRMWARE=/mnt/pluto.frm
+FIRMWARE=/mnt/msd/pluto.frm
 FRM_MAGIC="ITB PlutoSDR (ADALM-PLUTO)"
 
