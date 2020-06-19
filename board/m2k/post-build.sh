@@ -16,7 +16,7 @@ sed -i '/hostname/a\
 
 sed -i -e '/::sysinit:\/bin\/hostname -F \/etc\/hostname/d' ${TARGET_DIR}/etc/inittab
 
-grep -q mtd2 ${TARGET_DIR}/etc/fstab || echo "mtd2 /mnt_jffs2 jffs2 rw,noatime 0 0" >> ${TARGET_DIR}/etc/fstab
+grep -q mtd2 ${TARGET_DIR}/etc/fstab || echo "mtd2 /mnt/jffs2 jffs2 rw,noatime 0 0" >> ${TARGET_DIR}/etc/fstab
 
 BOARD_DIR="$(dirname $0)"
 BOARD_NAME="$(basename ${BOARD_DIR})"
@@ -36,7 +36,8 @@ rm -f ${TARGET_DIR}/opt/boot.vfat
 rm -f ${TARGET_DIR}/etc/init.d/S99iiod
 
 mkdir -p ${TARGET_DIR}/www/img
-mkdir -p ${TARGET_DIR}/mnt_jffs2
+mkdir -p ${TARGET_DIR}/mnt/jffs2
+mkdir -p ${TARGET_DIR}/mnt/msd
 mkdir -p ${TARGET_DIR}/etc/wpa_supplicant/
 
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/update.sh ${TARGET_DIR}/sbin/
