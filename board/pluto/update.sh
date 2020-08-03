@@ -248,6 +248,11 @@ do
 					do_reset=1
 			fi
 		fi
+
+		if [[ -s /mnt/msd/${CALIBFILENAME_TEMP_LUT} ]]; then
+			cp /mnt/msd/${CALIBFILENAME_TEMP_LUT} /mnt/jffs2/${CALIBFILENAME_TEMP_LUT}
+			do_reset=1
+		fi
 	fi
 
 	if [[ $do_reset = 1 ]]

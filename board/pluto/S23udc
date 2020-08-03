@@ -43,6 +43,7 @@ create_iiod_context_attributes() {
 
 	elif [ "$USBPID" == "0xb672" ]; then
 		cat /opt/${CALIBFILENAME} | grep ^cal,* >> /etc/libiio.ini
+		cat /opt/${CALIBFILENAME_TEMP_LUT} | grep ^cal,* >> /etc/libiio.ini
 	fi
 }
 
