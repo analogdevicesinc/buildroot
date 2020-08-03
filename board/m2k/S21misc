@@ -11,6 +11,10 @@ handle_calibration_files() {
 	elif [[ -s /mnt/jffs2/${CALIBFILENAME_FACTORY} ]]; then
 		cp /mnt/jffs2/${CALIBFILENAME_FACTORY} /opt/${CALIBFILENAME}
 	fi
+
+	if [[ -s /mnt/jffs2/${CALIBFILENAME_TEMP_LUT} ]]; then
+		cp /mnt/jffs2/${CALIBFILENAME_TEMP_LUT} /opt/${CALIBFILENAME_TEMP_LUT}
+	fi
 }
 
 case "$1" in
