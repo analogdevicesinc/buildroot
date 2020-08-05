@@ -1,0 +1,11 @@
+diff --git a/static_assert.h b/static_assert.h
+index 0bcfa80d..1bb7b134 100644
+--- a/static_assert.h
++++ b/static_assert.h
+@@ -27,3 +27,6 @@
+ # endif
+ 
+ #endif /* !STRACE_STATIC_ASSERT_H */
++
++#undef static_assert
++#define static_assert(expr, message)
