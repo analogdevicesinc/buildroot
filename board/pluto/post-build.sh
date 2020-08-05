@@ -25,6 +25,12 @@ if [ -n "${BR2_GCC_VERSION}" ] ; then
 	GCC_VERSION="${BR2_GCC_VERSION}"
 	BIN_VERSION="${BR2_BINUTILS_VERSION}"
 	GCC_TRIPLE="${BR2_GCC_TARGET_MODE}-${BR2_GCC_TARGET_CPU}-${BR2_GCC_TARGET_FLOAT_ABI}"
+
+	# FIXME: added these dummy files when not building the official image, because
+	# we need to do 'make legal-info', then run a script for that to generate the LICENSE.html file
+	[ -f "$BOARD_DIR/VERSIONS" ] || touch "$BOARD_DIR/VERSIONS"
+	[ -f "$BOARD_DIR/msd/LICENSE.html" ] || touch "$BOARD_DIR/msd/LICENSE.html"
+
 elif [ -n "${BR2_TOOLCHAIN_EXTERNAL_PREFIX}" ] ; then
 	GCC_VERSION=$(${BR2_TOOLCHAIN_EXTERNAL_PREFIX}-gcc --version | head -1 | sed 's/.*(\(.*\))/\1/')
 	BIN_VERSION=$(${BR2_TOOLCHAIN_EXTERNAL_PREFIX}-as --version | head -1 | sed 's/.*(\(.*\))/\1/')
