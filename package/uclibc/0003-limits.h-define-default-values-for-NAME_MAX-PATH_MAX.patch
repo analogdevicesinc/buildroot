@@ -1,0 +1,45 @@
+From 5bde011a711c9439440a952c2b1559bec88aa989 Mon Sep 17 00:00:00 2001
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Date: Wed, 12 Aug 2020 07:35:14 +0300
+Subject: [PATCH] limits.h: define default values for NAME_MAX, PATH_MAX,
+ IOV_MAX
+
+These are needed for building a few packages with buildroot, since these
+aren't defined in limits.h.
+So far, were found strace & libnl.
+
+References:
+   strace - https://github.com/strace/strace/pull/145
+   libnl - https://github.com/thom311/libnl/pull/259
+
+These PRs were opened to fix the packages, but then it was considered to
+address this in uclibc-ng.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ include/limits.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/include/limits.h b/include/limits.h
+index c274dd492..b00bb4aee 100644
+--- a/include/limits.h
++++ b/include/limits.h
+@@ -151,3 +151,15 @@
+ #ifdef	__USE_XOPEN
+ # include <bits/xopen_lim.h>
+ #endif
++
++#ifndef NAME_MAX
++#define NAME_MAX 255
++#endif
++
++#ifndef PATH_MAX
++#define PATH_MAX 4096
++#endif
++
++#ifndef IOV_MAX
++#define IOV_MAX 1024
++#endif
+-- 
+2.25.1
+
