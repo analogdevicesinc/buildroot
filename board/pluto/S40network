@@ -54,7 +54,7 @@ create_system_files () {
 	then
 		if [ -n "$WLAN_PWD" ]
 		then
-			wpa_passphrase $WLAN_SSID $WLAN_PWD > /etc/wpa.conf
+			wpa_passphrase "$WLAN_SSID" "$WLAN_PWD" > /etc/wpa.conf
 		else
 			echo "network={" > /etc/wpa.conf
 			echo "    ssid=\"$WLAN_SSID\"" >> /etc/wpa.conf
