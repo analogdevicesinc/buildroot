@@ -22,6 +22,7 @@ case "$1" in
 	# Restore saved password and Dropbear keys
 	[[ -d /mnt/jffs2/etc ]] && cd /mnt/jffs2/etc && md5sum -s -c password.md5 && cp passwd shadow group /etc
 	[[ -d /mnt/jffs2/etc/dropbear ]] && cd /mnt/jffs2/etc/dropbear && md5sum -s -c keys.md5 && cp dropbear* /etc/dropbear/
+	[[ -d /mnt/jffs2/root/.ssh ]] && cd /mnt/jffs2/root/.ssh && md5sum -s -c keys.md5 && mkdir /root/.ssh && cp authorized_keys /root/.ssh
 	iio_attr -q -d m2k-fabric clk_powerdown 1
 	handle_calibration_files
 	;;
