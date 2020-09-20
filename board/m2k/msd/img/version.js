@@ -29,6 +29,7 @@ function versionCompare(v1, v2) {
 }
 
 var latest_libiio;
+var latest_scopy;
 var mac = false;
 
 function GetDriverurl() {
@@ -52,9 +53,10 @@ function GetDriverurl() {
 	} else
 		document.getElementById('hidedriver').style.display = "none";
 	var linux = navigator.platform.indexOf('Linux') > -1 ? true : false;
-	if (mac || win || linux)
+	if (mac || win || linux) {
 		document.getElementById('hidelib').style.display = "inline";
-	else {
+		document.getElementById('hidescopy').style.display = "inline";
+	} else {
 		if (navigator.platform.match(/(Linux|iPhone|iPod|iPad|Android)/i)) {
 			document.getElementById('libtest').innerHTML = "Sorry, we don't support " + navigator.platform + " yet. Please ask.";
 			jQuery('#libtest').attr ('href', "https://ez.analog.com/university-program");
@@ -68,11 +70,13 @@ function GetDriverurl() {
 	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/libiio/releases/latest");
 	req.fail(function() {
 		document.getElementById('hidelib').style.display = "none";
+		document.getElementById('hidescopy').style.display = "none";
 		latest_libiio = null;
 	});
 	req.done(function(response) {
 		latest_libiio = response;
-		var select = document.getElementById("os-select");
+		var libiio_os = document.getElementById("libiio-os");
+		var scopy_os = document.getElementById("scopy-os");
 		var suffix = "";
 		for (i = 0; i < latest_libiio.assets.length; i++) {
 			os = latest_libiio.assets[i].name.split('-')[2];
@@ -80,20 +84,50 @@ function GetDriverurl() {
 			if (suffix == ".zip" ) {
 				os = os.slice(0, os.length-4);
 			}
-			for (j = 0; j < select.length; j++) {
-				if (os.match(select[j].value))
+			for (j = 0; j < libiio_os.length; j++) {
+				if (os.match(libiio_os[j].value))
 					break;
 			}
-			if (j == select.length) {
-				select.options[select.options.length] = new Option(os);
+			if (j == libiio_os.length) {
+				libiio_os.options[libiio_os.options.length] = new Option(os);
 				if ((win && os == "Windows") || (mac && os == "darwin") || (linux && os == "ubuntu")) {
-					select.value = os;
+					libiio_os.value = os;
 					libiio_type();
 				}
 			}
 		}
 		if (latest_libiio.hasOwnProperty('tarball_url') || latest_libiio.hasOwnProperty('zipball_url'))
-			select.options[select.options.length] = new Option("source");
+			libiio_os.options[libiio_os.options.length] = new Option("source");
+	});
+
+	var req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/scopy/releases/latest");
+	req.fail(function() {
+		document.getElementById('hidescopy').style.display = "none";
+		latest_scopy = null;
+	});
+	req.done(function(response) {
+		latest_scopy = response;
+		var scopy_os = document.getElementById("scopy-os");
+		var suffix = "";
+		for (i = 0; i < latest_scopy.assets.length; i++) {
+			var os = latest_scopy.assets[i].name.split('-')[2];
+			if (os.length == 0)
+				os = latest_scopy.assets[i].name.split(' ')[0];
+			os = os.split('_')[0];
+			for (j = 0; j < scopy_os.length; j++) {
+				if (os.match(scopy_os[j].value))
+					break;
+			}
+			if (j == scopy_os.length) {
+				scopy_os.options[scopy_os.options.length] = new Option(os);
+				if ((win && os == "Windows") || (mac && os == "osx") || (linux && os == "Linux")) {
+					scopy_os.value = os;
+					scopy_type();
+				}
+			}
+		}
+		if (latest_scopy.hasOwnProperty('tarball_url') || latest_scopy.hasOwnProperty('zipball_url'))
+			scopy_os.options[scopy_os.options.length] = new Option("source");
 	});
 	if (win) {
 		req = jQuery.getJSON("https://api.github.com/repos/analogdevicesinc/plutosdr-m2k-drivers-win/releases/latest");
@@ -123,8 +157,8 @@ function GetDriverurl() {
 }
 
 function libiio_type() {
-	var select = document.getElementById("type-select");
-	var os = document.getElementById("os-select").value;
+	var select = document.getElementById("libiio-type");
+	var os = document.getElementById("libiio-os").value;
 	select.onchange = null;
 	var i;
 	for (i = select.options.length - 1 ; i >= 0 ; i--) {
@@ -159,10 +193,51 @@ function libiio_type() {
 	libiio_ver();
 }
 
+function scopy_type() {
+	var type = select = document.getElementById("scopy-type");
+	var os = document.getElementById("scopy-os").value;
+	select.onchange = null;
+	var i;
+	for (i = select.options.length - 1 ; i >= 0 ; i--) {
+		type.remove(i);
+	}
+	var suffix = "";
+	for (i = 0; i < latest_scopy.assets.length; i++) {
+		if (latest_scopy.assets[i].browser_download_url.match(os)) {
+			suffix = latest_scopy.assets[i].browser_download_url.slice(-4);
+			if (suffix == "r.gz" ) {
+				suffix = ".tar.gz";
+			}
+			for (j = 0; j < type.length; j++) {
+				if (suffix.match(select[j].value))
+					break;
+			}
+			if (j == type.length) {
+				type.options[select.options.length] = new Option(suffix);
+			}
+		}
+	}
+	if (os.match('source')) {
+		if (latest_scopy.hasOwnProperty('tarball_url'))
+			type.options[select.options.length] = new Option('.tar');
+		if (latest_scopy.hasOwnProperty('zipball_url'))
+			type.options[select.options.length] = new Option('.zip');
+	}
+
+	if (type.length == 1)
+		document.getElementById('hidescopytype').style.display = "none";
+	else
+		document.getElementById('hidescopytype').style.display = "inline";
+
+	type.onchange = scopy_url;
+	scopy_url();
+}
+
+
 function libiio_ver() {
 	var select = document.getElementById("ver-select");
-	var os = document.getElementById("os-select").value;
-	var suffix = document.getElementById("type-select").value;
+	var os = document.getElementById("libiio-os").value;
+	var suffix = document.getElementById("libiio-type").value;
 	select.onchange = null;
 	var i;
 	for (i = select.options.length - 1 ; i >= 0 ; i--) {
@@ -188,8 +263,8 @@ function libiio_ver() {
 }
 
 function libiio_url() {
-	var os = document.getElementById("os-select").value;
-	var suffix = document.getElementById("type-select").value;
+	var os = document.getElementById("libiio-os").value;
+	var suffix = document.getElementById("libiio-type").value;
 	var ver = document.getElementById("ver-select").value;
 	var i, url;
 	for (i = 0; i < latest_libiio.assets.length; i++) {
@@ -209,6 +284,29 @@ function libiio_url() {
 			jQuery('#libtest').attr ('href', latest_libiio.zipball_url);
 		}
 
+	}
+}
+
+function scopy_url() {
+	var os = document.getElementById("scopy-os").value;
+	var suffix = document.getElementById("scopy-type").value;
+	var i, url;
+	for (i = 0; i < latest_scopy.assets.length; i++) {
+		url = latest_scopy.assets[i].browser_download_url;
+		if (url.match(os) && url.match(suffix)) {
+			jQuery('#scopytest').attr ('href', url);
+			document.getElementById('scopytest').innerHTML = latest_scopy.assets[i].name;
+		}
+	}
+	if (os.match('source')) {
+		if (suffix.match('.tar')) {
+			document.getElementById('scopytest').innerHTML = "Source code (tar)";
+			jQuery('#scopytest').attr ('href', latest_scopy.tarball_url);
+		}
+		if (suffix.match('.zip')) {
+			document.getElementById('scopytest').innerHTML = "Source code (zip)";
+			jQuery('#scopytest').attr ('href', latest_scopy.zipball_url);
+		}
 	}
 }
 
