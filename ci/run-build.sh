@@ -56,7 +56,14 @@ _check_defconfig_vivado() {
 
 	if [ "$vivado_ver" = "2019_1" ] ; then
 		gcc_ver=8
-		ker_ver=4_14
+		if [ "$VIVADO_ARCH" = "zynq" ] ; then
+			ker_ver=4_14
+		elif [ "$VIVADO_ARCH" = "microblaze" ] ; then
+			ker_ver=4_19
+		else
+			echo_red "Unknown or unspecied VIVADO_ARCH='$VIVADO_ARCH'"
+			exit 1
+		fi
 	elif [ "$vivado_ver" = "2018_3" ] ; then
 		gcc_ver=7
 		ker_ver=4_14
