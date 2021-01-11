@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-VLC_VERSION = 3.0.6
+VLC_VERSION = 3.0.11
 VLC_SITE = https://get.videolan.org/vlc/$(VLC_VERSION)
 VLC_SOURCE = vlc-$(VLC_VERSION).tar.xz
 VLC_LICENSE = GPL-2.0+, LGPL-2.1+
@@ -55,7 +55,6 @@ VLC_CONF_OPTS += \
 	--disable-dsm \
 	--disable-dv1394 \
 	--disable-fluidlite \
-	--disable-fluidsynth \
 	--disable-gme \
 	--disable-goom \
 	--disable-jack \
@@ -124,6 +123,13 @@ else
 VLC_CONF_OPTS += --disable-avahi
 endif
 
+ifeq ($(BR2_PACKAGE_DAV1D),y)
+VLC_CONF_OPTS += --enable-dav1d
+VLC_DEPENDENCIES += dav1d
+else
+VLC_CONF_OPTS += --disable-dav1d
+endif
+
 ifeq ($(BR2_PACKAGE_DBUS),y)
 VLC_CONF_OPTS += --enable-dbus
 VLC_DEPENDENCIES += dbus
@@ -162,6 +168,13 @@ VLC_CONF_OPTS += --enable-flac
 VLC_DEPENDENCIES += flac
 else
 VLC_CONF_OPTS += --disable-flac
+endif
+
+ifeq ($(BR2_PACKAGE_FLUIDSYNTH),y)
+VLC_CONF_OPTS += --enable-fluidsynth
+VLC_DEPENDENCIES += fluidsynth
+else
+VLC_CONF_OPTS += --disable-fluidsynth
 endif
 
 ifeq ($(BR2_PACKAGE_FREERDP),y)
@@ -427,6 +440,9 @@ endif
 ifeq ($(BR2_PACKAGE_LIVE555),y)
 VLC_CONF_OPTS += --enable-live555
 VLC_DEPENDENCIES += live555
+ifneq ($(BR2_PACKAGE_OPENSSL),y)
+VLC_CONF_ENV += CXXFLAGS="$(TARGET_CXXFLAGS) -DNO_OPENSSL"
+endif
 else
 VLC_CONF_OPTS += --disable-live555
 endif
@@ -559,6 +575,13 @@ endif
 
 ifeq ($(BR2_PACKAGE_ZLIB),y)
 VLC_DEPENDENCIES += zlib
+endif
+
+ifeq ($(BR2_PACKAGE_GNUTLS),y)
+VLC_CONF_OPTS += --enable-gnutls
+VLC_DEPENDENCIES += gnutls
+else
+VLC_CONF_OPTS += --disable-gnutls
 endif
 
 $(eval $(autotools-package))

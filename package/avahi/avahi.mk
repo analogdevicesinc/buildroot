@@ -81,6 +81,7 @@ AVAHI_CONF_OPTS = \
 	--disable-mono \
 	--disable-monodoc \
 	--disable-stack-protector \
+	--disable-introspection \
 	--with-distro=none \
 	--disable-manpages \
 	$(if $(BR2_PACKAGE_AVAHI_AUTOIPD),--enable,--disable)-autoipd \
@@ -198,14 +199,6 @@ endef
 endif
 
 define AVAHI_INSTALL_INIT_SYSTEMD
-	mkdir -p $(TARGET_DIR)/etc/systemd/system/multi-user.target.wants
-
-	ln -fs ../../../../usr/lib/systemd/system/avahi-daemon.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/avahi-daemon.service
-
-	ln -fs ../../../../usr/lib/systemd/system/avahi-dnsconfd.service \
-		$(TARGET_DIR)/etc/systemd/system/multi-user.target.wants/avahi-dnsconfd.service
-
 	$(INSTALL) -D -m 644 package/avahi/avahi_tmpfiles.conf \
 		$(TARGET_DIR)/usr/lib/tmpfiles.d/avahi.conf
 
