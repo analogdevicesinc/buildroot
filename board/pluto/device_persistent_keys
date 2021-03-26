@@ -17,3 +17,5 @@ if [ -f ${IDFILE} ]; then
  cd /root/.ssh
  md5sum authorized_keys 2>/dev/null > /mnt/jffs2/root/.ssh/keys.md5
 fi
+
+sync

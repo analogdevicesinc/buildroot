@@ -3,9 +3,14 @@ set +e
 
 while true;
 do
-	read -p "Are you sure to delete/format your mtd2 JFFS2 partition? (yes/no) " answ
+	read -p "Are you sure to delete/format your mtd2 JFFS2 (/mnt/jffs2) partition? (yes/no) " answ
 	case $answ in
-		[Yy]* ) flash_erase -j /dev/mtd2 0 0; break;;
+		[Yy]* )
+			umount /mnt/jffs2
+			flash_erase -j /dev/mtd2 0 0
+			mount -a
+			break
+			;;
 		[Nn]* ) exit;;
 		* ) echo "Please answer yes or no.";;
 	esac

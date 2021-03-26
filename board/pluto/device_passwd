@@ -7,4 +7,5 @@ passwd
 install -D /etc/passwd /etc/shadow /etc/group -t /mnt/jffs2/etc
 cd /etc
 md5sum passwd shadow group 2>/dev/null > /mnt/jffs2/etc/password.md5
+sync
 
