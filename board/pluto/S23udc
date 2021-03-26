@@ -6,6 +6,17 @@ CONFIGFS=/sys/kernel/config/usb_gadget
 GADGET=$CONFIGFS/composite_gadget
 IIOD_OPTS="-D -n $ENDPOINTS -F /dev/iio_ffs"
 UDC_HANDLE_SUSPEND=`fw_printenv -n udc_handle_suspend 2> /dev/null || echo 0`
+USB_ETH_MODE=`fw_printenv -n usb_ethernet_mode 2> /dev/null || echo 0`
+
+if [ "$USB_ETH_MODE" == "ncm" ]
+then
+	USB_NET_FUNCTION=ncm.usb0
+elif [ "$USB_ETH_MODE" == "ecm" ]
+then
+	USB_NET_FUNCTION=ecm.usb0
+else
+	USB_NET_FUNCTION=rndis.0
+fi
 
 create_iiod_context_attributes() {
 	model=$1
@@ -75,7 +86,7 @@ case "$1" in
 
 	mkdir -p $GADGET/functions/ffs.iio_ffs
 	mkdir -p $GADGET/functions/acm.usb0
-	mkdir -p $GADGET/functions/rndis.0
+	mkdir -p $GADGET/functions/$USB_NET_FUNCTION
 	mkdir -p $GADGET/functions/mass_storage.0
 
 #	echo /opt/vfat.img > $GADGET/functions/mass_storage.0/lun.0/file
@@ -84,15 +95,15 @@ case "$1" in
 	host_addr=`echo -n 00:E0:22; echo $sha1 | dd bs=1 count=6 2>/dev/null | hexdump -v -e '/1 ":%01c""%c"'`
 	dev_addr=`echo -n 00:05:F7; echo $sha1 | dd bs=1 count=6 skip=6 2>/dev/null | hexdump -v -e '/1 ":%01c""%c"'`
 
-	echo $host_addr > $GADGET/functions/rndis.0/host_addr
-	echo $dev_addr > $GADGET/functions/rndis.0/dev_addr
+	echo $host_addr > $GADGET/functions/$USB_NET_FUNCTION/host_addr
+	echo $dev_addr > $GADGET/functions/$USB_NET_FUNCTION/dev_addr
 
 	mkdir -p $GADGET/configs/c.1
 	mkdir -p $GADGET/configs/c.1/strings/0x409
 	echo "RNDIS/MSD/ACM/IIOUSBD" > $GADGET/configs/c.1/strings/0x409/configuration
 	echo 500 > $GADGET/configs/c.1/MaxPower
 
-	ln -s $GADGET/functions/rndis.0 $GADGET/configs/c.1
+	ln -s $GADGET/functions/$USB_NET_FUNCTION $GADGET/configs/c.1
 	ln -s $GADGET/functions/mass_storage.0 $GADGET/configs/c.1
 	ln -s $GADGET/functions/acm.usb0 $GADGET/configs/c.1
 	ln -s $GADGET/functions/ffs.iio_ffs $GADGET/configs/c.1/ffs.iio_ffs
@@ -122,7 +133,7 @@ case "$1" in
 	echo "" > $GADGET/UDC
 	start-stop-daemon -K -q -p /var/run/iiod.pid 2>/dev/null
 
-	rm $GADGET/configs/c.1/rndis.0
+	rm $GADGET/configs/c.1/$USB_NET_FUNCTION
 	rm $GADGET/configs/c.1/mass_storage.0
 	rm $GADGET/configs/c.1/acm.usb0
 	rm $GADGET/configs/c.1/ffs.iio_ffs
@@ -133,7 +144,7 @@ case "$1" in
 
 	rmdir $GADGET/functions/ffs.iio_ffs
 	#rmdir $GADGET/functions/acm.usb0
-	rmdir $GADGET/functions/rndis.0
+	rmdir $GADGET/functions/$USB_NET_FUNCTION
 	rmdir $GADGET/functions/mass_storage.0
 
 	rmdir $GADGET 2> /dev/null

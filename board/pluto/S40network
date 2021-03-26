@@ -29,6 +29,7 @@ create_system_files () {
 
 	XO_CORRECTION=`fw_printenv -n xo_correction 2> /dev/null`
 	UDC_HANDLE_SUSPEND=`fw_printenv -n udc_handle_suspend 2> /dev/null || echo 0`
+	USB_ETH_MODE=`fw_printenv -n usb_ethernet_mode 2> /dev/null || echo 0`
 
 	### /etc/udhcpd.conf ###
 	echo "start $IPADDR_HOST" > $UDHCPD_CONF
@@ -101,6 +102,8 @@ create_system_files () {
 	echo "[SYSTEM]"$'\r' >> $CONF
 	echo "xo_correction = $XO_CORRECTION"$'\r' >> $CONF
 	echo "udc_handle_suspend = $UDC_HANDLE_SUSPEND"$'\r' >> $CONF
+	echo "# USB Communication Device Class Compatibility Mode [rndis|ncm|ecm]"$'\r' >> $CONF
+	echo "usb_ethernet_mode = $USB_ETH_MODE"$'\r' >> $CONF
 	echo ""$'\r'>> $CONF
 	echo "[ACTIONS]"$'\r' >> $CONF
 	echo "diagnostic_report = 0"$'\r' >> $CONF
