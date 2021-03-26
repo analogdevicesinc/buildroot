@@ -97,6 +97,7 @@ process_ini() {
 		echo "pwd_wlan $pwd_wlan" >> /opt/fw_set.tmp
 		echo "xo_correction $xo_correction" >> /opt/fw_set.tmp
 		echo "udc_handle_suspend $udc_handle_suspend" >> /opt/fw_set.tmp
+		echo "usb_ethernet_mode $usb_ethernet_mode" >> /opt/fw_set.tmp
 		echo "ipaddr_eth $ipaddr_eth" >> /opt/fw_set.tmp
 		echo "netmask_eth $netmask_eth" >> /opt/fw_set.tmp
 		fw_setenv -s /opt/fw_set.tmp
@@ -220,7 +221,7 @@ do
 	fi
 
 	if [[ -s ${FIRMWARE} ]]
-	then 
+	then
 		handle_frimware_frm "${FIRMWARE}" "${FRM_MAGIC}"
 	fi
 

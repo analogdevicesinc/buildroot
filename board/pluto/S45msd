@@ -11,8 +11,8 @@ patch_html_page() {
 	LINUX=`uname -a | tr / - | tr '\n' ';' ; echo -n $(nproc) "core(s)"`
 	MODEL=`cat /etc/libiio.ini | grep hw_model= | cut -d '=' -f 2`
 	SERIAL=`cat /sys/kernel/config/usb_gadget/composite_gadget/strings/0x409/serialnumber`
-	MACHOST=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/rndis.0/host_addr`
-	MAC=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/rndis.0/dev_addr`
+	MACHOST=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/*/host_addr`
+	MAC=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/*/dev_addr`
 	IIO=`iio_info 2>/dev/null | grep "Library version:"`
 	BUILD=`grep device-fw /opt/VERSIONS | cut -d ' ' -f 2`
 	FPGA=`grep hdl /opt/VERSIONS | cut -d ' ' -f 2`
