@@ -42,8 +42,6 @@ function GetDriverurl() {
 		}
 		document.getElementById('prompt0').innerHTML = "adi-mm:tests analogdevices$";
 		document.getElementById('prompt1').innerHTML = "adi-mm:tests analogdevices$";
-	} else {
-		document.getElementById('hidehorndis').style.display = "none";
 	}
 	var win = navigator.platform.indexOf('Win') > -1 ? true : false;
 	if (win) {
@@ -107,19 +105,9 @@ function GetDriverurl() {
 			}
 		});
 	} else if (mac) {
-		req = jQuery.getJSON("https://api.github.com/repos/jwise/HoRNDIS/releases/latest");
-		req.done(function(response) {
-			for (i = 0; i < response.assets.length; i++) {
-				if (response.assets[i].content_type == "application/octet-stream" &&
-						response.assets[i].browser_download_url.slice(-4) == ".pkg") {
-					jQuery('#horndistest').attr ('href', response.assets[i].browser_download_url);
-					document.getElementById('horndistest').innerHTML = response.name;
-				}
-			}
-		});
+		document.getElementById('hidedriver').style.display = "none";
 	} else {
 		document.getElementById('hidedriver').style.display = "none";
-
 	}
 }
 
