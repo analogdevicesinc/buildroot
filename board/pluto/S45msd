@@ -19,9 +19,9 @@ patch_html_page() {
 	ROOTFS=`grep buildroot /opt/VERSIONS | cut -d ' ' -f 2`
 	UBOOT=`cat /proc/cmdline | tr  "=" "\n" | grep "U-Boot"`
 	USB_ETH_MODE=`fw_printenv -n usb_ethernet_mode 2> /dev/null || echo 0`
-	if [ "$USB_ETH_MODE" == "ncm" ] ;￼then
+	if [ "$USB_ETH_MODE" == "ncm" ]; then
 		NETWORKUSB="Communications Device Class – Network Control Model (CDC-NCM)"
-	elif [ "$USB_ETH_MODE" == "ecm" ] ; then
+	elif [ "$USB_ETH_MODE" == "ecm" ]; then
 		NETWORKUSB="Communications Device Class – Ethernet Control Module (CDC-EMC)"
 	else
 		NETWORKUSB="Remote Network Driver Interface Specification (RNDIS)"
