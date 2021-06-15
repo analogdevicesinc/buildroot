@@ -12,11 +12,36 @@ my_umount()
 	[ -d "${destdir}/$1" ] && rmdir "${destdir}/$1"
 }
 
+do_mount()
+{
+	local errno
+	local err
+
+	errno=0
+	for I in $(seq 5)
+	do
+		err=$(mount -t auto -o sync "/dev/$1" "${destdir}/$1" 2>&1)
+		errno=$?
+
+		# If we get a "Device or resource busy" error, retry again in a
+		# little bit, otherwise just return immediately.
+		if ! echo "${err}" | grep -q "Device or resource busy"
+		then
+			return ${errno}
+		fi
+
+		sleep .25
+	done
+
+	echo "${err}" >&2
+	return ${errno}
+}
+
 my_mount()
 {
 	mkdir -p "${destdir}/$1" || exit 1
 
-	if ! mount -t auto -o sync "/dev/$1" "${destdir}/$1"; then
+	if ! do_mount $1; then
 		# failed to mount, clean up mountpoint
 		rmdir "${destdir}/$1"
 		exit 1
