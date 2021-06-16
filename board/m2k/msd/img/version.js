@@ -317,12 +317,12 @@ function CheckFrmVersion() {
 			message = "Newer version available online (Version " + VerOnGithub + " )";
 			document.getElementById('versionsection').className = "download";
 		} else  if (res > 0) {
-			message = "Wow! Your Pluto Firmware Version #BUILD# is newer than (" + VerOnGithub + ") on Github.";
+			message = "Wow! Your M2k Firmware Version #BUILD# is newer than (" + VerOnGithub + ") on Github.";
 			document.getElementById('versionsection').className = "";
 			document.getElementById('fw-download').style.visibility = "hidden";
 			document.getElementById('hideupgrade').style.display = "none";
 		} else if (res == 0) {
-			message = "Pluto is using the same version as latest release!";
+			message = "M2k is using the same version as latest release!";
 			document.getElementById('versionsection').className = "";
 			document.getElementById('fw-download').style.visibility = "hidden";
 			document.getElementById('hideupgrade').style.display = "none";
