@@ -4,12 +4,12 @@
 #
 ################################################################################
 
-#LIBIIO_VERSION = 0.21
-#LIBIIO_SITE = $(call github,analogdevicesinc,libiio,v$(LIBIIO_VERSION))
+LIBIIO_VERSION = 0.23
+LIBIIO_SITE = $(call github,analogdevicesinc,libiio,v$(LIBIIO_VERSION))
 
-LIBIIO_VERSION = fb64aca8adcaa607b482091b23b8edf10e5c1ad8
-LIBIIO_SITE = https://github.com/analogdevicesinc/libiio.git
-LIBIIO_SITE_METHOD = git
+#LIBIIO_VERSION = fb64aca8adcaa607b482091b23b8edf10e5c1ad8
+#LIBIIO_SITE = https://github.com/analogdevicesinc/libiio.git
+#LIBIIO_SITE_METHOD = git
 
 LIBIIO_INSTALL_STAGING = YES
 LIBIIO_LICENSE = LGPL-2.1+
@@ -25,7 +25,7 @@ LIBIIO_CONF_OPTS = -DENABLE_IPV6=ON \
 	-DWITH_TESTS=$(if $(BR2_PACKAGE_LIBIIO_TESTS),ON,OFF) \
 	-DWITH_DOC=OFF
 
-	-DLIBIIO_VERSION_GIT=fb64aca \
+#	-DLIBIIO_VERSION_GIT=fb64aca \
 
 ifeq ($(BR2_PACKAGE_LIBIIO_LOCAL_BACKEND),y)
 LIBIIO_DEPENDENCIES += libini
