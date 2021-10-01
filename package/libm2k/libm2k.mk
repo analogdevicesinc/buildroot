@@ -3,7 +3,7 @@
 # libm2k
 #
 ################################################################################
-LIBM2K_VERSION = 0.4.0
+LIBM2K_VERSION = 0.5.0
 LIBM2K_SITE = $(call github,analogdevicesinc,libm2k,v$(LIBM2K_VERSION))
 
 LIBM2K_INSTALL_STAGING = YES
