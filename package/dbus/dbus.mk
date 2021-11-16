@@ -4,14 +4,14 @@
 #
 ################################################################################
 
-DBUS_VERSION = 1.12.18
+DBUS_VERSION = 1.12.16
 DBUS_SITE = https://dbus.freedesktop.org/releases/dbus
 DBUS_LICENSE = AFL-2.1 or GPL-2.0+ (library, tools), GPL-2.0+ (tools)
 DBUS_LICENSE_FILES = COPYING
 DBUS_INSTALL_STAGING = YES
 
 define DBUS_PERMISSIONS
-	/usr/libexec/dbus-daemon-launch-helper f 4750 0 dbus - - - - -
+	/usr/libexec/dbus-daemon-launch-helper f 4755 0 0 - - - - -
 endef
 
 define DBUS_USERS
@@ -107,7 +107,6 @@ HOST_DBUS_CONF_OPTS = \
 	--disable-selinux \
 	--disable-xml-docs \
 	--disable-doxygen-docs \
-	--disable-systemd \
 	--without-x \
 	--with-xml=expat
 

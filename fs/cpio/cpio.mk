@@ -37,11 +37,7 @@ ROOTFS_CPIO_OPTS += --reproducible
 endif
 
 define ROOTFS_CPIO_CMD
-	cd $(TARGET_DIR) && \
-	find . \
-	| LC_ALL=C sort \
-	| cpio $(ROOTFS_CPIO_OPTS) --quiet -o -H newc \
-	> $@
+	cd $(TARGET_DIR) && find . | cpio $(ROOTFS_CPIO_OPTS) --quiet -o -H newc > $@
 endef
 
 ifeq ($(BR2_TARGET_ROOTFS_CPIO_UIMAGE),y)

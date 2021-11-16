@@ -13,7 +13,7 @@ GCC_VERSION = $(call qstrip,$(BR2_GCC_VERSION))
 ifeq ($(BR2_GCC_VERSION_ARC),y)
 GCC_SITE = $(call github,foss-for-synopsys-dwc-arc-processors,gcc,$(GCC_VERSION))
 GCC_SOURCE = gcc-$(GCC_VERSION).tar.gz
-else ifeq ($(BR2_GCC_VERSION_CSKY),y)
+else ifeq ($(BR2_csky),y)
 GCC_SITE = $(call github,c-sky,gcc,$(GCC_VERSION))
 GCC_SOURCE = gcc-$(GCC_VERSION).tar.gz
 else
@@ -100,17 +100,6 @@ HOST_GCC_COMMON_CONF_ENV = \
 GCC_COMMON_TARGET_CFLAGS = $(TARGET_CFLAGS)
 GCC_COMMON_TARGET_CXXFLAGS = $(TARGET_CXXFLAGS)
 
-# used to fix ../../../../libsanitizer/libbacktrace/../../libbacktrace/elf.c:772:21: error: 'st.st_mode' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-ifeq ($(BR2_ENABLE_DEBUG),y)
-GCC_COMMON_TARGET_CFLAGS += -Wno-error
-endif
-
-# Make sure libgcc & libstdc++ always get built with -matomic on ARC700
-ifeq ($(GCC_TARGET_CPU):$(BR2_ARC_ATOMIC_EXT),arc700:y)
-GCC_COMMON_TARGET_CFLAGS += -matomic
-GCC_COMMON_TARGET_CXXFLAGS += -matomic
-endif
-
 # Propagate options used for target software building to GCC target libs
 HOST_GCC_COMMON_CONF_ENV += CFLAGS_FOR_TARGET="$(GCC_COMMON_TARGET_CFLAGS)"
 HOST_GCC_COMMON_CONF_ENV += CXXFLAGS_FOR_TARGET="$(GCC_COMMON_TARGET_CXXFLAGS)"
@@ -129,7 +118,7 @@ endif
 ifeq ($(BR2_USE_WCHAR)$(BR2_TOOLCHAIN_HAS_LIBQUADMATH),yy)
 HOST_GCC_COMMON_CONF_OPTS += --enable-libquadmath
 else
-HOST_GCC_COMMON_CONF_OPTS += --disable-libquadmath --disable-libquadmath-support
+HOST_GCC_COMMON_CONF_OPTS += --disable-libquadmath
 endif
 
 # libsanitizer requires wordexp, not in default uClibc config. Also
@@ -142,14 +131,6 @@ endif
 # https://bugs.busybox.net/show_bug.cgi?id=7951
 ifeq ($(BR2_sparc)$(BR2_sparc64),y)
 HOST_GCC_COMMON_CONF_OPTS += --disable-libsanitizer
-endif
-
-# The logic in libbacktrace/configure.ac to detect if __sync builtins
-# are available assumes they are as soon as target_subdir is not
-# empty, i.e when cross-compiling. However, some platforms do not have
-# __sync builtins, so help the configure script a bit.
-ifeq ($(BR2_TOOLCHAIN_HAS_SYNC_4),)
-HOST_GCC_COMMON_CONF_ENV += target_configargs="libbacktrace_cv_sys_sync=no"
 endif
 
 # TLS support is not needed on uClibc/no-thread and
@@ -232,13 +213,6 @@ ifeq ($(BR2_powerpc_SPE),y)
 HOST_GCC_COMMON_CONF_OPTS += \
 	--enable-e500_double \
 	--with-long-double-128
-endif
-
-# Set default to Secure-PLT to prevent run-time
-# generation of PLT stubs (supports RELRO and
-# SELinux non-exemem capabilities)
-ifeq ($(BR2_powerpc),y)
-HOST_GCC_COMMON_CONF_OPTS += --enable-secureplt
 endif
 
 # PowerPC64 big endian by default uses the elfv1 ABI, and PowerPC 64

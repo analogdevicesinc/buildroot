@@ -7,7 +7,7 @@ config BR2_PACKAGE_TINYDTLS
 	  machine.  It is implemented in C and provides support for
 	  the mandatory cipher suites specified in CoAP.
 
-	  https://projects.eclipse.org/projects/iot.tinydtls
+	  https://sourceforge.net/projects/tinydtls
 
 comment "tinydtls needs a toolchain w/ threads"
 	depends on !BR2_TOOLCHAIN_HAS_THREADS

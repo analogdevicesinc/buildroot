@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NGINX_VERSION = 1.17.9
+NGINX_VERSION = 1.17.7
 NGINX_SITE = http://nginx.org/download
 NGINX_LICENSE = BSD-2-Clause
 NGINX_LICENSE_FILES = LICENSE
@@ -50,8 +50,8 @@ NGINX_CONF_OPTS += \
 	--prefix=/usr \
 	--conf-path=/etc/nginx/nginx.conf \
 	--sbin-path=/usr/sbin/nginx \
-	--pid-path=/run/nginx.pid \
-	--lock-path=/run/lock/nginx.lock \
+	--pid-path=/var/run/nginx.pid \
+	--lock-path=/var/run/lock/nginx.lock \
 	--user=www-data \
 	--group=www-data \
 	--error-log-path=/var/log/nginx/error.log \

@@ -31,7 +31,7 @@ RAUC_DEPENDENCIES += systemd
 endif
 
 define RAUC_INSTALL_INIT_SYSTEMD
-	mkdir -p $(TARGET_DIR)/usr/lib/systemd/system/rauc.service.d
+	mkdir $(TARGET_DIR)/usr/lib/systemd/system/rauc.service.d
 	printf '[Install]\nWantedBy=multi-user.target\n' \
 		>$(TARGET_DIR)/usr/lib/systemd/system/rauc.service.d/buildroot-enable.conf
 endef
@@ -46,8 +46,7 @@ HOST_RAUC_CONF_OPTS += \
 	--disable-network \
 	--disable-json \
 	--disable-service \
-	--without-dbuspolicydir \
-	--with-systemdunitdir=no
+	--without-dbuspolicydir
 
 $(eval $(autotools-package))
 $(eval $(host-autotools-package))

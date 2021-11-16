@@ -26,8 +26,7 @@ define OPEN_PLC_UTILS_BUILD_CMDS
 endef
 
 define OPEN_PLC_UTILS_INSTALL_TARGET_CMDS
-	$(TARGET_MAKE_ENV) $(MAKE) ROOTFS=$(TARGET_DIR) \
-		BIN="$(TARGET_DIR)/usr/bin" -C $(@D) install
+	$(TARGET_MAKE_ENV) $(MAKE) ROOTFS=$(TARGET_DIR) -C $(@D) install
 endef
 
 $(eval $(generic-package))

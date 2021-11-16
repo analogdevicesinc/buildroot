@@ -177,7 +177,6 @@ static void check_unsafe_path(const char *arg,
 	}
 }
 
-#ifdef BR_NEED_SOURCE_DATE_EPOCH
 /* Returns false if SOURCE_DATE_EPOCH was not defined in the environment.
  *
  * Returns true if SOURCE_DATE_EPOCH is in the environment and represent
@@ -231,15 +230,6 @@ bool parse_source_date_epoch_from_env(void)
 	}
 	return true;
 }
-#else
-bool parse_source_date_epoch_from_env(void)
-{
-	/* The compiler is recent enough to handle SOURCE_DATE_EPOCH itself
-	 * so we do not need to do anything here.
-	 */
-	return false;
-}
-#endif
 
 int main(int argc, char **argv)
 {

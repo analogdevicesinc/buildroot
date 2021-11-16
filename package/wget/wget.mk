@@ -21,10 +21,6 @@ else
 WGET_CONF_OPTS += --without-ssl
 endif
 
-ifeq ($(BR2_PACKAGE_LIBICONV),y)
-WGET_DEPENDENCIES += libiconv
-endif
-
 ifeq ($(BR2_PACKAGE_LIBIDN2),y)
 WGET_CONF_OPTS += --with-libidn
 WGET_DEPENDENCIES += libidn2

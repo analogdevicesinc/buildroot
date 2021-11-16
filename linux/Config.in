@@ -30,7 +30,7 @@ config BR2_LINUX_KERNEL_LATEST_VERSION
 	bool "Latest version (5.4)"
 
 config BR2_LINUX_KERNEL_LATEST_CIP_VERSION
-	bool "Latest CIP SLTS version (4.19.152-cip37)"
+	bool "Latest CIP SLTS version (4.19.98-cip19)"
 	help
 	  CIP launched in the spring of 2016 to address the needs of
 	  organizations in industries such as power generation and
@@ -43,13 +43,13 @@ config BR2_LINUX_KERNEL_LATEST_CIP_VERSION
 	  implementation of software building blocks that meet
 	  these requirements.
 
-	  The CIP community plans to maintain 4.19 for security and
+	  The CIP community plans to maintain 4.4 for security and
 	  bug fixes for more than 10 years.
 
 	  https://www.cip-project.org
 
 config BR2_LINUX_KERNEL_LATEST_CIP_RT_VERSION
-	bool "Latest CIP RT SLTS version (4.19.152-cip37-rt16)"
+	bool "Latest CIP RT SLTS version (4.19.98-cip19-rt7)"
 	help
 	  Same as the CIP version, but this is the PREEMPT_RT realtime
 	  variant.
@@ -128,9 +128,9 @@ endif
 
 config BR2_LINUX_KERNEL_VERSION
 	string
-	default "5.4.77" if BR2_LINUX_KERNEL_LATEST_VERSION
-	default "4.19.152-cip37" if BR2_LINUX_KERNEL_LATEST_CIP_VERSION
-	default "4.19.152-cip37-rt16" if BR2_LINUX_KERNEL_LATEST_CIP_RT_VERSION
+	default "5.4.23" if BR2_LINUX_KERNEL_LATEST_VERSION
+	default "4.19.98-cip19" if BR2_LINUX_KERNEL_LATEST_CIP_VERSION
+	default "4.19.98-cip19-rt7" if BR2_LINUX_KERNEL_LATEST_CIP_RT_VERSION
 	default BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE \
 		if BR2_LINUX_KERNEL_CUSTOM_VERSION
 	default "custom" if BR2_LINUX_KERNEL_CUSTOM_TARBALL
@@ -338,10 +338,10 @@ config BR2_LINUX_KERNEL_IMAGE_NAME
 	string "Kernel image name"
 	depends on BR2_LINUX_KERNEL_IMAGE_TARGET_CUSTOM
 	help
-	  The filename of the kernel image, if it is different from
-	  the make target (above). Defaults to
-	  BR2_LINUX_KERNEL_IMAGE_TARGET_NAME. If specified, the
-	  filename is relative to arch/ARCH/boot/.
+	  The filename of the kernel image, if it is different from the
+	  make target (above). Only Xtensa uses a filename different
+	  from the make target. Defaults to
+	  BR2_LINUX_KERNEL_IMAGE_TARGET_NAME.
 
 	  If unsure, leave it empty.
 

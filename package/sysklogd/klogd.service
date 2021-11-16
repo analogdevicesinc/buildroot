@@ -2,7 +2,7 @@
 Description=Kernel Log Daemon
 
 [Service]
-ExecStart=/sbin/klogd -n
+ExecStart=/usr/sbin/klogd -n
 StandardOutput=null
 Restart=on-failure
 

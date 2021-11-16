@@ -79,13 +79,6 @@ else
 LIBARCHIVE_CONF_OPTS += --without-xml2
 endif
 
-ifeq ($(BR2_PACKAGE_LZ4),y)
-LIBARCHIVE_CONF_OPTS += --with-lz4
-LIBARCHIVE_DEPENDENCIES += lz4
-else
-LIBARCHIVE_CONF_OPTS += --without-lz4
-endif
-
 ifeq ($(BR2_PACKAGE_LZO),y)
 LIBARCHIVE_DEPENDENCIES += lzo
 else
@@ -131,13 +124,11 @@ HOST_LIBARCHIVE_CONF_OPTS = \
 	--without-expat \
 	--without-libiconv-prefix \
 	--without-xml2 \
-	--without-lz4 \
 	--without-lzo2 \
 	--without-mbedtls \
 	--without-nettle \
 	--without-openssl \
-	--without-lzma \
-	--without-zstd
+	--without-lzma
 
 $(eval $(autotools-package))
 $(eval $(host-autotools-package))

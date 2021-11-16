@@ -186,25 +186,18 @@ F:	package/rauc/
 
 N:	Angelo Compagnucci <angelo.compagnucci@gmail.com>
 F:	package/corkscrew/
-F:	package/cups/
-F:	package/cups-filters/
 F:	package/fail2ban/
-F:	package/grep/
 F:	package/i2c-tools/
-F:	package/jq/
-F:	package/libb64/
 F:	package/mender/
 F:	package/mender-artifact/
 F:	package/mono/
 F:	package/mono-gtksharp3/
 F:	package/monolite/
-F:	package/openjpeg/
 F:	package/python-can/
 F:	package/python-pillow/
 F:	package/python-pydal/
 F:	package/python-spidev/
 F:	package/python-web2py/
-F:	package/sam-ba/
 F:	package/sshguard/
 F:	package/sunwait/
 F:	package/sysdig/
@@ -217,9 +210,8 @@ F:	package/pkg-golang.mk
 N:	Anthony Viallard <viallard@syscom-instruments.com>
 F:	package/gnuplot/
 
-N:	Antoine Tenart <atenart@kernel.org>
-F:	package/libselinux/
-F:	package/refpolicy/
+N:	Antoine Ténart <antoine.tenart@bootlin.com>
+F:	package/wf111/
 
 N:	Antony Pavlov <antonynpavlov@gmail.com>
 F:	package/lsscsi/
@@ -473,6 +465,9 @@ N:	Biagio Montaruli <biagio.hkr@gmail.com>
 F:	board/acmesystems/
 F:	configs/acmesystems_*
 
+N:	Bimal Jacob <bimal.jacob@rockwellcollins.com>
+F:	package/nginx-upload/
+
 N:	Bogdan Radulescu <bogdan@nimblex.net>
 F:	package/iftop/
 F:	package/ncdu/
@@ -486,6 +481,33 @@ F:	package/pdmenu/
 N:	Carlo Caione <carlo.caione@gmail.com>
 F:	package/jailhouse/
 F:	package/sunxi-boards/
+
+N:	Carlos Santos <unixmania@gmail.com>
+F:	package/busybox/
+F:	package/cups/
+F:	package/cups-filters/
+F:	package/gtest/
+F:	package/initscripts/
+F:	package/intel-microcode/
+F:	package/libpam-radius-auth/
+F:	package/libpam-tacplus/
+F:	package/liburiparser/
+F:	package/modem-manager/
+F:	package/pamtester/
+F:	package/pcm-tools/
+F:	package/perl-file-util/
+F:	package/skeleton-custom/
+F:	package/skeleton-init-common/
+F:	package/skeleton-init-none/
+F:	package/skeleton-init-systemd/
+F:	package/skeleton-init-sysv/
+F:	package/skeleton/
+F:	package/sysvinit/
+F:	package/util-linux/
+F:	package/tpm2-abrmd/
+F:	package/tpm2-tools/
+F:	package/tpm2-totp/
+F:	package/tpm2-tss/
 
 N:	Carsten Schoenert <c.schoenert@gmail.com>
 F:	package/dvbsnoop/
@@ -644,6 +666,9 @@ F:	package/openldap/
 N:	David du Colombier <0intro@gmail.com>
 F:	package/x264/
 
+N:	David Graziano <david.graziano@rockwellcollins.com>
+F:	package/libcsv/
+
 N:	David Lechner <david@lechnology.com>
 F:	board/lego/ev3/
 F:	configs/lego_ev3_defconfig
@@ -651,7 +676,7 @@ F:	linux/linux-ext-ev3dev-linux-drivers.mk
 F:	package/brickd/
 F:	package/ev3dev-linux-drivers/
 
-N:	Davide Viti <zinosat@gmail.com>
+N:	Davide Viti <zinosat@tiscali.it>
 F:	package/flann/
 F:	package/python-paho-mqtt/
 F:	package/qhull/
@@ -667,7 +692,7 @@ N:	Dominik Faessler <faessler@was.ch>
 F:	package/logsurfer/
 F:	package/python-id3/
 
-N:	Doug Kehn <rdkehn@gmail.com>
+N:	Doug Kehn <rdkehn@yahoo.com>
 F:	package/nss-pam-ldapd/
 F:	package/sp-oops-extract/
 F:	package/unscd/
@@ -1043,7 +1068,6 @@ N:	Gwenhael Goavec-Merou <gwenhael.goavec-merou@trabucayre.com>
 F:	package/gnuradio/
 F:	package/gqrx/
 F:	package/gr-osmosdr/
-F:	package/librtlsdr/
 F:	package/libusbgx/
 F:	package/python-cheetah/
 F:	package/python-markdown/
@@ -1184,6 +1208,9 @@ N:	Jan Viktorin <viktorin@rehivetech.com>
 F:	package/python-pexpect/
 F:	package/python-ptyprocess/
 F:	package/zynq-boot-bin/
+
+N:	Jared Bents <jared.bents@rockwellcollins.com>
+F:	package/davici/
 
 N:	Jarkko Sakkinen <jarkko.sakkinen@intel.com>
 F:	package/quota/
@@ -1361,7 +1388,7 @@ F:	board/technologic/ts7680/
 F:	configs/ts7680_defconfig
 F:	package/paho-mqtt-c
 
-N:	Julien Olivain <ju.o@free.fr>
+N:	Julien Olivain <juju@cotds.org>
 F:	board/technexion/imx8mmpico/
 F:	board/technexion/imx8mpico/
 F:	configs/imx8mmpico_defconfig
@@ -1487,6 +1514,9 @@ F:	package/mpv/
 F:	package/rpi-firmware/
 F:	package/rpi-userland/
 
+N:	Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+F:	package/nvme/
+
 N:	Manuel Vögele <develop@manuel-voegele.de>
 F:	package/python-pyqt5/
 F:	package/python-requests-toolbelt/
@@ -1586,7 +1616,6 @@ F:	package/cgroupfs-mount/
 F:	package/crda/
 F:	package/cunit/
 F:	package/dacapo/
-F:	package/davici/
 F:	package/dnsmasq/
 F:	package/dosfstools/
 F:	package/eigen/
@@ -1719,6 +1748,9 @@ F:	package/systemd-bootchart/
 F:	package/tinyalsa/
 F:	package/tinyxml/
 
+N:	Maxime Ripard <maxime.ripard@bootlin.com>
+F:	package/kmsxx/
+
 N:	Michael Durrant <mdurrant@arcturusnetworks.com>
 F:	board/arcturus/
 F:	configs/arcturus_ucp1020_defconfig
@@ -1774,7 +1806,7 @@ N:	Murat Demirten <mdemirten@yh.com.tr>
 F:	package/jpeg-turbo/
 F:	package/libgeotiff/
 
-N:	Mylène Josserand <mylene.josserand@collabora.com>
+N:	Mylène Josserand <mylene.josserand@bootlin.com>
 F:	package/rtl8723bu/
 
 N:	Nathaniel Roach <nroach44@gmail.com>
@@ -1813,7 +1845,6 @@ F:	package/tpm-tools/
 F:	package/trousers/
 
 N:	Norbert Lange <nolange79@gmail.com>
-F:	package/systemd/
 F:	package/tcf-agent/
 
 N:	Nylon Chen <nylon7@andestech.com>
@@ -1847,6 +1878,9 @@ F:	package/openjpeg/
 
 N:	Olivier Singla <olivier.singla@gmail.com>
 F:	package/shellinabox/
+
+N:	Paresh Chaudhary <paresh.chaudhary@rockwellcollins.com>
+F:	package/checksec/
 
 N:	Parnell Springmeyer <parnell@digitalmentat.com>
 F:	package/scrypt/
@@ -2056,6 +2090,9 @@ F:	package/libfreeimage/
 N:	Renaud Aubin <root@renaud.io>
 F:	package/libhttpparser/
 
+N:	Rhys Williams <github@wilberforce.co.nz>
+F:	package/lirc-tools/
+
 N:	Ricardo Martincoski <ricardo.martincoski@datacom.com.br>
 F:	package/atop/
 F:	package/thermald/
@@ -2139,13 +2176,18 @@ F:	package/davfs2/
 
 N:	Ryan Barnett <ryan.barnett@rockwellcollins.com>
 F:	package/atftp/
-F:	package/c-periphery/
 F:	package/miraclecast/
 F:	package/python-pyasn/
+F:	package/python-pycrypto/
 F:	package/python-pysnmp/
 F:	package/python-pysnmp-mibs/
 F:	package/python-tornado/
 F:	package/websocketpp/
+
+N:	Ryan Coe <bluemrp9@gmail.com>
+F:	package/inadyn/
+F:	package/libite/
+F:	package/mariadb/
 
 N:	Ryan Wilkins <ryan@deadfrog.net>
 F:	package/biosdevname/
@@ -2280,9 +2322,11 @@ F:	package/libscrypt/
 N:	Stephan Hoffmann <sho@relinux.de>
 F:	package/cache-calibrator/
 F:	package/gtest/
-F:	package/libhttpserver/
 F:	package/mtdev/
 F:	package/mtdev2tuio/
+
+N:	Stephan Hoffmann <stephan.hoffmann@ext.grandcentrix.net>
+F:	package/libhttpserver/
 
 N:	Steve Calfee <stevecalfee@gmail.com>
 F:	package/python-pymysql/
@@ -2425,6 +2469,9 @@ F:	package/redis/
 F:	package/waf/
 F:	support/testing/tests/package/test_crudini.py
 
+N:	Trent Piepho <tpiepho@impinj.com>
+F:	package/libp11/
+
 N:	Tudor Holton <buildroot@tudorholton.com>
 F:	package/openjdk/
 
@@ -2473,8 +2520,6 @@ N:	Wade Berrier <wberrier@gmail.com>
 F:	package/ngrep/
 
 N:	Waldemar Brodkorb <wbx@openadk.org>
-F:	package/mksh/
-F:	package/ruby/
 F:	package/uclibc/
 F:	package/uclibc-ng-test/
 

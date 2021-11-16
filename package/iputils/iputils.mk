@@ -40,8 +40,13 @@ IPUTILS_DEPENDENCIES += libgcrypt
 else ifeq ($(BR2_PACKAGE_OPENSSL),y)
 IPUTILS_CONF_OPTS += -DUSE_CRYPTO=openssl
 IPUTILS_DEPENDENCIES += openssl
-else
+else ifeq ($(BR2_PACKAGE_LINUX_HEADERS),y)
 IPUTILS_CONF_OPTS += -DUSE_CRYPTO=kernel
+IPUTILS_DEPENDENCIES += linux-headers
+else
+IPUTILS_CONF_OPTS += -DUSE_CRYPTO=none
+# BUILD_NINFOD=true and USE_CRYPTO=none cannot be combined
+IPUTILS_NINFOD = n
 endif
 
 ifeq ($(BR2_PACKAGE_SYSTEMD),y)

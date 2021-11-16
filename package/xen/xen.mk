@@ -4,10 +4,8 @@
 #
 ################################################################################
 
-XEN_VERSION = 4.13.1
+XEN_VERSION = 4.13.0
 XEN_SITE = https://downloads.xenproject.org/release/xen/$(XEN_VERSION)
-XEN_PATCH = \
-	https://xenbits.xenproject.org/xsa/xsa327.patch
 XEN_LICENSE = GPL-2.0
 XEN_LICENSE_FILES = COPYING
 XEN_DEPENDENCIES = host-acpica host-python3
@@ -42,8 +40,7 @@ XEN_CONF_OPTS += --disable-xen
 endif
 
 ifeq ($(BR2_PACKAGE_XEN_TOOLS),y)
-XEN_DEPENDENCIES += \
-	dtc libaio libglib2 ncurses openssl pixman slirp util-linux yajl
+XEN_DEPENDENCIES += dtc libaio libglib2 ncurses openssl pixman util-linux yajl
 ifeq ($(BR2_PACKAGE_ARGP_STANDALONE),y)
 XEN_DEPENDENCIES += argp-standalone
 endif
