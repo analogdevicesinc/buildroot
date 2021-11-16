@@ -4,14 +4,14 @@
 #
 ################################################################################
 
-MPV_VERSION = 0.29.1
-MPV_SITE = https://github.com/mpv-player/mpv/archive
-MPV_SOURCE = v$(MPV_VERSION).tar.gz
+MPV_VERSION = 0.33.1
+MPV_SITE = $(call github,mpv-player,mpv,v$(MPV_VERSION))
 MPV_DEPENDENCIES = \
-	host-pkgconf ffmpeg zlib \
+	host-pkgconf ffmpeg libass zlib \
 	$(if $(BR2_PACKAGE_LIBICONV),libiconv)
 MPV_LICENSE = GPL-2.0+
 MPV_LICENSE_FILES = LICENSE.GPL
+MPV_CPE_ID_VENDOR = mpv
 
 MPV_NEEDS_EXTERNAL_WAF = YES
 
@@ -24,12 +24,19 @@ MPV_CONF_OPTS = \
 	--disable-coreaudio \
 	--disable-cuda-hwaccel \
 	--disable-opensles \
-	--disable-rsound \
 	--disable-rubberband \
 	--disable-uchardet \
-	--disable-vapoursynth \
-	--disable-vapoursynth-lazy \
-	--disable-mali-fbdev
+	--disable-vapoursynth
+
+ifeq ($(BR2_REPRODUCIBLE),y)
+MPV_CONF_OPTS += --disable-build-date
+endif
+
+ifeq ($(BR2_STATIC_LIBS),y)
+MPV_CONF_OPTS += --disable-libmpv-shared --enable-libmpv-static
+else
+MPV_CONF_OPTS += --enable-libmpv-shared --disable-libmpv-static
+endif
 
 # ALSA support requires pcm+mixer
 ifeq ($(BR2_PACKAGE_ALSA_LIB_MIXER)$(BR2_PACKAGE_ALSA_LIB_PCM),yy)
@@ -80,14 +87,6 @@ else
 MPV_CONF_OPTS += --disable-libarchive
 endif
 
-# libass subtitle support
-ifeq ($(BR2_PACKAGE_LIBASS),y)
-MPV_CONF_OPTS += --enable-libass
-MPV_DEPENDENCIES += libass
-else
-MPV_CONF_OPTS += --disable-libass
-endif
-
 # bluray support
 ifeq ($(BR2_PACKAGE_LIBBLURAY),y)
 MPV_CONF_OPTS += --enable-libbluray
@@ -112,30 +111,12 @@ else
 MPV_CONF_OPTS += --disable-dvdnav
 endif
 
-# libdvdread
-ifeq ($(BR2_PACKAGE_LIBDVDREAD),y)
-MPV_CONF_OPTS += --enable-dvdread
-MPV_DEPENDENCIES += libdvdread
-else
-MPV_CONF_OPTS += --disable-dvdread
-endif
-
 # libdrm
 ifeq ($(BR2_PACKAGE_LIBDRM),y)
 MPV_CONF_OPTS += --enable-drm
 MPV_DEPENDENCIES += libdrm
 else
 MPV_CONF_OPTS += --disable-drm
-endif
-
-# libv4l
-ifeq ($(BR2_PACKAGE_LIBV4L),y)
-MPV_CONF_OPTS += \
-	--enable-libv4l2 \
-	--enable-tv
-MPV_DEPENDENCIES += libv4l
-else
-MPV_CONF_OPTS += --disable-libv4l2
 endif
 
 # libvdpau
@@ -169,14 +150,6 @@ MPV_CONF_OPTS += --enable-pulse
 MPV_DEPENDENCIES += pulseaudio
 else
 MPV_CONF_OPTS += --disable-pulse
-endif
-
-# samba support
-ifeq ($(BR2_PACKAGE_SAMBA4),y)
-MPV_CONF_OPTS += --enable-libsmbclient
-MPV_DEPENDENCIES += samba4
-else
-MPV_CONF_OPTS += --disable-libsmbclient
 endif
 
 # SDL support
@@ -233,6 +206,10 @@ MPV_CONF_OPTS += --disable-xv
 endif
 else
 MPV_CONF_OPTS += --disable-x11
+endif
+
+ifeq ($(BR2_TOOLCHAIN_HAS_LIBATOMIC),y)
+MPV_CONF_ENV += LDFLAGS="$(TARGET_LDFLAGS) -latomic"
 endif
 
 $(eval $(waf-package))

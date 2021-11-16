@@ -4,13 +4,16 @@
 #
 ################################################################################
 
-MPD_VERSION_MAJOR = 0.21
-MPD_VERSION = $(MPD_VERSION_MAJOR).19
+MPD_VERSION_MAJOR = 0.22
+MPD_VERSION = $(MPD_VERSION_MAJOR).6
 MPD_SOURCE = mpd-$(MPD_VERSION).tar.xz
 MPD_SITE = http://www.musicpd.org/download/mpd/$(MPD_VERSION_MAJOR)
 MPD_DEPENDENCIES = host-pkgconf boost
 MPD_LICENSE = GPL-2.0+
 MPD_LICENSE_FILES = COPYING
+MPD_CONF_OPTS = \
+	-Daudiofile=disabled \
+	-Ddocumentation=disabled
 
 # Zeroconf support depends on libdns_sd from avahi.
 ifeq ($(BR2_PACKAGE_MPD_AVAHI_SUPPORT),y)
@@ -40,13 +43,6 @@ MPD_DEPENDENCIES += libao
 MPD_CONF_OPTS += -Dao=enabled
 else
 MPD_CONF_OPTS += -Dao=disabled
-endif
-
-ifeq ($(BR2_PACKAGE_MPD_AUDIOFILE),y)
-MPD_DEPENDENCIES += audiofile
-MPD_CONF_OPTS += -Daudiofile=enabled
-else
-MPD_CONF_OPTS += -Daudiofile=disabled
 endif
 
 ifeq ($(BR2_PACKAGE_MPD_BZIP2),y)
@@ -97,10 +93,24 @@ else
 MPD_CONF_OPTS += -Dflac=disabled
 endif
 
+ifeq ($(BR2_PACKAGE_MPD_FLUIDSYNTH),y)
+MPD_DEPENDENCIES += fluidsynth
+MPD_CONF_OPTS += -Dfluidsynth=enabled
+else
+MPD_CONF_OPTS += -Dfluidsynth=disabled
+endif
+
 ifeq ($(BR2_PACKAGE_MPD_HTTPD_OUTPUT),y)
 MPD_CONF_OPTS += -Dhttpd=true
 else
 MPD_CONF_OPTS += -Dhttpd=false
+endif
+
+ifeq ($(BR2_PACKAGE_MPD_ID3TAG),y)
+MPD_DEPENDENCIES += libid3tag
+MPD_CONF_OPTS += -Did3tag=enabled
+else
+MPD_CONF_OPTS += -Did3tag=disabled
 endif
 
 ifeq ($(BR2_PACKAGE_MPD_JACK2),y)
@@ -173,6 +183,13 @@ else
 MPD_CONF_OPTS += -Dmad=disabled
 endif
 
+ifeq ($(BR2_PACKAGE_MPD_MODPLUG),y)
+MPD_DEPENDENCIES += libmodplug
+MPD_CONF_OPTS += -Dmodplug=enabled
+else
+MPD_CONF_OPTS += -Dmodplug=disabled
+endif
+
 ifeq ($(BR2_PACKAGE_MPD_MPG123),y)
 MPD_DEPENDENCIES += libid3tag mpg123
 MPD_CONF_OPTS += -Dmpg123=enabled
@@ -191,6 +208,13 @@ ifeq ($(BR2_PACKAGE_MPD_NEIGHBOR_DISCOVERY_SUPPORT),y)
 MPD_CONF_OPTS += -Dneighbor=true
 else
 MPD_CONF_OPTS += -Dneighbor=false
+endif
+
+ifeq ($(BR2_PACKAGE_MPD_OPENAL),y)
+MPD_DEPENDENCIES += openal
+MPD_CONF_OPTS += -Dopenal=enabled
+else
+MPD_CONF_OPTS += -Dopenal=disabled
 endif
 
 ifeq ($(BR2_PACKAGE_MPD_OPUS),y)
@@ -225,6 +249,13 @@ MPD_DEPENDENCIES += libshout
 MPD_CONF_OPTS += -Dshout=enabled
 else
 MPD_CONF_OPTS += -Dshout=disabled
+endif
+
+ifeq ($(BR2_PACKAGE_MPD_SIDPLAY),y)
+MPD_DEPENDENCIES += libsidplay2
+MPD_CONF_OPTS += -Dsidplay=enabled
+else
+MPD_CONF_OPTS += -Dsidplay=disabled
 endif
 
 ifeq ($(BR2_PACKAGE_MPD_SOUNDCLOUD),y)
@@ -269,7 +300,7 @@ endif
 ifeq ($(BR2_PACKAGE_MPD_UPNP),y)
 MPD_DEPENDENCIES += \
 	expat \
-	$(if $(BR2_PACKAGE_LIBUPNP),libupnp,libupnp18)
+	libupnp
 MPD_CONF_OPTS += -Dupnp=enabled
 else
 MPD_CONF_OPTS += -Dupnp=disabled
@@ -289,8 +320,17 @@ else
 MPD_CONF_OPTS += -Dwavpack=disabled
 endif
 
+ifeq ($(BR2_PACKAGE_MPD_ZZIP),y)
+MPD_DEPENDENCIES += zziplib
+MPD_CONF_OPTS += -Dzzip=enabled
+else
+MPD_CONF_OPTS += -Dzzip=disabled
+endif
+
 define MPD_INSTALL_EXTRA_FILES
 	$(INSTALL) -m 0644 -D package/mpd/mpd.conf $(TARGET_DIR)/etc/mpd.conf
+	mkdir -p $(TARGET_DIR)/var/lib/mpd/music
+	mkdir -p $(TARGET_DIR)/var/lib/mpd/playlists
 endef
 
 MPD_POST_INSTALL_TARGET_HOOKS += MPD_INSTALL_EXTRA_FILES

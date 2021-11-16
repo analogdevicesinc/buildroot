@@ -10,6 +10,8 @@ AUDIT_LICENSE = GPL-2.0+ (programs), LGPL-2.1+ (libraries)
 AUDIT_LICENSE_FILES = COPYING COPYING.LIB
 # 0002-Add-substitue-functions-for-strndupa-rawmemchr.patch
 AUDIT_AUTORECONF = YES
+AUDIT_CPE_ID_VENDOR = linux_audit_project
+AUDIT_CPE_ID_PRODUCT = linux_audit
 
 AUDIT_INSTALL_STAGING = YES
 
@@ -53,6 +55,11 @@ define AUDIT_INSTALL_CLEANUP
 	$(RM) $(TARGET_DIR)/etc/sysconfig/auditd
 endef
 AUDIT_POST_INSTALL_TARGET_HOOKS += AUDIT_INSTALL_CLEANUP
+
+define AUDIT_LINUX_CONFIG_FIXUPS
+	$(call KCONFIG_ENABLE_OPT,CONFIG_NET)
+	$(call KCONFIG_ENABLE_OPT,CONFIG_AUDIT)
+endef
 
 HOST_AUDIT_CONF_OPTS = \
 	--without-python \

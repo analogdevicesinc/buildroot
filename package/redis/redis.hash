@@ -1,5 +1,5 @@
-# From https://github.com/antirez/redis-hashes/blob/master/README
-sha256 61db74eabf6801f057fd24b590232f2f337d422280fd19486eca03be87d3a82b  redis-5.0.7.tar.gz
+# From https://github.com/redis/redis-hashes/blob/master/README
+sha256  3639bbf29aca1a1670de1ab2ce224d6511c63969e7e590d3cdf8f7888184fa19  redis-6.0.16.tar.gz
 
 # Locally calculated
-sha256 cbf420a3672475a6e2765e3c0984c1f81efe0212afb94a3c998ee63bfd661063  COPYING
+sha256  97f0a15b7bbae580d2609dad2e11f1956ae167be296ab60f4691ab9c30ee9828  COPYING

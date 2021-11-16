@@ -5,7 +5,7 @@ config BR2_PACKAGE_LIBCURL
 	  Telnet, and Dict servers, using any of the supported
 	  protocols.
 
-	  http://curl.haxx.se/
+	  https://curl.se/
 
 if BR2_PACKAGE_LIBCURL
 
@@ -52,6 +52,10 @@ config BR2_PACKAGE_LIBCURL_OPENSSL
 	bool "OpenSSL"
 	depends on BR2_PACKAGE_OPENSSL
 
+config BR2_PACKAGE_LIBCURL_BEARSSL
+	bool "BearSSL"
+	depends on BR2_PACKAGE_BEARSSL
+
 config BR2_PACKAGE_LIBCURL_GNUTLS
 	bool "GnuTLS"
 	depends on BR2_PACKAGE_GNUTLS
@@ -67,6 +71,7 @@ config BR2_PACKAGE_LIBCURL_MBEDTLS
 config BR2_PACKAGE_LIBCURL_WOLFSSL
 	bool "WolfSSL"
 	depends on BR2_PACKAGE_WOLFSSL
+	select BR2_PACKAGE_WOLFSSL_ALL
 
 config BR2_PACKAGE_LIBCURL_TLS_NONE
 	bool "None"

@@ -18,7 +18,7 @@ secure and non-secure worlds.
 	-serial stdio \
 	-netdev user,id=vmnic -device virtio-net-device,netdev=vmnic \
 	-semihosting-config enable,target=native \
-	-bios bl1.bin
+	-bios bl1.bin # qemu_arm_vexpress_tz_defconfig
 
 The boot stage traces (if any) followed by the login prompt will appear
 in the terminal that started QEMU.
@@ -28,8 +28,6 @@ number of cores.
 
 Note: "-netdev user,id=vmnic -device virtio-net-device,netdev=vmnic"
 brings network support that is used i.e. in OP-TEE regression tests.
-
-Tested with QEMU 2.12.0, and 3.1.0.
 
 
 -- Boot Details --

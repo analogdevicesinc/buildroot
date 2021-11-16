@@ -12,6 +12,7 @@ HWLOC_LICENSE = BSD-3-Clause
 HWLOC_LICENSE_FILES = COPYING
 HWLOC_DEPENDENCIES = host-pkgconf
 HWLOC_INSTALL_STAGING = YES
+HWLOC_SELINUX_MODULES = hwloc
 
 HWLOC_CONF_OPTS = \
 	--disable-opencl \
@@ -19,14 +20,31 @@ HWLOC_CONF_OPTS = \
 	--disable-nvml \
 	--disable-gl \
 	--disable-cairo \
-	--disable-libxml2 \
 	--disable-doxygen
+
+ifeq ($(BR2_PACKAGE_HAS_UDEV),y)
+HWLOC_CONF_OPTS += --enable-libudev
+HWLOC_DEPENDENCIES += udev
+else
+HWLOC_CONF_OPTS += --disable-libudev
+endif
 
 ifeq ($(BR2_PACKAGE_LIBPCIACCESS),y)
 HWLOC_CONF_OPTS += --enable-pci
 HWLOC_DEPENDENCIES += libpciaccess
 else
 HWLOC_CONF_OPTS += --disable-pci
+endif
+
+ifeq ($(BR2_PACKAGE_LIBXML2),y)
+HWLOC_CONF_OPTS += --enable-libxml2
+HWLOC_DEPENDENCIES += libxml2
+else
+HWLOC_CONF_OPTS += --disable-libxml2
+endif
+
+ifeq ($(BR2_PACKAGE_NCURSES),y)
+HWLOC_DEPENDENCIES += ncurses
 endif
 
 ifeq ($(BR2_PACKAGE_NUMACTL),y)

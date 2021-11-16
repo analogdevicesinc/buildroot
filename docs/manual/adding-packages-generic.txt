@@ -142,7 +142,7 @@ All these steps rely on the +$(@D)+ variable, which
 contains the directory where the source code of the package has been
 extracted.
 
-On lines 31..43, we define a user that is used by this package (e.g.
+On lines 31..33, we define a user that is used by this package (e.g.
 to run a daemon as non-root) (+LIBFOO_USERS+).
 
 On line 35..37, we define a device-node file used by this package
@@ -452,7 +452,7 @@ not and can not work as people would expect it should:
   of the manifest file for this package.
 
 * +LIBFOO_ACTUAL_SOURCE_TARBALL+ only applies to packages whose
-  +LIBFOO_SITE+ / +LIBTOO_SOURCE+ pair points to an archive that does
+  +LIBFOO_SITE+ / +LIBFOO_SOURCE+ pair points to an archive that does
   not actually contain source code, but binary code. This a very
   uncommon case, only known to apply to external toolchains which come
   already compiled, although theoretically it might apply to other
@@ -501,6 +501,39 @@ LIBFOO_IGNORE_CVES += CVE-2020-12345
 # only when built with libbaz, which Buildroot doesn't support
 LIBFOO_IGNORE_CVES += CVE-2020-54321
 ----------------------
+
+* +LIBFOO_CPE_ID_*+ variables is a set of variables that allows the
+  package to define its https://nvd.nist.gov/products/cpe[CPE
+  identifier]. The available variables are:
++
+--
+** +LIBFOO_CPE_ID_PREFIX+, specifies the prefix of the CPE identifier,
+   i.e the first three fields. When not defined, the default value is
+   +cpe:2.3:a+.
+
+** +LIBFOO_CPE_ID_VENDOR+, specifies the vendor part of the CPE
+   identifier. When not defined, the default value is
+   +<pkgname>_project+.
+
+** +LIBFOO_CPE_ID_PRODUCT+, specifies the product part of the CPE
+   identifier. When not defined, the default value is +<pkgname>+.
+
+** +LIBFOO_CPE_ID_VERSION+, specifies the version part of the CPE
+   identifier. When not defined the default value is
+   +$(LIBFOO_VERSION)+.
+
+** +LIBFOO_CPE_ID_UPDATE+ specifies the _update_ part of the CPE
+   identifier. When not defined the default value is +*+.
+--
++
+If any of those variables is defined, then the generic package
+infrastructure assumes the package provides valid CPE information. In
+this case, the generic package infrastructure will define
++LIBFOO_CPE_ID+.
++
+For a host package, if its +LIBFOO_CPE_ID_*+ variables are not
+defined, it inherits the value of those variables from the
+corresponding target package.
 
 The recommended way to define these variables is to use the following
 syntax:
@@ -576,6 +609,14 @@ different steps of the build process.
   anything in any format.
   This is seldom used, as packages rarely have custom rules. *Do not use
   this variable*, unless you really know that you need to print help.
+
+* +LIBFOO_LINUX_CONFIG_FIXUPS+ lists the Linux kernel configuration
+  options that are needed to build and use this package, and without
+  which the package is fundamentally broken. This shall be a set of
+  calls to one of the kconfig tweaking option: `KCONFIG_ENABLE_OPT`,
+  `KCONFIG_DISABLE_OPT`, or `KCONFIG_SET_OPT`.
+  This is seldom used, as package usually have no strict requirements on
+  the kernel options.
 
 The preferred way to define these variables is:
 

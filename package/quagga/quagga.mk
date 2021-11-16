@@ -6,9 +6,11 @@
 
 QUAGGA_VERSION = 1.2.4
 QUAGGA_SITE = http://download.savannah.gnu.org/releases/quagga
+QUAGGA_INSTALL_STAGING = YES
 QUAGGA_DEPENDENCIES = host-gawk host-pkgconf
 QUAGGA_LICENSE = GPL-2.0+
 QUAGGA_LICENSE_FILES = COPYING
+QUAGGA_CPE_ID_VENDOR = quagga
 
 # We need to override the sysconf and localstate directories so that
 # quagga can create files as the quagga user without extra

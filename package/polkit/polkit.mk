@@ -8,13 +8,17 @@ POLKIT_VERSION = 0.116
 POLKIT_SITE = http://www.freedesktop.org/software/polkit/releases
 POLKIT_LICENSE = GPL-2.0
 POLKIT_LICENSE_FILES = COPYING
-
+POLKIT_CPE_ID_VENDOR = polkit_project
+POLKIT_AUTORECONF = YES
 POLKIT_INSTALL_STAGING = YES
 
-POLKIT_DEPENDENCIES = libglib2 host-intltool expat spidermonkey
+POLKIT_DEPENDENCIES = \
+	libglib2 host-intltool expat spidermonkey $(TARGET_NLS_DEPENDENCIES)
 
 # spidermonkey needs C++11
-POLKIT_CONF_ENV = CXXFLAGS="$(TARGET_CXXFLAGS) -std=c++11"
+POLKIT_CONF_ENV = \
+	CXXFLAGS="$(TARGET_CXXFLAGS) -std=c++11" \
+	LIBS=$(TARGET_NLS_LIBS)
 
 POLKIT_CONF_OPTS = \
 	--with-os-type=unknown \
@@ -23,7 +27,15 @@ POLKIT_CONF_OPTS = \
 	--disable-libelogind \
 	--disable-libsystemd-login
 
+ifeq ($(BR2_PACKAGE_GOBJECT_INTROSPECTION),y)
+POLKIT_CONF_OPTS += --enable-introspection
+POLKIT_DEPENDENCIES += gobject-introspection
+else
+POLKIT_CONF_OPTS += --disable-introspection
+endif
+
 ifeq ($(BR2_PACKAGE_LINUX_PAM),y)
+POLKIT_DEPENDENCIES += linux-pam
 POLKIT_CONF_OPTS += --with-authfw=pam
 else
 POLKIT_CONF_OPTS += --with-authfw=shadow
@@ -37,6 +49,17 @@ define POLKIT_PERMISSIONS
 	/etc/polkit-1 r 750 root polkitd - - - - -
 	/usr/share/polkit-1 r 750 root polkitd - - - - -
 	/usr/bin/pkexec f 4755 root root - - - - -
+endef
+
+define POLKIT_INSTALL_INIT_SYSTEMD
+	$(INSTALL) -D -m 644 $(POLKIT_PKGDIR)/polkit.service \
+		$(TARGET_DIR)/usr/lib/systemd/system/polkit.service
+
+endef
+
+define POLKIT_INSTALL_INIT_SYSV
+	$(INSTALL) -D -m 0755 package/polkit/S50polkit \
+		$(TARGET_DIR)/etc/init.d/S50polkit
 endef
 
 $(eval $(autotools-package))

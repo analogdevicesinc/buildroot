@@ -4,14 +4,15 @@
 #
 ################################################################################
 
-GERBERA_VERSION = 1.3.4
+GERBERA_VERSION = 1.6.4
 GERBERA_SITE = $(call github,gerbera,gerbera,v$(GERBERA_VERSION))
 GERBERA_LICENSE = GPL-2.0
 GERBERA_LICENSE_FILES = LICENSE.md
 GERBERA_DEPENDENCIES = \
-	expat \
+	fmt \
 	host-pkgconf \
-	libupnp18 \
+	pugixml \
+	spdlog \
 	sqlite \
 	util-linux \
 	zlib
@@ -21,7 +22,7 @@ GERBERA_CONF_OPTS = \
 
 # Uses __atomic_fetch_add_4
 ifeq ($(BR2_TOOLCHAIN_HAS_LIBATOMIC),y)
-GERBERA_CONF_OPTS += -DCMAKE_CXX_FLAGS="$(TARGET_CXXFLAGS) -latomic"
+GERBERA_CONF_OPTS += -DCMAKE_EXE_LINKER_FLAGS=-latomic
 endif
 
 ifeq ($(BR2_PACKAGE_EXIV2),y)
@@ -61,6 +62,22 @@ endif
 
 ifeq ($(BR2_PACKAGE_LIBICONV),y)
 GERBERA_DEPENDENCIES += libiconv
+endif
+
+ifeq ($(BR2_PACKAGE_LIBMATROSKA),y)
+GERBERA_DEPENDENCIES += libmatroska
+GERBERA_CONF_OPTS += -DWITH_MATROSKA=ON
+else
+GERBERA_CONF_OPTS += -DWITH_MATROSKA=OFF
+endif
+
+# Either libupnp or libnpupnp are guranteed to be enabled
+ifeq ($(BR2_PACKAGE_LIBNPUPNP),y)
+GERBERA_DEPENDENCIES += libnpupnp
+GERBERA_CONF_OPTS += -DWITH_NPUPNP=ON
+else
+GERBERA_DEPENDENCIES += libupnp
+GERBERA_CONF_OPTS += -DWITH_NPUPNP=OFF
 endif
 
 ifeq ($(BR2_PACKAGE_MYSQL),y)

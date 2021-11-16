@@ -10,6 +10,7 @@ LLVM_SITE = https://github.com/llvm/llvm-project/releases/download/llvmorg-$(LLV
 LLVM_SOURCE = llvm-$(LLVM_VERSION).src.tar.xz
 LLVM_LICENSE = Apache-2.0 with exceptions
 LLVM_LICENSE_FILES = LICENSE.TXT
+LLVM_CPE_ID_VENDOR = llvm
 LLVM_SUPPORTS_IN_SOURCE_BUILD = NO
 LLVM_INSTALL_STAGING = YES
 
@@ -189,11 +190,9 @@ LLVM_CONF_OPTS += -DLLVM_DEFAULT_TARGET_TRIPLE=$(GNU_TARGET_NAME)
 # This solves "No available targets are compatible for this triple" with llvmpipe
 LLVM_CONF_OPTS += -DLLVM_HOST_TRIPLE=$(GNU_TARGET_NAME)
 
-# The Go bindings have no CMake rules at the moment, but better remove the
-# check preventively. Building the Go and OCaml bindings is yet unsupported.
+# Building the Go and OCaml bindings is yet unsupported.
 HOST_LLVM_CONF_OPTS += \
-	-DGO_EXECUTABLE=GO_EXECUTABLE-NOTFOUND \
-	-DOCAMLFIND=OCAMLFIND-NOTFOUND
+	-DLLVM_ENABLE_BINDINGS=OFF
 
 # Builds a release host tablegen that gets used during the LLVM build.
 HOST_LLVM_CONF_OPTS += -DLLVM_OPTIMIZED_TABLEGEN=ON
