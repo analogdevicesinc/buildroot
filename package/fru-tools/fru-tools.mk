@@ -3,7 +3,7 @@
 # fru-tools
 #
 ################################################################################
-FRU_TOOLS_VERSION = 8927da366f99a987b48e9aacc377f18dd7f20a4b
+FRU_TOOLS_VERSION = 534c30f1ae9f10825c04f8f6522336e01a75afd7
 FRU_TOOLS_SITE = https://github.com/analogdevicesinc/fru_tools.git
 FRU_TOOLS_SITE_METHOD = git
 FRU_TOOLS_INSTALL_STAGING = YES
