@@ -589,3 +589,6 @@ linux-rebuild-with-initramfs:
 	$(call LINUX_INSTALL_IMAGE,$(BINARIES_DIR))
 	# If there is a .ub file copy it to the final destination
 	test ! -f $(LINUX_IMAGE_PATH).ub || cp $(LINUX_IMAGE_PATH).ub $(BINARIES_DIR)
+ifeq ($(BR2_LINUX_KERNEL_SIMPLEIMAGE),y)
+	test ! -f $(LINUX_IMAGE_PATH).strip || cp $(LINUX_IMAGE_PATH).strip $(BINARIES_DIR)
+endif
