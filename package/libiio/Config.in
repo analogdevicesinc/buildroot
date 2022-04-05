@@ -15,6 +15,12 @@ config BR2_PACKAGE_LIBIIO_LOCAL_BACKEND
 	help
 	  Enable the local backend of the library.
 
+config BR2_PACKAGE_LIBIIO_HWMON_SUPPORT
+	bool "hwmon support"
+	default y
+	help
+	  Enable hwmon support.
+
 config BR2_PACKAGE_LIBIIO_LOCAL_CONFIG
 	bool "Local context attributes"
 	depends on BR2_PACKAGE_LIBINI
