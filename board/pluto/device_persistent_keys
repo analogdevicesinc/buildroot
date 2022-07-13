@@ -8,9 +8,9 @@ cat /proc/mounts | grep -q mtd2 || (echo "Filesystem not mounted use device_form
 
 #dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key
 [[ ! -f ${KEYFILE} ]] && dropbearkey -t ecdsa -f ${KEYFILE}
-install -D ${KEYFILE} -t /mnt/jffs2/etc/dropbear
+install -D /etc/dropbear/dropbear_* -t /mnt/jffs2/etc/dropbear
 cd /etc/dropbear
-md5sum dropbear* /etc/dropbear/ 2>/dev/null > /mnt/jffs2/etc/dropbear/keys.md5
+md5sum dropbear_* /etc/dropbear/ 2>/dev/null > /mnt/jffs2/etc/dropbear/keys.md5
 
 if [ -f ${IDFILE} ]; then
  install -D ${IDFILE} -t /mnt/jffs2/root/.ssh
