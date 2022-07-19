@@ -119,6 +119,10 @@ config BR2_SCP
 	string "Secure copy (scp) command"
 	default "scp"
 
+config BR2_SFTP
+	string "Secure file transfer (sftp) command"
+	default "sftp"
+
 config BR2_HG
 	string "Mercurial (hg) command"
 	default "hg"
@@ -411,6 +415,19 @@ config BR2_DEBUG_3
 	  macro expansion when you use -g3.
 endchoice
 endif
+
+config BR2_ENABLE_RUNTIME_DEBUG
+	bool "build packages with runtime debugging info"
+	help
+	  Some packages may have runtime assertions, extra traces, and
+	  similar runtime elements that can help debugging. However,
+	  these elements may negatively influence performance so should
+	  normally not be enabled on production systems.
+
+	  Enable this option to enable such runtime debugging.
+
+	  Note: disabling this option is not a guarantee that all
+	  packages effectively removed these runtime debugging elements.
 
 config BR2_STRIP_strip
 	bool "strip target binaries"
@@ -723,6 +740,7 @@ config BR2_PIC_PIE_ARCH_SUPPORTS
 
 config BR2_PIC_PIE
 	bool "Build code with PIC/PIE"
+	default y
 	depends on BR2_PIC_PIE_ARCH_SUPPORTS
 	depends on BR2_SHARED_LIBS
 	depends on BR2_TOOLCHAIN_SUPPORTS_PIE
@@ -738,6 +756,8 @@ comment "PIC/PIE needs a toolchain w/ PIE"
 choice
 	bool "Stack Smashing Protection"
 	default BR2_SSP_ALL if BR2_ENABLE_SSP # legacy
+	default BR2_SSP_STRONG if BR2_TOOLCHAIN_HAS_SSP_STRONG
+	default BR2_SSP_REGULAR
 	depends on BR2_TOOLCHAIN_HAS_SSP
 	help
 	  Enable stack smashing protection support using GCC's
@@ -799,6 +819,8 @@ comment "Stack Smashing Protection needs a toolchain w/ SSP"
 
 choice
 	bool "RELRO Protection"
+	default BR2_RELRO_FULL if BR2_TOOLCHAIN_SUPPORTS_PIE
+	default BR2_RELRO_PARTIAL
 	depends on BR2_SHARED_LIBS
 	help
 	  Enable a link-time protection know as RELRO (RELocation Read
@@ -843,6 +865,7 @@ config BR2_FORTIFY_SOURCE_ARCH_SUPPORTS
 
 choice
 	bool "Buffer-overflow Detection (FORTIFY_SOURCE)"
+	default BR2_FORTIFY_SOURCE_1
 	depends on BR2_FORTIFY_SOURCE_ARCH_SUPPORTS
 	depends on BR2_TOOLCHAIN_USES_GLIBC
 	depends on !BR2_OPTIMIZE_0

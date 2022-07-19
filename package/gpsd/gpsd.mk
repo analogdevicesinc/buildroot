@@ -9,9 +9,10 @@ GPSD_SITE = http://download-mirror.savannah.gnu.org/releases/gpsd
 GPSD_LICENSE = BSD-2-Clause
 GPSD_LICENSE_FILES = COPYING
 GPSD_CPE_ID_VENDOR = gpsd_project
+GPSD_SELINUX_MODULES = gpsd
 GPSD_INSTALL_STAGING = YES
 
-GPSD_DEPENDENCIES = host-python3 host-scons host-pkgconf
+GPSD_DEPENDENCIES = host-scons host-pkgconf
 
 GPSD_LDFLAGS = $(TARGET_LDFLAGS)
 GPSD_CFLAGS = $(TARGET_CFLAGS)
@@ -193,10 +194,6 @@ ifeq ($(BR2_PACKAGE_PYTHON3),y)
 GPSD_SCONS_OPTS += \
 	python=yes \
 	python_libdir="/usr/lib/python$(PYTHON3_VERSION_MAJOR)/site-packages"
-else ifeq ($(BR2_PACKAGE_PYTHON),y)
-GPSD_SCONS_OPTS += \
-	python=yes \
-	python_libdir="/usr/lib/python$(PYTHON_VERSION_MAJOR)/site-packages"
 else
 GPSD_SCONS_OPTS += python=no
 endif
@@ -210,7 +207,7 @@ GPSD_SCONS_ENV += \
 define GPSD_BUILD_CMDS
 	(cd $(@D); \
 		$(GPSD_SCONS_ENV) \
-		$(HOST_DIR)/bin/python3 $(SCONS) \
+		$(SCONS) \
 		$(GPSD_SCONS_OPTS))
 endef
 
@@ -218,7 +215,7 @@ define GPSD_INSTALL_TARGET_CMDS
 	(cd $(@D); \
 		$(GPSD_SCONS_ENV) \
 		DESTDIR=$(TARGET_DIR) \
-		$(HOST_DIR)/bin/python3 $(SCONS) \
+		$(SCONS) \
 		$(GPSD_SCONS_OPTS) \
 		$(if $(BR2_PACKAGE_HAS_UDEV),udev-install,install))
 endef
@@ -240,7 +237,7 @@ define GPSD_INSTALL_STAGING_CMDS
 	(cd $(@D); \
 		$(GPSD_SCONS_ENV) \
 		DESTDIR=$(STAGING_DIR) \
-		$(HOST_DIR)/bin/python3 $(SCONS) \
+		$(SCONS) \
 		$(GPSD_SCONS_OPTS) \
 		install)
 endef

@@ -8,6 +8,7 @@ NETDATA_VERSION = 1.21.1
 NETDATA_SITE = $(call github,netdata,netdata,v$(NETDATA_VERSION))
 NETDATA_LICENSE = GPL-3.0+
 NETDATA_LICENSE_FILES = LICENSE
+NETDATA_CPE_ID_VENDOR = netdata
 # netdata's source code is released without a generated configure script
 NETDATA_AUTORECONF = YES
 NETDATA_CONF_OPTS = \
@@ -58,6 +59,16 @@ endif
 
 ifeq ($(BR2_TOOLCHAIN_HAS_LIBATOMIC),y)
 NETDATA_CONF_ENV += LIBS=-latomic
+endif
+
+ifeq ($(BR2_PACKAGE_NETDATA_PROMETHEUS),y)
+# Override the result of AC_PATH_PROG([CXX_BINARY], [${CXX}], [no])
+# which fails because CXX is set to the full CXX binary path
+NETDATA_CONF_ENV += ac_cv_path_CXX_BINARY=yes
+NETDATA_CONF_OPTS += --enable-backend-prometheus-remote-write
+NETDATA_DEPENDENCIES += protobuf snappy
+else
+NETDATA_CONF_OPTS += --disable-backend-prometheus-remote-write
 endif
 
 define NETDATA_INSTALL_INIT_SYSV

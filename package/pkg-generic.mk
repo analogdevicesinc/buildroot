@@ -90,17 +90,41 @@ endif
 #######################################
 # Helper functions
 
-# Make sure .la files only reference the current per-package
-# directory.
-
-# $1: package name (lower case)
-# $2: staging directory of the package
 ifeq ($(BR2_PER_PACKAGE_DIRECTORIES),y)
-define fixup-libtool-files
-	$(Q)find $(2)/usr/lib* -name "*.la" | xargs --no-run-if-empty \
-		$(SED) "s:$(PER_PACKAGE_DIR)/[^/]\+/:$(PER_PACKAGE_DIR)/$(1)/:g"
+
+# Ensure files like .la, .pc, .pri, .cmake, and so on, point to the
+# proper staging and host directories for the current package: find
+# all text files that contain the PPD root, and replace it with the
+# current package's PPD.
+define PPD_FIXUP_PATHS
+	$(Q)grep --binary-files=without-match -lrZ '$(PER_PACKAGE_DIR)/[^/]\+/' $(HOST_DIR) \
+	|while read -d '' f; do \
+		file -b --mime-type "$${f}" | grep -q '^text/' || continue; \
+		printf '%s\0' "$${f}"; \
+	done \
+	|xargs -0 --no-run-if-empty \
+		$(SED) 's:$(PER_PACKAGE_DIR)/[^/]\+/:$(PER_PACKAGE_DIR)/$($(PKG)_NAME)/:g'
 endef
-endif
+
+# Remove python's pre-compiled "sysconfigdata", as it may contain paths to
+# the original staging or host dirs.
+#
+# Can't use $(foreach d, $(HOST_DIR)/lib/python* $(STAGING_DIR)/usr/lib/python*, ...)
+# because those directories may be created in the same recipe this macro will
+# be expanded in.
+# Additionally, either or both may be missing, which would make find whine and
+# fail.
+# So we just use HOST_DIR as a starting point, and filter on the two directories
+# of interest.
+define PPD_PYTHON_REMOVE_SYSCONFIGDATA_PYC
+	$(Q)find $(HOST_DIR) \
+		\(    -path '$(HOST_DIR)/lib/python*' \
+		   -o -path '$(STAGING_DIR)/usr/lib/python*' \
+		\) \
+		\( -name "_sysconfigdata*.pyc" -delete \)
+endef
+
+endif  # PPD
 
 # Functions to collect statistics about installed files
 
@@ -135,6 +159,23 @@ define check_bin_arch
 		-a $(BR2_READELF_ARCH_NAME)
 endef
 
+# Functions to remove conflicting and useless files
+
+# $1: base directory (target, staging, host)
+define remove-conflicting-useless-files
+	$(if $(strip $($(PKG)_DROP_FILES_OR_DIRS)),
+		$(Q)$(RM) -rf $(patsubst %, $(1)%, $($(PKG)_DROP_FILES_OR_DIRS)))
+endef
+define REMOVE_CONFLICTING_USELESS_FILES_IN_HOST
+	$(call remove-conflicting-useless-files,$(HOST_DIR))
+endef
+define REMOVE_CONFLICTING_USELESS_FILES_IN_STAGING
+	$(call remove-conflicting-useless-files,$(STAGING_DIR))
+endef
+define REMOVE_CONFLICTING_USELESS_FILES_IN_TARGET
+	$(call remove-conflicting-useless-files,$(TARGET_DIR))
+endef
+
 ################################################################################
 # Implicit targets -- produce a stamp file for each step of a package build
 ################################################################################
@@ -151,7 +192,8 @@ $(BUILD_DIR)/%/.stamp_downloaded:
 			break ; \
 		fi ; \
 	done
-	$(foreach p,$($(PKG)_ALL_DOWNLOADS),$(call DOWNLOAD,$(p),$(PKG))$(sep))
+	$(if $($(PKG)_MAIN_DOWNLOAD),$(call DOWNLOAD,$($(PKG)_MAIN_DOWNLOAD),$(PKG),$(patsubst %,-p '%',$($(PKG)_DOWNLOAD_POST_PROCESS))))
+	$(foreach p,$($(PKG)_ADDITIONAL_DOWNLOADS),$(call DOWNLOAD,$(p),$(PKG))$(sep))
 	$(foreach hook,$($(PKG)_POST_DOWNLOAD_HOOKS),$(call $(hook))$(sep))
 	$(Q)mkdir -p $(@D)
 	@$(call step_end,download)
@@ -232,10 +274,11 @@ $(BUILD_DIR)/%/.stamp_configured:
 	@$(call MESSAGE,"Configuring")
 	$(Q)mkdir -p $(HOST_DIR) $(TARGET_DIR) $(STAGING_DIR) $(BINARIES_DIR)
 	$(call prepare-per-package-directory,$($(PKG)_FINAL_DEPENDENCIES))
+	$(foreach hook,$($(PKG)_POST_PREPARE_HOOKS),$(call $(hook))$(sep))
 	@$(call pkg_size_before,$(TARGET_DIR))
 	@$(call pkg_size_before,$(STAGING_DIR),-staging)
+	@$(call pkg_size_before,$(BINARIES_DIR),-images)
 	@$(call pkg_size_before,$(HOST_DIR),-host)
-	$(call fixup-libtool-files,$(NAME),$(STAGING_DIR))
 	$(foreach hook,$($(PKG)_PRE_CONFIGURE_HOOKS),$(call $(hook))$(sep))
 	$($(PKG)_CONFIGURE_CMDS)
 	$(foreach hook,$($(PKG)_POST_CONFIGURE_HOOKS),$(call $(hook))$(sep))
@@ -358,6 +401,7 @@ $(BUILD_DIR)/%/.stamp_target_installed:
 $(BUILD_DIR)/%/.stamp_installed:
 	@$(call pkg_size_after,$(TARGET_DIR))
 	@$(call pkg_size_after,$(STAGING_DIR),-staging)
+	@$(call pkg_size_after,$(BINARIES_DIR),-images)
 	@$(call pkg_size_after,$(HOST_DIR),-host)
 	@$(call check_bin_arch)
 	$(Q)touch $@
@@ -494,8 +538,30 @@ $(2)_DIR	=  $$(BUILD_DIR)/$$($(2)_BASENAME)
 ifndef $(2)_SUBDIR
  ifdef $(3)_SUBDIR
   $(2)_SUBDIR = $$($(3)_SUBDIR)
- else
-  $(2)_SUBDIR ?=
+ endif
+endif
+
+ifndef $(2)_DL_SUBDIR
+ ifdef $(3)_DL_SUBDIR
+  $(2)_DL_SUBDIR = $$($(3)_DL_SUBDIR)
+ endif
+endif
+
+ifndef $(2)_DOWNLOAD_DEPENDENCIES
+ ifdef $(3)_DOWNLOAD_DEPENDENCIES
+  $(2)_DOWNLOAD_DEPENDENCIES = $$(filter-out $(1),$$($(3)_DOWNLOAD_DEPENDENCIES))
+ endif
+endif
+
+ifndef $(2)_DL_ENV
+ ifdef $(3)_DL_ENV
+  $(2)_DL_ENV = $$($(3)_DL_ENV)
+ endif
+endif
+
+ifndef $(2)_DOWNLOAD_POST_PROCESS
+ ifdef $(3)_DOWNLOAD_POST_PROCESS
+  $(2)_DOWNLOAD_POST_PROCESS = $$($(3)_DOWNLOAD_POST_PROCESS)
  endif
 endif
 
@@ -536,11 +602,15 @@ ifndef $(2)_PATCH
  endif
 endif
 
-$(2)_ALL_DOWNLOADS = \
-	$$(if $$($(2)_SOURCE),$$($(2)_SITE_METHOD)+$$($(2)_SITE)/$$($(2)_SOURCE)) \
+$(2)_MAIN_DOWNLOAD = \
+	$$(if $$($(2)_SOURCE),$$($(2)_SITE_METHOD)+$$($(2)_SITE)/$$($(2)_SOURCE))
+
+$(2)_ADDITIONAL_DOWNLOADS = \
 	$$(foreach p,$$($(2)_PATCH) $$($(2)_EXTRA_DOWNLOADS),\
 		$$(if $$(findstring ://,$$(p)),$$(p),\
 			$$($(2)_SITE_METHOD)+$$($(2)_SITE)/$$(p)))
+
+$(2)_ALL_DOWNLOADS = $$($(2)_MAIN_DOWNLOAD) $$($(2)_ADDITIONAL_DOWNLOADS)
 
 ifndef $(2)_SITE
  ifdef $(3)_SITE
@@ -792,35 +862,24 @@ $(2)_EXTRACT_CMDS ?= \
 		$$(TAR_OPTIONS) -)
 
 # pre/post-steps hooks
-$(2)_PRE_DOWNLOAD_HOOKS         ?=
-$(2)_POST_DOWNLOAD_HOOKS        ?=
-$(2)_PRE_EXTRACT_HOOKS          ?=
-$(2)_POST_EXTRACT_HOOKS         ?=
-$(2)_PRE_RSYNC_HOOKS            ?=
-$(2)_POST_RSYNC_HOOKS           ?=
-$(2)_PRE_PATCH_HOOKS            ?=
-$(2)_POST_PATCH_HOOKS           ?=
-$(2)_PRE_CONFIGURE_HOOKS        ?=
-$(2)_POST_CONFIGURE_HOOKS       ?=
-$(2)_PRE_BUILD_HOOKS            ?=
-$(2)_POST_BUILD_HOOKS           ?=
-$(2)_PRE_INSTALL_HOOKS          ?=
-$(2)_POST_INSTALL_HOOKS         ?=
-$(2)_PRE_INSTALL_STAGING_HOOKS  ?=
-$(2)_POST_INSTALL_STAGING_HOOKS ?=
-$(2)_PRE_INSTALL_TARGET_HOOKS   ?=
-$(2)_POST_INSTALL_TARGET_HOOKS  ?=
-$(2)_PRE_INSTALL_IMAGES_HOOKS   ?=
-$(2)_POST_INSTALL_IMAGES_HOOKS  ?=
-$(2)_PRE_LEGAL_INFO_HOOKS       ?=
-$(2)_POST_LEGAL_INFO_HOOKS      ?=
-$(2)_TARGET_FINALIZE_HOOKS      ?=
-$(2)_ROOTFS_PRE_CMD_HOOKS       ?=
+$(2)_POST_PREPARE_HOOKS += \
+	PPD_FIXUP_PATHS \
+	PPD_PYTHON_REMOVE_SYSCONFIGDATA_PYC
 
 ifeq ($$($(2)_TYPE),target)
 ifneq ($$(HOST_$(2)_KCONFIG_VAR),)
 $$(error "Package $(1) defines host variant before target variant!")
 endif
+endif
+
+# Globaly remove following conflicting and useless files
+$(2)_DROP_FILES_OR_DIRS += /share/info/dir
+
+ifeq ($$($(2)_TYPE),host)
+$(2)_POST_INSTALL_HOOKS += REMOVE_CONFLICTING_USELESS_FILES_IN_HOST
+else
+$(2)_POST_INSTALL_STAGING_HOOKS += REMOVE_CONFLICTING_USELESS_FILES_IN_STAGING
+$(2)_POST_INSTALL_TARGET_HOOKS += REMOVE_CONFLICTING_USELESS_FILES_IN_TARGET
 endif
 
 # human-friendly targets and target sequencing
@@ -1176,6 +1235,9 @@ ifeq ($$($(2)_SITE_METHOD),svn)
 DL_TOOLS_DEPENDENCIES += svn
 else ifeq ($$($(2)_SITE_METHOD),git)
 DL_TOOLS_DEPENDENCIES += git
+ifneq ($$($(2)_GIT_LFS),)
+DL_TOOLS_DEPENDENCIES += git-lfs
+endif
 else ifeq ($$($(2)_SITE_METHOD),bzr)
 DL_TOOLS_DEPENDENCIES += bzr
 else ifeq ($$($(2)_SITE_METHOD),scp)

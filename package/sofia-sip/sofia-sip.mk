@@ -4,8 +4,8 @@
 #
 ################################################################################
 
-SOFIA_SIP_VERSION = 1.13.1-d10a3d268c
-SOFIA_SIP_SITE = https://files.freeswitch.org/downloads/libs
+SOFIA_SIP_VERSION = 1.13.6-4152840260
+SOFIA_SIP_SITE = https://files.freeswitch.org/downloads/libs/sofia-sip
 SOFIA_SIP_INSTALL_STAGING = YES
 SOFIA_SIP_DEPENDENCIES = host-pkgconf
 SOFIA_SIP_LICENSE = LGPL-2.1+
@@ -28,10 +28,6 @@ else
 SOFIA_SIP_CONF_OPTS += \
 	--disable-nth \
 	--without-openssl
-endif
-
-ifeq ($(BR2_ENABLE_DEBUG),y)
-SOFIA_SIP_CONF_OPTS += --enable-ndebug
 endif
 
 $(eval $(autotools-package))

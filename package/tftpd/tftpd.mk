@@ -5,12 +5,14 @@
 ################################################################################
 
 TFTPD_VERSION = b2b34cecc8cbc18ff6f1fc00bda6ae6e9011e6c7
-TFTPD_SITE = git://git.kernel.org/pub/scm/network/tftp/tftp-hpa.git
+TFTPD_SITE = https://git.kernel.org/pub/scm/network/tftp/tftp-hpa.git
+TFTPD_SITE_METHOD = git
 TFTPD_CONF_OPTS = --without-tcpwrappers
 TFTPD_LICENSE = BSD-4-Clause
 TFTPD_LICENSE_FILES = tftpd/tftpd.c
 TFTPD_CPE_ID_VENDOR = tftpd-hpa_project
 TFTPD_CPE_ID_PRODUCT = tftpd-hpa
+TFTPD_SELINUX_MODULES = tftp
 # From git
 TFTPD_AUTORECONF = YES
 
