@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-GVFS_VERSION_MAJOR = 1.44
+GVFS_VERSION_MAJOR = 1.48
 GVFS_VERSION = $(GVFS_VERSION_MAJOR).1
 GVFS_SOURCE = gvfs-$(GVFS_VERSION).tar.xz
 GVFS_SITE = http://ftp.gnome.org/pub/GNOME/sources/gvfs/$(GVFS_VERSION_MAJOR)
@@ -19,6 +19,7 @@ GVFS_DEPENDENCIES = \
 	$(TARGET_NLS_DEPENDENCIES)
 GVFS_LICENSE = LGPL-2.0+
 GVFS_LICENSE_FILES = COPYING
+GVFS_CPE_ID_VENDOR = gnome
 
 GVFS_LDFLAGS = $(TARGET_LDFLAGS) $(TARGET_NLS_LIBS)
 

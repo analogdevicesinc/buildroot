@@ -4,11 +4,11 @@
 #
 ################################################################################
 
-LIBTASN1_VERSION = 4.16.0
+LIBTASN1_VERSION = 4.18.0
 LIBTASN1_SITE = $(BR2_GNU_MIRROR)/libtasn1
 LIBTASN1_DEPENDENCIES = host-bison host-pkgconf
 LIBTASN1_LICENSE = GPL-3.0+ (tests, tools), LGPL-2.1+ (library)
-LIBTASN1_LICENSE_FILES = LICENSE doc/COPYING doc/COPYING.LESSER
+LIBTASN1_LICENSE_FILES = COPYING doc/COPYING doc/COPYING.LESSER
 LIBTASN1_CPE_ID_VENDOR = gnu
 LIBTASN1_INSTALL_STAGING = YES
 
@@ -19,5 +19,13 @@ LIBTASN1_AUTORECONF = YES
 LIBTASN1_CONF_ENV = MAKEINFO="true"
 
 LIBTASN1_CONF_OPTS = CFLAGS="$(TARGET_CFLAGS) -std=gnu99"
+
+LIBTASN1_PROGS = asn1Coding asn1Decoding asn1Parser
+
+# We only need the library
+define LIBTASN1_REMOVE_PROGS
+	$(RM) $(addprefix $(TARGET_DIR)/usr/bin/,$(LIBTASN1_PROGS))
+endef
+LIBTASN1_POST_INSTALL_TARGET_HOOKS += LIBTASN1_REMOVE_PROGS
 
 $(eval $(autotools-package))

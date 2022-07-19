@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-BOOST_VERSION = 1.75.0
+BOOST_VERSION = 1.78.0
 BOOST_SOURCE = boost_$(subst .,_,$(BOOST_VERSION)).tar.bz2
-BOOST_SITE = https://dl.bintray.com/boostorg/release/$(BOOST_VERSION)/source
+BOOST_SITE = https://boostorg.jfrog.io/artifactory/main/release/$(BOOST_VERSION)/source
 BOOST_INSTALL_STAGING = YES
 BOOST_LICENSE = BSL-1.0
 BOOST_LICENSE_FILES = LICENSE_1_0.txt
@@ -17,7 +17,7 @@ HOST_BOOST_FLAGS = --without-icu --with-toolset=gcc \
 	--without-libraries=$(subst $(space),$(comma),atomic chrono context \
 	contract container coroutine date_time exception fiber filesystem graph \
 	graph_parallel iostreams json locale log math mpi nowide program_options \
-	python random regex serialization stacktrace system test thread timer \
+	python random serialization stacktrace test thread timer \
 	type_erasure wave)
 
 BOOST_WITHOUT_FLAGS += $(if $(BR2_PACKAGE_BOOST_ATOMIC),,atomic)
@@ -68,16 +68,11 @@ BOOST_DEPENDENCIES += bzip2 zlib
 endif
 
 ifeq ($(BR2_PACKAGE_BOOST_PYTHON),y)
-BOOST_FLAGS += --with-python-root=$(HOST_DIR)
-ifeq ($(BR2_PACKAGE_PYTHON3),y)
-BOOST_FLAGS += --with-python=$(HOST_DIR)/bin/python$(PYTHON3_VERSION_MAJOR)
+BOOST_FLAGS += \
+	--with-python-root=$(HOST_DIR) \
+	--with-python=$(HOST_DIR)/bin/python$(PYTHON3_VERSION_MAJOR)
 BOOST_TARGET_CXXFLAGS += -I$(STAGING_DIR)/usr/include/python$(PYTHON3_VERSION_MAJOR)
 BOOST_DEPENDENCIES += python3
-else
-BOOST_FLAGS += --with-python=$(HOST_DIR)/bin/python$(PYTHON_VERSION_MAJOR)
-BOOST_TARGET_CXXFLAGS += -I$(STAGING_DIR)/usr/include/python$(PYTHON_VERSION_MAJOR)
-BOOST_DEPENDENCIES += python
-endif
 endif
 
 HOST_BOOST_OPTS += --no-cmake-config toolset=gcc threading=multi \
@@ -85,17 +80,17 @@ HOST_BOOST_OPTS += --no-cmake-config toolset=gcc threading=multi \
 
 ifeq ($(BR2_MIPS_OABI32),y)
 BOOST_ABI = o32
-else ifeq ($(BR2_arm),y)
+else ifeq ($(BR2_arm)$(BR2_armeb)$(BR2_aarch64)$(BR2_aarch64_be),y)
 BOOST_ABI = aapcs
 else
 BOOST_ABI = sysv
 endif
 
 BOOST_OPTS += --no-cmake-config \
-	     toolset=gcc \
-	     threading=multi \
-	     abi=$(BOOST_ABI) \
-	     variant=$(if $(BR2_ENABLE_DEBUG),debug,release)
+	toolset=gcc \
+	threading=multi \
+	abi=$(BOOST_ABI) \
+	variant=$(if $(BR2_ENABLE_RUNTIME_DEBUG),debug,release)
 
 ifeq ($(BR2_sparc64),y)
 BOOST_OPTS += architecture=sparc instruction-set=ultrasparc

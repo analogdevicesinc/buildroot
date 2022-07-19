@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-KMOD_VERSION = 28
+KMOD_VERSION = 29
 KMOD_SOURCE = kmod-$(KMOD_VERSION).tar.xz
 KMOD_SITE = $(BR2_KERNEL_MIRROR)/linux/utils/kernel/kmod
 KMOD_INSTALL_STAGING = YES
@@ -41,6 +41,13 @@ else
 KMOD_CONF_OPTS += --without-zlib
 endif
 
+ifeq ($(BR2_PACKAGE_ZSTD),y)
+KMOD_DEPENDENCIES += zstd
+KMOD_CONF_OPTS += --with-zstd
+else
+KMOD_CONF_OPTS += --without-zstd
+endif
+
 ifeq ($(BR2_PACKAGE_XZ),y)
 KMOD_DEPENDENCIES += xz
 KMOD_CONF_OPTS += --with-xz
@@ -55,8 +62,8 @@ else
 KMOD_CONF_OPTS += --without-openssl
 endif
 
-ifeq ($(BR2_PACKAGE_PYTHON)$(BR2_PACKAGE_PYTHON3),y)
-KMOD_DEPENDENCIES += $(if $(BR2_PACKAGE_PYTHON),python,python3)
+ifeq ($(BR2_PACKAGE_PYTHON3),y)
+KMOD_DEPENDENCIES += python3
 KMOD_CONF_OPTS += --enable-python
 endif
 
@@ -89,6 +96,13 @@ HOST_KMOD_DEPENDENCIES += host-zlib
 HOST_KMOD_CONF_OPTS += --with-zlib
 else
 HOST_KMOD_CONF_OPTS += --without-zlib
+endif
+
+ifeq ($(BR2_PACKAGE_HOST_KMOD_ZSTD),y)
+HOST_KMOD_DEPENDENCIES += host-zstd
+HOST_KMOD_CONF_OPTS += --with-zstd
+else
+HOST_KMOD_CONF_OPTS += --without-zstd
 endif
 
 ifeq ($(BR2_PACKAGE_HOST_KMOD_XZ),y)

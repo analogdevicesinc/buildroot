@@ -4,11 +4,12 @@
 #
 ################################################################################
 
-FMT_VERSION = 7.1.3
+FMT_VERSION = 8.1.1
 FMT_SITE = https://github.com/fmtlib/fmt/releases/download/$(FMT_VERSION)
 FMT_SOURCE = fmt-$(FMT_VERSION).zip
 FMT_LICENSE = MIT with exception
 FMT_LICENSE_FILES = LICENSE.rst
+FMT_CPE_ID_VENDOR = fmt
 FMT_INSTALL_STAGING = YES
 
 FMT_CONF_OPTS = \

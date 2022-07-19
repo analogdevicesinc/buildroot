@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-IPTABLES_VERSION = 1.8.6
+IPTABLES_VERSION = 1.8.7
 IPTABLES_SOURCE = iptables-$(IPTABLES_VERSION).tar.bz2
 IPTABLES_SITE = https://netfilter.org/projects/iptables/files
 IPTABLES_INSTALL_STAGING = YES
@@ -55,6 +55,12 @@ define IPTABLES_LINUX_CONFIG_FIXUPS
 	$(call KCONFIG_ENABLE_OPT,CONFIG_IP_NF_FILTER)
 	$(call KCONFIG_ENABLE_OPT,CONFIG_NETFILTER)
 	$(call KCONFIG_ENABLE_OPT,CONFIG_NETFILTER_XTABLES)
+endef
+
+define IPTABLES_INSTALL_INIT_SYSV
+	$(INSTALL) -m 0755 -D package/iptables/S35iptables \
+		$(TARGET_DIR)/etc/init.d/S35iptables
+	touch $(TARGET_DIR)/etc/iptables.conf
 endef
 
 $(eval $(autotools-package))
