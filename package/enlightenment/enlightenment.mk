@@ -10,7 +10,6 @@ ENLIGHTENMENT_SITE = http://download.enlightenment.org/rel/apps/enlightenment
 ENLIGHTENMENT_LICENSE = BSD-2-Clause, OFL-1.1 (font)
 ENLIGHTENMENT_LICENSE_FILES = COPYING \
 	src/modules/wl_weekeyboard/themes/default/fonts/LICENSE.txt
-ENLIGHTENMENT_CPE_ID_VENDOR = enlightenment
 
 ENLIGHTENMENT_DEPENDENCIES = \
 	host-pkgconf \

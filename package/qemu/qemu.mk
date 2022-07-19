@@ -341,7 +341,6 @@ define HOST_QEMU_CONFIGURE_CMDS
 		--disable-bzip2 \
 		--disable-containers \
 		--disable-curl \
-		--disable-docs \
 		--disable-libssh \
 		--disable-linux-io-uring \
 		--disable-sdl \

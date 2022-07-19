@@ -9,12 +9,7 @@ NGINX_SITE = http://nginx.org/download
 NGINX_LICENSE = BSD-2-Clause
 NGINX_LICENSE_FILES = LICENSE
 NGINX_CPE_ID_VENDOR = nginx
-NGINX_DEPENDENCIES = \
-	host-pkgconf \
-	$(if $(BR2_PACKAGE_LIBXCRYPT),libxcrypt)
-
-# 0010-Resolver-fixed-off-by-one-write-in-ngx_resolver_copy.patch
-NGINX_IGNORE_CVES += CVE-2021-23017
+NGINX_DEPENDENCIES = host-pkgconf
 
 NGINX_CONF_OPTS = \
 	--crossbuild=Linux::$(BR2_ARCH) \
@@ -52,7 +47,6 @@ NGINX_CONF_ENV += \
 
 # prefix: nginx root configuration location
 NGINX_CONF_OPTS += \
-	--force-endianness=$(call qstrip,$(call LOWERCASE,$(BR2_ENDIAN))) \
 	--prefix=/usr \
 	--conf-path=/etc/nginx/nginx.conf \
 	--sbin-path=/usr/sbin/nginx \

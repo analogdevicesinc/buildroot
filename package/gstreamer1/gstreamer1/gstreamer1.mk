@@ -4,14 +4,12 @@
 #
 ################################################################################
 
-GSTREAMER1_VERSION = 1.18.5
+GSTREAMER1_VERSION = 1.18.3
 GSTREAMER1_SOURCE = gstreamer-$(GSTREAMER1_VERSION).tar.xz
 GSTREAMER1_SITE = https://gstreamer.freedesktop.org/src/gstreamer
 GSTREAMER1_INSTALL_STAGING = YES
 GSTREAMER1_LICENSE_FILES = COPYING
 GSTREAMER1_LICENSE = LGPL-2.0+, LGPL-2.1+
-GSTREAMER1_CPE_ID_VENDOR = gstreamer_project
-GSTREAMER1_CPE_ID_PRODUCT = gstreamer
 
 GSTREAMER1_CONF_OPTS = \
 	-Dexamples=disabled \

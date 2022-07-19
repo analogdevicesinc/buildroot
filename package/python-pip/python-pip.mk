@@ -10,10 +10,5 @@ PYTHON_PIP_SITE = https://files.pythonhosted.org/packages/8e/76/66066b7bc7181723
 PYTHON_PIP_SETUP_TYPE = setuptools
 PYTHON_PIP_LICENSE = MIT
 PYTHON_PIP_LICENSE_FILES = LICENSE.txt
-PYTHON_PIP_CPE_ID_VENDOR = pypa
-PYTHON_PIP_CPE_ID_PRODUCT = pip
-
-#0001-Don-t-split-git-references-on-unicode-separators.patch
-PYTHON_PIP_IGNORE_CVES += CVE-2021-3572
 
 $(eval $(python-package))
