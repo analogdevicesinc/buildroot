@@ -1,0 +1,54 @@
+diff -ruN bin_orig/arm-linux-gnueabihf-ar bin/arm-linux-gnueabihf-ar
+--- bin_orig/arm-linux-gnueabihf-ar	2022-07-22 22:20:20.680995700 +0200
++++ bin/arm-linux-gnueabihf-ar	2022-07-19 22:18:43.510699300 +0200
+@@ -1,3 +1,3 @@
+ #!/bin/bash
+-CC="`dirname $0`/../x86_64-petalinux-linux/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-ar"
++CC="/tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/x86_64-petalinux-linux/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-ar"
+ $CC "$@" 
+diff -ruN bin_orig/arm-linux-gnueabihf-gcc bin/arm-linux-gnueabihf-gcc
+--- bin_orig/arm-linux-gnueabihf-gcc	2022-07-22 22:20:02.570995700 +0200
++++ bin/arm-linux-gnueabihf-gcc	2022-07-22 11:41:43.360995700 +0200
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+-CC="`dirname $0`/../x86*/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-gcc"
+-LIBC="`dirname $0`/../cortexa9t2hf-neon-xilinx-linux-gnueabi"
++CC="/tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/x86*/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-gcc"
++LIBC="/tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/cortexa9t2hf-neon-xilinx-linux-gnueabi"
+ FLAGS=" -mfpu=neon -mfloat-abi=hard"
+ for i in "$@"
+ do
+diff -ruN bin_orig/arm-linux-gnueabihf-gcc-ar bin/arm-linux-gnueabihf-gcc-ar
+--- bin_orig/arm-linux-gnueabihf-gcc-ar	2022-07-22 22:21:46.420995700 +0200
++++ bin/arm-linux-gnueabihf-gcc-ar	2022-07-19 22:28:16.540699300 +0200
+@@ -1,3 +1,3 @@
+ #!/bin/bash
+-CC=`dirname $0`/../x86*/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-gcc-ar
++CC=/tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/x86*/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-gcc-ar
+ $CC $@
+diff -ruN bin_orig/arm-linux-gnueabihf-gcc-ranlib bin/arm-linux-gnueabihf-gcc-ranlib
+--- bin_orig/arm-linux-gnueabihf-gcc-ranlib	2022-07-22 22:22:04.440995700 +0200
++++ bin/arm-linux-gnueabihf-gcc-ranlib	2022-07-19 22:32:42.940699300 +0200
+@@ -1,3 +1,3 @@
+ #!/bin/bash
+-CC=`dirname $0`/../x86*/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-gcc-ranlib
++CC=/tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/x86*/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-gcc-ranlib
+ $CC $@
+diff -ruN bin_orig/arm-linux-gnueabihf-ld bin/arm-linux-gnueabihf-ld
+--- bin_orig/arm-linux-gnueabihf-ld	2022-07-22 22:20:43.130995700 +0200
++++ bin/arm-linux-gnueabihf-ld	2022-07-22 09:47:42.810995700 +0200
+@@ -1,4 +1,4 @@
+ #!/bin/bash
+-CC="`dirname $0`/../x86*/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-ld"
+-LIBC="`dirname $0`/../cortexa9t2hf-neon-xilinx-linux-gnueabi"
++CC="/tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/x86*/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-ld"
++LIBC="/tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/cortexa9t2hf-neon-xilinx-linux-gnueabi"
+ $CC --sysroot=$LIBC "$@"
+diff -ruN bin_orig/arm-linux-gnueabihf-ranlib bin/arm-linux-gnueabihf-ranlib
+--- bin_orig/arm-linux-gnueabihf-ranlib	2022-07-22 22:21:13.560995700 +0200
++++ bin/arm-linux-gnueabihf-ranlib	2022-07-22 18:15:26.770995700 +0200
+@@ -1,3 +1,3 @@
+ #!/bin/bash
+-CC=`dirname $0`/../x86*/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-ranlib
++CC=/tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/x86*/usr/bin/arm-xilinx-linux-gnueabi/arm-xilinx-linux-gnueabi-ranlib
+ $CC $@
