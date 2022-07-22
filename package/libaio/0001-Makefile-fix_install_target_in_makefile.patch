@@ -1,5 +1,5 @@
---- Makefile.orig	2022-07-22 16:18:03.697464100 +0200
-+++ Makefile	2022-07-22 16:15:54.786296000 +0200
+--- libaio-0.3.112/Makefile.orig	2022-07-22 16:52:50.103332100 +0200
++++ libaio-0.3.112/Makefile	2022-07-22 16:59:08.555076300 +0200
 @@ -13,7 +13,7 @@
  all:
  	@$(MAKE) -C src
@@ -7,5 +7,5 @@
 -install:
 +install: all
  	@$(MAKE) -C src install prefix=$(DESTDIR)$(prefix) includedir=$(DESTDIR)$(includedir) libdir=$(DESTDIR)$(libdir)
-         $(info $(MAKE) -C src install prefix=$(DESTDIR)$(prefix) includedir=$(DESTDIR)$(includedir) libdir=$(DESTDIR)$(libdir))
  
+ check:
