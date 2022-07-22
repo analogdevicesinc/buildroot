@@ -1,0 +1,11 @@
+--- Makefile.orig	2022-07-22 16:18:03.697464100 +0200
++++ Makefile	2022-07-22 16:15:54.786296000 +0200
+@@ -13,7 +13,7 @@
+ all:
+ 	@$(MAKE) -C src
+ 
+-install:
++install: all
+ 	@$(MAKE) -C src install prefix=$(DESTDIR)$(prefix) includedir=$(DESTDIR)$(includedir) libdir=$(DESTDIR)$(libdir)
+         $(info $(MAKE) -C src install prefix=$(DESTDIR)$(prefix) includedir=$(DESTDIR)$(includedir) libdir=$(DESTDIR)$(libdir))
+ 
