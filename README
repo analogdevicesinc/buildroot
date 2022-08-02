@@ -4,7 +4,7 @@ To use Vitis 2022.1 as external custom toolchain the following steps have to be 
 cd /tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin
 sudo patch -i 'path-to-buildroot'/Vitis2022.1.patch
 
-2. libc.so.6 from a Windows installation of Vitis 2022.1 to /tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/cortexa9t2hf-neon-xilinx-linux-gnueabi/lib
+2. libc.a from a Windows installation of Vitis 2022.1 to /tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/cortexa9t2hf-neon-xilinx-linux-gnueabi/lib
 
 3. remove the file ld.so.conf like this
 /tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/cortexa9t2hf-neon-xilinx-linux-gnueabi/etc$ sudo mv ld.so.conf ld.so.conf.backup
