@@ -1,3 +1,9 @@
+To use Vitis 2022.1 as external custom toolchain apply the supplied patch like this:
+
+cd /tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin
+sudo patch -i 'path-to-buildroot'/Vitis2022.1.patch
+
+-------------
 Buildroot is a simple, efficient and easy-to-use tool to generate embedded
 Linux systems through cross-compilation.
 
