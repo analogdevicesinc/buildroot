@@ -9,6 +9,10 @@ sudo patch -i 'path-to-buildroot'/Vitis2022.1.patch
 3. remove the file ld.so.conf like this
 /tools/Xilinx/Vitis/2022.1/gnu/aarch32/lin/gcc-arm-linux-gnueabi/cortexa9t2hf-neon-xilinx-linux-gnueabi/etc$ sudo mv ld.so.conf ld.so.conf.backup
 
+4. in buildroot/configs/zynq_pluto_defconfig set
+BR2_TOOLCHAIN_EXTERNAL_GCC_11=y
+BR2_TOOLCHAIN_EXTERNAL_HEADERS_5_14=y
+
 -------------
 Buildroot is a simple, efficient and easy-to-use tool to generate embedded
 Linux systems through cross-compilation.
