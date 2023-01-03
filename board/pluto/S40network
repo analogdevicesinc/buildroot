@@ -40,7 +40,7 @@ create_system_files () {
 	echo -e "auto lo\n""iface lo inet loopback\n" > $IFAC
 	echo -e "auto usb0\n""iface usb0 inet static" >> $IFAC
 	echo -e "\taddress $IPADDR\n""\tnetmask $NETMASK\n" >> $IFAC
-	echo -e "auto usb0\n""iface usb1 inet dhcp\n" >> $IFAC
+	echo -e "auto usb1\n""iface usb1 inet dhcp\n" >> $IFAC
 
 	echo -e "auto eth0" >> $IFAC
 	if [ -n "$ETH_IPADDR" ]
