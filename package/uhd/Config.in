@@ -106,6 +106,7 @@ comment "uhd python API needs python3 and a toolchain w/ glibc or musl"
 config BR2_PACKAGE_UHD_PYTHON
 	bool "python API support"
 	depends on BR2_PACKAGE_PYTHON3
+	depends on BR2_PACKAGE_PYTHON3_MAKO
 	depends on BR2_PACKAGE_PYTHON_NUMPY_ARCH_SUPPORTS
 	depends on BR2_TOOLCHAIN_USES_GLIBC || BR2_TOOLCHAIN_USES_MUSL # python-numpy
 	select BR2_PACKAGE_PYTHON_NUMPY
