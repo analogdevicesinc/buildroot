@@ -2,8 +2,6 @@ config BR2_PACKAGE_KODI_PVR_OCTONET
 	bool "kodi-pvr-octonet"
 	depends on BR2_TOOLCHAIN_GCC_AT_LEAST_4_7 # jsoncpp
 	select BR2_PACKAGE_JSONCPP
-	select BR2_PACKAGE_KODI_PLATFORM
-	select BR2_PACKAGE_LIBPLATFORM
 	help
 	  DigitalDevices Octonet PVR client addon for Kodi
 

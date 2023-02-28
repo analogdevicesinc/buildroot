@@ -1,6 +1,6 @@
 # retrieved by scancpan from http://cpan.metacpan.org/
-md5  2c9120830a68f18deb43a95826ea6372  Net-DNS-1.29.tar.gz
-sha256  852d6ee87e8f0d014223026581cbb56924ba8cddd3ceb29c6191dbb6122d43c5  Net-DNS-1.29.tar.gz
+md5  f3ba5295ee588d25dabc74a2ecda296a  Net-DNS-1.33.tar.gz
+sha256  5a40e7cf524e4bd2c33cf03b82b47d5308b712083aa5ee180b0b5af54c71fbd2  Net-DNS-1.33.tar.gz
 
 # computed by scancpan
-sha256  e4f3224d86bd79ac3d11ea513fcb83c68c20701346653699225331e2b7a2d447  README
+sha256  1e44fcf65509b47a251eda0ce1f8bd6aefa13517e38cb1e95b8d36120fb15452  LICENSE

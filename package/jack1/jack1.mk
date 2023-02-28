@@ -11,9 +11,15 @@ JACK1_LICENSE = GPL-2.0+ (jack server), LGPL-2.1+ (jack library)
 JACK1_LICENSE_FILES = COPYING COPYING.GPL COPYING.LGPL
 JACK1_INSTALL_STAGING = YES
 
-# Dependency to celt can't be met: jack1 requires celt >= 0.8.0 but we
-# only have 0.5.1.3 and we cannot upgrade.
-JACK1_DEPENDENCIES = host-pkgconf alsa-lib berkeleydb libsamplerate libsndfile
+JACK1_DEPENDENCIES = host-pkgconf alsa-lib berkeleydb
+
+ifeq ($(BR2_PACKAGE_LIBSAMPLERATE),y)
+JACK1_DEPENDENCIES += libsamplerate
+endif
+
+ifeq ($(BR2_PACKAGE_LIBSNDFILE),y)
+JACK1_DEPENDENCIES += libsndfile
+endif
 
 ifeq ($(BR2_PACKAGE_READLINE),y)
 JACK1_DEPENDENCIES += readline

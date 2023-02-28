@@ -1,4 +1,3 @@
-from __future__ import print_function
 from io import open
 import os
 import re
@@ -254,6 +253,8 @@ def parse_developers():
                 for f in dev_files:
                     dev_file = os.path.relpath(f, brpath)
                     dev_file = dev_file.replace(os.sep, '/')  # force unix sep
+                    if f[-1] == '/':  # relpath removes the trailing /
+                        dev_file = dev_file + '/'
                     files.append(dev_file)
             elif line == "":
                 if not name:

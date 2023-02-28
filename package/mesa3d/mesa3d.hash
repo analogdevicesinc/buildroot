@@ -1,6 +1,6 @@
-# From https://lists.freedesktop.org/archives/mesa-announce/2021-March/000623.html
-sha256  909a72df63dfa3c0844ccf44a26ac028d148297ed333ab51560893923d7691ce  mesa-20.3.5.tar.xz
-sha512  481e710ed80d8f215a8d541cfe51b960862c2403c2b9e7e6932c8236b8decb5d478871d6c73559d6d795ada143803764f3a93b2329588c80f62e2e5ec98c78a9  mesa-20.3.5.tar.xz
+# From https://lists.freedesktop.org/archives/mesa-announce/2022-January/000660.html
+sha256  d93b2a9d2464ee856d7637a07dff6b7cd950f295ad58518bb959f76882cf4a4c  mesa-21.3.5.tar.xz
+sha512  417d1787f8177567f0c547dde3e24212f7497f2fe7cdaa945fe998cd61ec0e9eb9388feb444e377c4fd8794b056af02aac28d1bbfb9527844391ba49e6893933  mesa-21.3.5.tar.xz
 
 # License
-sha256  1361129baa4519b6ed27a1bf4aeee33a58b060bf7bb9b6ea415ecede04e35e46  docs/license.rst
+sha256  998437f3f75f0c542046f83c1cb349408122268168fb13eb4ae6967aa18b7d98  docs/license.rst

@@ -4,9 +4,8 @@
 #
 ################################################################################
 
-VDR_VERSION = 2.4.6
-VDR_SOURCE = vdr-$(VDR_VERSION).tar.bz2
-VDR_SITE = ftp://ftp.tvdr.de/vdr
+VDR_VERSION = 2.6.0
+VDR_SITE = $(call github,vdr-projects,vdr,$(VDR_VERSION))
 VDR_LICENSE = GPL-2.0+
 VDR_LICENSE_FILES = COPYING
 VDR_CPE_ID_VENDOR = tvdr
@@ -26,6 +25,11 @@ VDR_MAKE_FLAGS = \
 	PREFIX=/usr \
 	VIDEODIR=/var/lib/vdr
 VDR_LDFLAGS = $(TARGET_NLS_LIBS)
+
+ifeq ($(BR2_PACKAGE_LIBEXECINFO),y)
+VDR_DEPENDENCIES += libexecinfo
+VDR_LDFLAGS += -lexecinfo
+endif
 
 ifeq ($(BR2_PACKAGE_LIBFRIBIDI),y)
 VDR_DEPENDENCIES += libfribidi

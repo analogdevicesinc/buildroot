@@ -18,7 +18,7 @@ choice
 	  Select the version of OP-TEE OS you want to use
 
 config BR2_TARGET_OPTEE_OS_LATEST
-	bool "3.11.0"
+	bool "3.15.0"
 	help
 	  Use the latest release tag from the OP-TEE OS official Git
 	  repository.
@@ -50,9 +50,16 @@ endif
 
 config BR2_TARGET_OPTEE_OS_VERSION
 	string
-	default "3.11.0"	if BR2_TARGET_OPTEE_OS_LATEST
+	default "3.15.0"	if BR2_TARGET_OPTEE_OS_LATEST
 	default BR2_TARGET_OPTEE_OS_CUSTOM_REPO_VERSION \
 				if BR2_TARGET_OPTEE_OS_CUSTOM_GIT
+
+config BR2_TARGET_OPTEE_OS_NEEDS_DTC
+	bool "OP-TEE OS needs dtc"
+	select BR2_PACKAGE_HOST_DTC
+	help
+	  Select this option if your OP-TEE OS platform configuration
+	  requires the Device Tree compiler to be available.
 
 config BR2_TARGET_OPTEE_OS_CORE
 	bool "Build core"

@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-APITRACE_VERSION = 9.0
+APITRACE_VERSION = 10.0
 APITRACE_SITE = $(call github,apitrace,apitrace,$(APITRACE_VERSION))
 APITRACE_LICENSE = MIT
 APITRACE_LICENSE_FILES = LICENSE
@@ -36,6 +36,11 @@ endif
 ifeq ($(BR2_TOOLCHAIN_HAS_GCC_BUG_85180),y)
 # This works around Apitrace itself build failure
 APITRACE_CXXFLAGS += -O0
+endif
+
+# m68k needs 32-bit offsets in switch tables to build
+ifeq ($(BR2_m68k),y)
+APITRACE_CXXFLAGS += -mlong-jump-table-offsets
 endif
 
 APITRACE_CONF_OPTS += \
