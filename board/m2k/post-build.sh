@@ -53,6 +53,7 @@ ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S23udc ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S40network ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S41network ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S45msd ${TARGET_DIR}/etc/init.d/
+${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S98autostart ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/../pluto/fw_env.config ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/VERSIONS ${TARGET_DIR}/opt/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/m2k-calib.ini ${TARGET_DIR}/opt/
