@@ -101,7 +101,14 @@ case "$1" in
 	mkdir -p $GADGET/configs/c.1
 	mkdir -p $GADGET/configs/c.1/strings/0x409
 	echo "RNDIS/MSD/ACM/IIOUSBD" > $GADGET/configs/c.1/strings/0x409/configuration
-	echo 500 > $GADGET/configs/c.1/MaxPower
+
+	# In case the M2k is powered via the Power USB, advertise low power on the DATA USB
+	if [ "$TARGET" == "m2k" ]; then
+		echo 905 > /sys/class/gpio/export
+		[ "`cat /sys/class/gpio/gpio905/value`" == "1" ] && echo 4 > $GADGET/configs/c.1/MaxPower || echo 500 > $GADGET/configs/c.1/MaxPower
+	else
+		echo 500 > $GADGET/configs/c.1/MaxPower
+	fi
 
 	ln -s $GADGET/functions/$USB_NET_FUNCTION $GADGET/configs/c.1
 	ln -s $GADGET/functions/mass_storage.0 $GADGET/configs/c.1
