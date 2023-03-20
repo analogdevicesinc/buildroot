@@ -33,7 +33,7 @@ create_system_files () {
 
 	### /etc/udhcpd.conf ###
 	echo "start $IPADDR_HOST" > $UDHCPD_CONF
-	echo "end $IPADDR_HOST" > $UDHCPD_CONF
+	echo "end $IPADDR_HOST" >> $UDHCPD_CONF
 	echo "interface usb0" >> $UDHCPD_CONF
 	echo "option subnet $NETMASK" >> $UDHCPD_CONF
 
