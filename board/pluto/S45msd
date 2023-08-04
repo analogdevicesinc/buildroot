@@ -13,7 +13,7 @@ patch_html_page() {
 	SERIAL=`cat /sys/kernel/config/usb_gadget/composite_gadget/strings/0x409/serialnumber`
 	MACHOST=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/*/host_addr`
 	MAC=`cat /sys/kernel/config/usb_gadget/composite_gadget/functions/*/dev_addr`
-	IIO=`iio_info 2>/dev/null | grep "Library version:"`
+	IIO=`iio_info -V 2>/dev/null | tail -1`
 	BUILD=`grep device-fw /opt/VERSIONS | cut -d ' ' -f 2`
 	FPGA=`grep hdl /opt/VERSIONS | cut -d ' ' -f 2`
 	ROOTFS=`grep buildroot /opt/VERSIONS | cut -d ' ' -f 2`
