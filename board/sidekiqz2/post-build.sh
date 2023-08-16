@@ -35,6 +35,7 @@ rm -f ${TARGET_DIR}/etc/init.d/S99iiod
 
 mkdir -p ${TARGET_DIR}/www/img
 mkdir -p ${TARGET_DIR}/etc/wpa_supplicant/
+mkdir -p ${TARGET_DIR}/mnt/msd
 
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/update.sh ${TARGET_DIR}/sbin/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/udc_handle_suspend.sh ${TARGET_DIR}/sbin/
