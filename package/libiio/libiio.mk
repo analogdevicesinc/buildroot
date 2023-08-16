@@ -5,7 +5,7 @@
 ################################################################################
 
 
-LIBIIO_VERSION = 0.24
+LIBIIO_VERSION = 0.25
 LIBIIO_SITE = $(call github,analogdevicesinc,libiio,v$(LIBIIO_VERSION))
 
 #LIBIIO_VERSION = 60de6b948a04d4074d2feca46dbb64dca92ae60d
