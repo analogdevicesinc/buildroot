@@ -4,34 +4,25 @@
 #
 ################################################################################
 
-GNURADIO_VERSION = 3.10.3.0
-GNURADIO_SOURCE = v$(GNURADIO_VERSION).tar.gz
-GNURADIO_SITE = https://github.com/gnuradio/gnuradio/archive/refs/tags
+GNURADIO_VERSION = 3.10.4.0
+GNURADIO_SITE = $(call github,gnuradio,gnuradio,v$(GNURADIO_VERSION))
 GNURADIO_LICENSE = GPL-3.0+
 GNURADIO_LICENSE_FILES = COPYING
+
 GNURADIO_SUPPORTS_IN_SOURCE_BUILD = NO
 
-# needed to determine site-packages path
-GNURADIO_PYVER = $(PYTHON3_VERSION_MAJOR)
-
-# host-python-mako and host-python-six are needed for volk to compile
 GNURADIO_DEPENDENCIES = \
 	host-python3 \
-	python-pip \
-	python-pybind \
-    host-python-numpy \
-    host-python-packaging \
-	host-python-mako \
-	host-python-six \
 	boost \
-    spdlog \
 	log4cpp \
 	gmp \
+	spdlog \
 	volk
 
 GNURADIO_CONF_OPTS = \
 	-DPYTHON_EXECUTABLE=$(HOST_DIR)/bin/python \
 	-DENABLE_DEFAULT=OFF \
+	-DENABLE_EXAMPLES=OFF \
 	-DENABLE_GNURADIO_RUNTIME=ON \
 	-DENABLE_TESTING=OFF \
 	-DXMLTO_EXECUTABLE=NOTFOUND
@@ -42,13 +33,6 @@ GNURADIO_INSTALL_STAGING = YES
 
 ifeq ($(BR2_TOOLCHAIN_HAS_LIBATOMIC),y)
 GNURADIO_CONF_OPTS += -DCMAKE_EXE_LINKER_FLAGS=-latomic
-endif
-
-ifeq ($(BR2_PACKAGE_ORC),y)
-GNURADIO_DEPENDENCIES += orc
-GNURADIO_CONF_OPTS += -DENABLE_ORC=ON
-else
-GNURADIO_CONF_OPTS += -DENABLE_ORC=OFF
 endif
 
 ifeq ($(BR2_PACKAGE_GNURADIO_ANALOG),y)
@@ -71,6 +55,9 @@ endif
 
 ifeq ($(BR2_PACKAGE_GNURADIO_BLOCKS),y)
 GNURADIO_CONF_OPTS += -DENABLE_GR_BLOCKS=ON
+ifeq ($(BR2_PACKAGE_LIBSNDFILE),y)
+GNURADIO_DEPENDENCIES += libsndfile
+endif
 else
 GNURADIO_CONF_OPTS += -DENABLE_GR_BLOCKS=OFF
 endif
@@ -119,23 +106,29 @@ else
 GNURADIO_CONF_OPTS += -DENABLE_GR_FILTER=OFF
 endif
 
+ifeq ($(BR2_PACKAGE_GNURADIO_NETWORK),y)
+GNURADIO_CONF_OPTS += -DENABLE_GR_NETWORK=ON
+else
+GNURADIO_CONF_OPTS += -DENABLE_GR_NETWORK=OFF
+endif
+
 ifeq ($(BR2_PACKAGE_GNURADIO_PYTHON),y)
-GNURADIO_DEPENDENCIES += python3
+GNURADIO_DEPENDENCIES += python3 python-pybind \
+	host-python-numpy host-python-packaging
 GNURADIO_CONF_OPTS += -DENABLE_PYTHON=ON
+# mandatory to avoid pybind11 to overwrite variables provided
+# by gnuradio and buildroot
+GNURADIO_CONF_OPTS += -DPYBIND11_PYTHONLIBS_OVERWRITE=OFF
+# mandatory to avoid pybind11 to force libraries extensions
+# with a name based on host architecture
+GNURADIO_CONF_ENV += _PYTHON_SYSCONFIGDATA_NAME="$(PKG_PYTHON_SYSCONFIGDATA_NAME)" \
+	PYTHONPATH=$(PYTHON3_PATH)
 # mandatory to install python modules in site-packages and to use
 # correct path for python libraries
 GNURADIO_CONF_OPTS += -DGR_PYTHON_RELATIVE=ON \
-	-DGR_PYTHON_DIR=lib/python$(GNURADIO_PYVER)/site-packages \
-	-DCMAKE_CXX_FLAGS="${TARGET_CXXFLAGS} -isystem $(STAGING_DIR)/usr/lib/python$(GNURADIO_PYVER)/site-packages/numpy/core/include"
-        #-Dpybind11_DIR="$(STAGING_DIR)/usr/lib/python$(GNURADIO_PYVER)/site-packages/pybind11/share/cmake/pybind11"
+	-DGR_PYTHON_DIR=lib/python$(PYTHON3_VERSION_MAJOR)/site-packages
 else
 GNURADIO_CONF_OPTS += -DENABLE_PYTHON=OFF
-endif
-
-ifeq ($(BR2_PACKAGE_GNURADIO_PAGER),y)
-GNURADIO_CONF_OPTS += -DENABLE_GR_PAGER=ON
-else
-GNURADIO_CONF_OPTS += -DENABLE_GR_PAGER=OFF
 endif
 
 ifeq ($(BR2_PACKAGE_GNURADIO_QTGUI),y)
@@ -173,7 +166,5 @@ GNURADIO_CONF_OPTS += -DENABLE_GR_ZEROMQ=ON
 else
 GNURADIO_CONF_OPTS += -DENABLE_GR_ZEROMQ=OFF
 endif
-
-GNURADIO_TARGET: $(GNURADIO_DEPENDENCIES)
 
 $(eval $(cmake-package))

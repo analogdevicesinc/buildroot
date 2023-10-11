@@ -10,6 +10,7 @@ DIFFUTILS_SITE = $(BR2_GNU_MIRROR)/diffutils
 DIFFUTILS_DEPENDENCIES = $(TARGET_NLS_DEPENDENCIES)
 DIFFUTILS_LICENSE = GPL-3.0+
 DIFFUTILS_LICENSE_FILES = COPYING
+DIFFUTILS_CPE_ID_VENDOR = gnu
 # We're patching m4/stack-direction.m4
 DIFFUTILS_AUTORECONF = YES
 
@@ -20,4 +21,3 @@ DIFFUTILS_CONF_ENV += gl_cv_func_getopt_gnu=yes
 endif
 
 $(eval $(autotools-package))
-$(eval $(host-autotools-package))

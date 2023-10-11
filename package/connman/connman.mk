@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-CONNMAN_VERSION = 1.41
+CONNMAN_VERSION = 1.42
 CONNMAN_SOURCE = connman-$(CONNMAN_VERSION).tar.xz
 CONNMAN_SITE = $(BR2_KERNEL_MIRROR)/linux/network/connman
 CONNMAN_DEPENDENCIES = libglib2 dbus
@@ -63,6 +63,12 @@ CONNMAN_CONF_OPTS += --enable-ofono
 CONNMAN_DEPENDENCIES += ofono
 else
 CONNMAN_CONF_OPTS += --disable-ofono
+endif
+
+ifeq ($(BR2_PACKAGE_CONNMAN_STATS),y)
+CONNMAN_CONF_OPTS += --enable-stats
+else
+CONNMAN_CONF_OPTS += --disable-stats
 endif
 
 ifeq ($(BR2_PACKAGE_CONNMAN_WIFI),y)

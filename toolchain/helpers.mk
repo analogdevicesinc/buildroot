@@ -19,7 +19,12 @@ copy_toolchain_lib_root = \
 			rm -fr $(TARGET_DIR)/$${DESTDIR}/$${LIBNAME}; \
 			if test -h $${LIBPATH} ; then \
 				cp -d $${LIBPATH} $(TARGET_DIR)/$${DESTDIR}/$${LIBNAME}; \
+				OLD_LIBPATH="$${LIBPATH}"; \
 				LIBPATH="`readlink -f $${LIBPATH}`"; \
+				if [ "$${LIBPATH}" = "" ]; then \
+					echo "LIBPATH empty after trying to resolve symlink $${OLD_LIBPATH}" 1>&2; \
+					exit 1; \
+				fi; \
 			elif test -f $${LIBPATH}; then \
 				$(INSTALL) -D -m0755 $${LIBPATH} $(TARGET_DIR)/$${DESTDIR}/$${LIBNAME}; \
 				break ; \
@@ -150,7 +155,7 @@ copy_toolchain_sysroot = \
 	if test -n "$${SUPPORT_LIB_DIR}" ; then \
 		cp -a $${SUPPORT_LIB_DIR}/* $(STAGING_DIR)/lib/ ; \
 	fi ; \
-	find $(STAGING_DIR) -type d | xargs chmod 755
+	find $(STAGING_DIR) -type d -print0 | xargs -0 chmod 755
 
 #
 # Check the specified kernel headers version actually matches the
@@ -302,7 +307,7 @@ check_uclibc = \
 	$(call check_uclibc_feature,__UCLIBC_HAS_LFS__,,$${UCLIBC_CONFIG_FILE},Large file support) ;\
 	$(call check_uclibc_feature,__UCLIBC_HAS_IPV6__,,$${UCLIBC_CONFIG_FILE},IPv6 support) ;\
 	$(call check_uclibc_feature,__UCLIBC_HAS_RPC__,BR2_TOOLCHAIN_HAS_NATIVE_RPC,$${UCLIBC_CONFIG_FILE},RPC support) ;\
-	$(call check_uclibc_feature,__UCLIBC_HAS_LOCALE__,BR2_ENABLE_LOCALE,$${UCLIBC_CONFIG_FILE},Locale support) ;\
+	$(call check_uclibc_feature,__UCLIBC_HAS_XLOCALE__,BR2_ENABLE_LOCALE,$${UCLIBC_CONFIG_FILE},Locale support) ;\
 	$(call check_uclibc_feature,__UCLIBC_HAS_WCHAR__,BR2_USE_WCHAR,$${UCLIBC_CONFIG_FILE},Wide char support) ;\
 	$(call check_uclibc_feature,__UCLIBC_HAS_THREADS__,BR2_TOOLCHAIN_HAS_THREADS,$${UCLIBC_CONFIG_FILE},Thread support) ;\
 	$(call check_uclibc_feature,__PTHREADS_DEBUG_SUPPORT__,BR2_TOOLCHAIN_HAS_THREADS_DEBUG,$${UCLIBC_CONFIG_FILE},Thread debugging support) ;\
@@ -417,12 +422,16 @@ check_cross_compiler_exists = \
 #   the host tuple.
 # - Exclude distro-class toolchains which are not relocatable.
 # - Exclude broken toolchains which return "libc.a" with -print-file-name.
+# - Exclude toolchains used with wrong toolchain cflags or broken toolchains
+#   which return "libc.a" with -print-file-name and toolchain cflags.
 # - Exclude toolchains which doesn't support --sysroot option.
 #
 # $1: cross-gcc path
+# $1: toolchain cflags
 #
 check_unusable_toolchain = \
 	__CROSS_CC=$(strip $1) ; \
+	__TOOLCHAIN_CFLAGS=$(strip $2) ; \
 	vendor=`$${__CROSS_CC} -dumpmachine | cut -f2 -d'-'` ; \
 	if test "$${vendor}" = "angstrom" ; then \
 		echo "Angstrom toolchains are not pure toolchains: they contain" ; \
@@ -444,6 +453,13 @@ check_unusable_toolchain = \
 		echo "Unable to detect the toolchain sysroot, Buildroot cannot use this toolchain." ; \
 		exit 1 ; \
 	fi ; \
+	libc_a_archsysroot_path=`$${__CROSS_CC} $${__TOOLCHAIN_CFLAGS} -print-file-name=libc.a` ; \
+	if test "$${libc_a_archsysroot_path}" = "libc.a" ; then \
+		echo "Unable to detect the toolchain architecture sysroot." ; \
+		echo "Please check the Target Architecture Variant selected, the toolchains may not support it." ; \
+		echo "Buildroot cannot use this toolchain." ; \
+		exit 1 ; \
+	fi; \
 	sysroot_dir="$(call toolchain_find_sysroot,$${__CROSS_CC})" ; \
 	if test -z "$${sysroot_dir}" ; then \
 		echo "External toolchain doesn't support --sysroot. Cannot use." ; \

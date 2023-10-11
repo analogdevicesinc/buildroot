@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-QT5BASE_VERSION = 53a047c212af7fbded6505651f648172f9d7a34d
+QT5BASE_VERSION = 2ffb7ad8a1079a0444b9c72affe3d19b089b60de
 QT5BASE_SITE = $(QT5_SITE)/qtbase/-/archive/$(QT5BASE_VERSION)
 QT5BASE_SOURCE = qtbase-$(QT5BASE_VERSION).tar.bz2
 
@@ -12,9 +12,14 @@ QT5BASE_DEPENDENCIES = host-pkgconf pcre2 zlib
 QT5BASE_INSTALL_STAGING = YES
 QT5BASE_SYNC_QT_HEADERS = YES
 
-# 0010-Avoid-processing-intensive-painting-of-high-number-o.patch
-# 0011-Improve-fix-for-avoiding-huge-number-of-tiny-dashes.patch
+# From commits:
+# 4ce7053a59 "Avoid processing-intensive painting of high number of tiny dashes"
+# e7ea2ed27c "Improve fix for avoiding huge number of tiny dashes"
 QT5BASE_IGNORE_CVES += CVE-2021-38593
+# From commit 2766b2cba6ca4b1c430304df5437e2a6c874b107 "QProcess/Unix: ensure we don't accidentally execute something from CWD"
+QT5BASE_IGNORE_CVES += CVE-2022-25255
+# From commit e68ca8e51375d963b2391715f70b42707992dbd8 "Windows: use QSystemLibrary instead of LoadLibrary directly"
+QT5BASE_IGNORE_CVES += CVE-2022-25634
 
 # A few comments:
 #  * -no-pch to workaround the issue described at
@@ -169,9 +174,13 @@ QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_QT5BASE_LINUXFB),--enable-linuxfb,-
 QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_QT5BASE_DIRECTFB),-directfb,-no-directfb)
 QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_QT5BASE_DIRECTFB),directfb)
 
+ifeq ($(BR2_PACKAGE_LIBXKBCOMMON),y)
+QT5BASE_CONFIGURE_OPTS += -xkbcommon
+QT5BASE_DEPENDENCIES   += libxkbcommon
+endif
+
 ifeq ($(BR2_PACKAGE_QT5BASE_XCB),y)
 QT5BASE_CONFIGURE_OPTS += -xcb
-QT5BASE_CONFIGURE_OPTS += -xkbcommon
 
 QT5BASE_DEPENDENCIES   += \
 	libxcb \
@@ -179,8 +188,7 @@ QT5BASE_DEPENDENCIES   += \
 	xcb-util-image \
 	xcb-util-keysyms \
 	xcb-util-renderutil \
-	xlib_libX11 \
-	libxkbcommon
+	xlib_libX11
 ifeq ($(BR2_PACKAGE_QT5BASE_WIDGETS),y)
 QT5BASE_DEPENDENCIES   += xlib_libXext
 endif
@@ -201,6 +209,19 @@ endif
 QT5BASE_DEFAULT_QPA = $(call qstrip,$(BR2_PACKAGE_QT5BASE_DEFAULT_QPA))
 QT5BASE_CONFIGURE_OPTS += $(if $(QT5BASE_DEFAULT_QPA),-qpa $(QT5BASE_DEFAULT_QPA))
 
+ifeq ($(BR2_arc),y)
+# In case of -Os (which is default in BR) gcc will use millicode implementation
+# from libgcc. That along with performance degradation may lead to issues during
+# linkage stage. In case of QtWebkit exactly that happens - millicode functions
+# get put way too far from caller functions and so linker fails.
+# To solve that problem we explicitly disable millicode call generation for Qt.
+# Also due to some Qt5 libs being really huge (the best example is QtWebKit)
+# it's good to firce compiler to not assume short or even medium-length calls
+# could be used. I.e. always use long jump instaructions.
+# Otherwise there's a high risk of hitting link-time failures.
+QT5BASE_CFLAGS += -mno-millicode -mlong-calls
+endif
+
 ifeq ($(BR2_PACKAGE_QT5BASE_EGLFS),y)
 QT5BASE_CONFIGURE_OPTS += -eglfs
 QT5BASE_DEPENDENCIES   += libegl
@@ -208,8 +229,8 @@ else
 QT5BASE_CONFIGURE_OPTS += -no-eglfs
 endif
 
-QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_OPENSSL),-openssl,-no-openssl)
-QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_OPENSSL),openssl)
+QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_LIBOPENSSL),-openssl,-no-openssl)
+QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_LIBOPENSSL),openssl)
 
 QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_QT5BASE_FONTCONFIG),-fontconfig,-no-fontconfig)
 QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_QT5BASE_FONTCONFIG),fontconfig)
@@ -297,9 +318,14 @@ endef
 endif
 
 # This allows to use ccache when available
+ifeq ($(BR2_CCACHE),y)
+QT5BASE_CONFIGURE_OPTS += -ccache
+endif
+
+# Ensure HOSTCC/CXX is used
 define QT5BASE_CONFIGURE_HOSTCC
-	$(SED) 's,^QMAKE_CC\s*=.*,QMAKE_CC = $(HOSTCC),' $(@D)/mkspecs/common/g++-base.conf
-	$(SED) 's,^QMAKE_CXX\s*=.*,QMAKE_CXX = $(HOSTCXX),' $(@D)/mkspecs/common/g++-base.conf
+	$(SED) 's,^QMAKE_CC\s*=.*,QMAKE_CC = $(HOSTCC_NOCCACHE),' $(@D)/mkspecs/common/g++-base.conf
+	$(SED) 's,^QMAKE_CXX\s*=.*,QMAKE_CXX = $(HOSTCXX_NOCCACHE),' $(@D)/mkspecs/common/g++-base.conf
 endef
 
 # Must be last so can override all options set by Buildroot

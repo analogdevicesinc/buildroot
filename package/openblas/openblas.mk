@@ -4,11 +4,12 @@
 #
 ################################################################################
 
-OPENBLAS_VERSION = 0.3.18
+OPENBLAS_VERSION = 0.3.21
 OPENBLAS_SITE = https://github.com/xianyi/OpenBLAS/releases/download/v$(OPENBLAS_VERSION)
 OPENBLAS_LICENSE = BSD-3-Clause
 OPENBLAS_LICENSE_FILES = LICENSE
 OPENBLAS_INSTALL_STAGING = YES
+OPENBLAS_CPE_ID_VENDOR = openblas_project
 
 # Initialise OpenBLAS make options to $(TARGET_CONFIGURE_OPTS)
 OPENBLAS_MAKE_OPTS = $(TARGET_CONFIGURE_OPTS)
@@ -46,6 +47,12 @@ OPENBLAS_MAKE_OPTS += USE_OPENMP=0
 # statically for size reduction, even if BR2_STATIC_LIBS is not set.
 ifeq ($(BR2_STATIC_LIBS),y)
 OPENBLAS_MAKE_OPTS += NO_SHARED=1
+endif
+
+ifeq ($(BR2_ARCH_IS_64),y)
+OPENBLAS_MAKE_OPTS += BINARY=64
+else
+OPENBLAS_MAKE_OPTS += BINARY=32
 endif
 
 # binutils version <= 2.23.2 has a bug
