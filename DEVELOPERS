@@ -402,7 +402,6 @@ F:	package/libyuv/
 F:	package/mesa3d/
 F:	package/minidlna/
 F:	package/mjpg-streamer/
-F:	package/nut/
 F:	package/perl-crypt-openssl-guess/
 F:	package/perl-crypt-openssl-random/
 F:	package/perl-crypt-openssl-rsa/
@@ -655,7 +654,6 @@ F:	package/xinetd/
 
 N:	Dario Binacchi <dariobin@libero.it>
 F:	package/davinci-bootcount/
-F:	package/libmnl/
 
 N:	David Bachelart <david.bachelart@bbright.com>
 F:	package/ccrypt/
@@ -1064,6 +1062,10 @@ F:	package/flannel/
 
 N:	Geoffrey Ragot <geoffreyragot@gmail.com>
 F:	package/python-pyyaml/
+
+N:	Gerome Burlats <gerome.burlats@smile.fr>
+F:	board/qemu/
+F:	configs/qemu_*
 
 N:	Gilles Talis <gilles.talis@gmail.com>
 F:	board/freescale/imx8mmevk/
@@ -1710,7 +1712,7 @@ F:	package/intel-gmmlib/
 F:	package/intel-mediadriver/
 F:	package/intel-mediasdk/
 
-N:	Luca Ceresoli <luca.ceresoli@bootlin.com>
+N:	Luca Ceresoli <luca@lucaceresoli.net>
 F:	board/olimex/a20_olinuxino/
 F:	board/zynq/
 F:	board/zynqmp/
@@ -2056,7 +2058,7 @@ F:	package/libfribidi/
 N:	Min Xu <xuminready@gmail.com>
 F:	package/shadowsocks-libev/
 
-N:	Miquèl Raynal <miquel.raynal@bootlin.com>
+N:	Miquèl Raynal
 F:	package/mali-driver/
 F:	package/rockchip-mali/
 
@@ -2066,6 +2068,9 @@ F:	package/mbuffer/
 N:	Murat Demirten <mdemirten@yh.com.tr>
 F:	package/jpeg-turbo/
 F:	package/libgeotiff/
+
+N:	Mylène Josserand <mylene.josserand@collabora.com>
+F:	package/rtl8723bu/
 
 N:	Nathaniel Roach <nroach44@gmail.com>
 F:	package/bandwidthd/
@@ -2077,7 +2082,7 @@ F:	package/libevdev/
 F:	package/pkg-qmake.mk
 F:	package/qt5/qt5opcua/
 
-N:	Neal Frager <neal.frager@amd.com>
+N:	Neal Frager <neal.frager@xilinx.com>
 F:	board/zynqmp/
 F:	configs/zynqmp_zcu102_defconfig
 
@@ -2744,11 +2749,8 @@ F:	utils/size-stats-compare
 F:	toolchain/
 
 N:	Thomas Huth <huth@tuxfamily.org>
-F:	board/qemu/m68k-mcf5208/
-F:	configs/qemu_m68k_mcf5208_defconfig
 F:	package/ascii-invaders/
 F:	package/frotz/
-F:	package/kvm-unit-tests/
 F:	package/xorcurses/
 
 N:	Thomas Petazzoni <thomas.petazzoni@bootlin.com>

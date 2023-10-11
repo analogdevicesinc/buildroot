@@ -69,7 +69,7 @@ endif
 
 ifeq ($(BR2_PACKAGE_SQLITE),y)
 AIRCRACK_NG_DEPENDENCIES += sqlite
-AIRCRACK_NG_CONF_OPTS += --with-sqlite3=$(STAGING_DIR)/usr
+AIRCRACK_NG_CONF_OPTS += --with-sqlite3
 else
 AIRCRACK_NG_CONF_OPTS += --without-sqlite3
 endif

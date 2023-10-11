@@ -19,9 +19,7 @@ HOST_PIXMAN_DEPENDENCIES = host-pkgconf
 PIXMAN_AUTORECONF = YES
 
 # don't build gtk based demos
-PIXMAN_CONF_OPTS = \
-	--disable-gtk \
-	--disable-loongson-mmi
+PIXMAN_CONF_OPTS = --disable-gtk
 
 # The ARM SIMD code from pixman requires a recent enough ARM core, but
 # there is a runtime CPU check that makes sure it doesn't get used if

@@ -32,8 +32,4 @@ else
 QPDF_CONF_OPTS += --disable-crypto-openssl
 endif
 
-ifeq ($(BR2_TOOLCHAIN_HAS_LIBATOMIC),y)
-QPDF_CONF_ENV += LIBS=-latomic
-endif
-
 $(eval $(autotools-package))

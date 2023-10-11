@@ -17,7 +17,8 @@ define IPMIUTIL_TOUCH_CONFIG_H_IN
 endef
 IPMIUTIL_PRE_CONFIGURE_HOOKS += IPMIUTIL_TOUCH_CONFIG_H_IN
 
-ifeq ($(BR2_PACKAGE_OPENSSL),y)
+# forgets to link against libcrypto dependencies breaking static link
+ifeq ($(BR2_PACKAGE_OPENSSL)x$(BR2_STATIC_LIBS),yx)
 # tests against distro libcrypto so it might get a false positive when
 # the openssl version is old, so force it off
 # SKIP_MD2 can be used only if ALLOW_GNU is defined.
