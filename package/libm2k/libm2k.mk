@@ -3,7 +3,7 @@
 # libm2k
 #
 ################################################################################
-LIBM2K_VERSION = 0.6.0
+LIBM2K_VERSION = 0.8.0
 LIBM2K_SITE = https://github.com/analogdevicesinc/libm2k/archive/refs/tags/v$(LIBM2K_VERSION)
 
 LIBM2K_INSTALL_STAGING = YES
