@@ -3,7 +3,7 @@
 # libad9361-iio
 #
 ################################################################################
-LIBAD9361_IIO_VERSION = 0.2
+LIBAD9361_IIO_VERSION = 0.3
 LIBAD9361_IIO_SITE = $(call github,analogdevicesinc,libad9361-iio,v$(LIBAD9361_IIO_VERSION))
 
 LIBAD9361_IIO_INSTALL_STAGING = YES
