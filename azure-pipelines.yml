@@ -1,0 +1,36 @@
+trigger:
+- main
+- master
+- staging/*
+- adi-20*
+
+pr:
+- main
+- master
+- adi-20*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Build
+    jobs:
+      - job: microblaze_rootfs_build_test
+        steps:
+        - checkout: self
+          fetchDepth: 1
+          clean: true
+        - script: |
+            #!/bin/bash
+            make microblaze_adi_rootfs_vivado_2019_1_defconfig
+            make -j"$(nproc)"
+          displayName: "Build rootfs for microblaze"
+        - task: CopyFiles@2
+          inputs:
+            sourceFolder: '$(Agent.BuildDirectory)/s/output/images'
+            contents: '$(Agent.BuildDirectory)/s/output/images/rootfs.cpio.gz'
+            targetFolder: '$(Build.ArtifactStagingDirectory)'
+        - task: PublishPipelineArtifact@1
+          inputs:
+            targetPath: '$(Build.ArtifactStagingDirectory)'
+            artifactName: 'mb_rootfs'
