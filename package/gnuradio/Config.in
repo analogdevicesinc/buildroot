@@ -50,6 +50,15 @@ config BR2_PACKAGE_GNURADIO_AUDIO
 	help
 	  Add audio source/sink to GNU Radio
 
+config BR2_PACKAGE_GNURADIO_IIO
+	bool "gr-iio"
+ 	select BR2_PACKAGE_LIBIIO
+  	select BR2_PACKAGE_LIBAD9361IIO
+  	select BR2_PACKAGE_LS_GNURADIO_BLOCKS
+   	select BR2_PACKAGE_LS_GNURADIO_PYTHON
+    	help
+     	  GNU Radio IIO library
+
 config BR2_PACKAGE_GNURADIO_BLOCKS
 	bool "blocks support"
 	help
