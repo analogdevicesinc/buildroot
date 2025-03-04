@@ -67,6 +67,11 @@ BOTAN_DEPENDENCIES += sqlite
 BOTAN_CONF_OPTS += --with-sqlite
 endif
 
+ifeq ($(BR2_PACKAGE_TROUSERS),y)
+BOTAN_DEPENDENCIES += trousers
+BOTAN_CONF_OPTS += --with-tpm
+endif
+
 ifeq ($(BR2_PACKAGE_XZ),y)
 BOTAN_DEPENDENCIES += xz
 BOTAN_CONF_OPTS += --with-lzma
@@ -82,6 +87,10 @@ BOTAN_CONF_OPTS += --disable-altivec
 endif
 
 ifeq ($(BR2_ARM_CPU_HAS_NEON),)
+BOTAN_CONF_OPTS += --disable-neon
+endif
+
+ifeq ($(BR2_SOFT_FLOAT),y)
 BOTAN_CONF_OPTS += --disable-neon
 endif
 

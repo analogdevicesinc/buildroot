@@ -7,7 +7,8 @@
 # Generate version string using:
 #   git describe --match 'glibc-*' --abbrev=40 origin/release/MAJOR.MINOR/master | cut -d '-' -f 2-
 # When updating the version, please also update localedef
-GLIBC_VERSION = 2.36-81-g4f4d7a13edfd2fdc57c9d76e1fd6d017fb47550c
+GLIBC_VERSION = 2.36-128-gb9b7d6a27aa0632f334352fa400771115b3c69b7
+
 # Upstream doesn't officially provide an https download link.
 # There is one (https://sourceware.org/git/glibc.git) but it's not reliable,
 # sometimes the connection times out. So use an unofficial github mirror.
@@ -19,6 +20,56 @@ GLIBC_SITE = $(call github,bminor,glibc,$(GLIBC_VERSION))
 GLIBC_LICENSE = GPL-2.0+ (programs), LGPL-2.1+, BSD-3-Clause, MIT (library)
 GLIBC_LICENSE_FILES = COPYING COPYING.LIB LICENSES
 GLIBC_CPE_ID_VENDOR = gnu
+
+# Extract the base version (e.g. 2.36) from GLIBC_VERSION in order to
+# allow proper matching with the CPE database.
+GLIBC_CPE_ID_VERSION = $(word 1, $(subst -,$(space),$(GLIBC_VERSION)))
+
+# Fixed by b0e7888d1fa2dbd2d9e1645ec8c796abf78880b9, which is between
+# 2.36 and the version we're really using
+GLIBC_IGNORE_CVES += CVE-2022-39046
+
+# Fixed by 4ea972b7edd7e36610e8cde18bf7a8149d7bac4f, which is between
+# 2.36 and the version we're really using
+GLIBC_IGNORE_CVES += CVE-2023-4527
+
+# Fixed by a9728f798ec7f05454c95637ee6581afaa9b487d, which is between
+# 2.36 and the version we're really using
+GLIBC_IGNORE_CVES += CVE-2023-4806
+
+# Fixed by 22955ad85186ee05834e47e665056148ca07699c, which is between
+# 2.36 and the version we're really using.
+GLIBC_IGNORE_CVES += CVE-2023-4911
+
+# Fixed by 856bac55f98dc840e7c27cfa82262b933385de90, which is between
+# 2.36 and the version we're really using.
+GLIBC_IGNORE_CVES += CVE-2023-5156
+
+# Fixed by d1a83b6767f68b3cb5b4b4ea2617254acd040c82, which is between
+# 2.36 and the version we're really using.
+GLIBC_IGNORE_CVES += CVE-2023-6246
+
+# Fixed by 2bc9d7c002bdac38b5c2a3f11b78e309d7765b83, which is between
+# 2.36 and the version we're really using.
+GLIBC_IGNORE_CVES += CVE-2023-6779
+
+# Fixed by b9b7d6a27aa0632f334352fa400771115b3c69b7, which is between
+# 2.36 and the version we're really using.
+GLIBC_IGNORE_CVES += CVE-2023-6780
+
+# All these CVEs are considered as not being security issues by
+# upstream glibc:
+#  https://security-tracker.debian.org/tracker/CVE-2010-4756
+#  https://security-tracker.debian.org/tracker/CVE-2019-1010022
+#  https://security-tracker.debian.org/tracker/CVE-2019-1010023
+#  https://security-tracker.debian.org/tracker/CVE-2019-1010024
+#  https://security-tracker.debian.org/tracker/CVE-2019-1010025
+GLIBC_IGNORE_CVES += \
+	CVE-2010-4756 \
+	CVE-2019-1010022 \
+	CVE-2019-1010023 \
+	CVE-2019-1010024 \
+	CVE-2019-1010025
 
 # glibc is part of the toolchain so disable the toolchain dependency
 GLIBC_ADD_TOOLCHAIN_DEPENDENCY = NO

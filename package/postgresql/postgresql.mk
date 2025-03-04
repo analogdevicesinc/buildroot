@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-POSTGRESQL_VERSION = 15.4
+POSTGRESQL_VERSION = 15.6
 POSTGRESQL_SOURCE = postgresql-$(POSTGRESQL_VERSION).tar.bz2
 POSTGRESQL_SITE = https://ftp.postgresql.org/pub/source/v$(POSTGRESQL_VERSION)
 POSTGRESQL_LICENSE = PostgreSQL
@@ -85,6 +85,13 @@ POSTGRESQL_DEPENDENCIES += openldap
 POSTGRESQL_CONF_OPTS += --with-ldap
 else
 POSTGRESQL_CONF_OPTS += --without-ldap
+endif
+
+ifeq ($(BR2_PACKAGE_ICU),y)
+POSTGRESQL_DEPENDENCIES += icu
+POSTGRESQL_CONF_OPTS += --with-icu
+else
+POSTGRESQL_CONF_OPTS += --without-icu
 endif
 
 ifeq ($(BR2_PACKAGE_LIBXML2),y)

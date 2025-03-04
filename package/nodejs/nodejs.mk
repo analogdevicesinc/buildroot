@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-NODEJS_VERSION = 16.20.0
+NODEJS_VERSION = 16.20.2
 NODEJS_SOURCE = node-v$(NODEJS_VERSION).tar.xz
 NODEJS_SITE = http://nodejs.org/dist/v$(NODEJS_VERSION)
 NODEJS_DEPENDENCIES = \
@@ -47,7 +47,7 @@ HOST_NODEJS_MAKE_OPTS = \
 	LDFLAGS.host="$(HOST_LDFLAGS)" \
 	NO_LOAD=cctest.target.mk \
 	PATH=$(@D)/bin:$(BR_PATH) \
-	JOBS=$(BR2_JLEVEL)
+	JOBS=$(PARALLEL_JOBS)
 
 NODEJS_MAKE_OPTS = \
 	$(TARGET_CONFIGURE_OPTS) \
@@ -55,7 +55,7 @@ NODEJS_MAKE_OPTS = \
 	PATH=$(@D)/bin:$(BR_PATH) \
 	LDFLAGS="$(NODEJS_LDFLAGS)" \
 	LD="$(TARGET_CXX)" \
-	JOBS=$(BR2_JLEVEL)
+	JOBS=$(PARALLEL_JOBS)
 
 # nodejs's build system uses python which can be a symlink to an unsupported
 # python version (e.g. python 3.10 with nodejs 14.18.1). We work around this by
@@ -248,6 +248,9 @@ define NODEJS_INSTALL_MODULES
 	# help in diagnosing the problem.
 	$(NPM) install -g $(NODEJS_MODULES_LIST)
 endef
+
+# Exclude prebuilt binaries with different architectures and OS from check
+NODEJS_BIN_ARCH_EXCLUDE = /usr/lib/node_modules/
 endif
 
 define NODEJS_INSTALL_STAGING_CMDS
