@@ -5,7 +5,7 @@
 ################################################################################
 
 EXPAT_VERSION = 2.5.0
-EXPAT_SITE = http://downloads.sourceforge.net/project/expat/expat/$(EXPAT_VERSION)
+EXPAT_SITE = https://github.com/libexpat/libexpat/releases/download/R_2_5_0/$(EXPAT_VERSION)
 EXPAT_SOURCE = expat-$(EXPAT_VERSION).tar.xz
 EXPAT_INSTALL_STAGING = YES
 EXPAT_LICENSE = MIT
