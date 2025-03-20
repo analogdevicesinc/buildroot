@@ -22,7 +22,7 @@ stages:
           clean: true
         - script: |
             #!/bin/bash
-            make microblaze_adi_rootfs_vivado_2019_1_defconfig
+            make microblaze_adi_rootfs_defconfig
             make -j"$(nproc)"
           displayName: "Build rootfs for microblaze"
         - task: CopyFiles@2
