@@ -1,0 +1,46 @@
+From da5b574a430f12a40ec985a1296b1e674d4666d8 Mon Sep 17 00:00:00 2001
+From: Philip Molloy <philip.molloy@analog.com>
+Date: Thu, 14 Aug 2025 18:36:29 +0200
+Subject: [PATCH] board: adi: sc598: boot peripheral based on boot mode
+
+Signed-off-by: Philip Molloy <philip.molloy@analog.com>
+---
+ board/adi/common-sc598-som/sc598-som.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/board/adi/common-sc598-som/sc598-som.c b/board/adi/common-sc598-som/sc598-som.c
+index 96b73520e66..0612c9d907a 100644
+--- a/board/adi/common-sc598-som/sc598-som.c
++++ b/board/adi/common-sc598-som/sc598-som.c
+@@ -9,6 +9,7 @@
+ #include <asm/arch-adi/sc5xx/sc5xx.h>
+ #include <asm/arch-adi/sc5xx/soc.h>
+ #include <asm/armv8/mmu.h>
++#include <asm/io.h>
+ 
+ #include "../carriers/somcrr.h"
+ 
+@@ -21,6 +22,8 @@ int board_phy_config(struct phy_device *phydev)
+ 
+ int board_init(void)
+ {
++	u32 bmode = (readl(0x3108C004) & 0x00000F00) >> 8;
++
+ 	sc59x_remap_ospi();
+ 
+ 	if (IS_ENABLED(CONFIG_ADI_CARRIER_SOMCRR_EZKIT) ||
+@@ -30,5 +33,11 @@ int board_init(void)
+ 
+ 	sc5xx_enable_rgmii();
+ 
++	if (bmode == 2) {
++		env_set("bootcmd", "spiboot");
++	} else if (bmode == 6) {
++		env_set("bootcmd", "emmcboot");
++	}
++
+ 	return 0;
+ }
+-- 
+2.50.1
+

@@ -1,0 +1,26 @@
+From 0f88ae6a553a70e6f11892d01a36c7e2b6acbea0 Mon Sep 17 00:00:00 2001
+From: Philip Molloy <philip.molloy@analog.com>
+Date: Tue, 1 Jul 2025 13:56:06 +0200
+Subject: [PATCH] mach-sc5xx: build U-Boot proper in ADI ldr format
+
+Upstream: https://github.com/analogdevicesinc/u-boot/pull/1
+Signed-off-by: Philip Molloy <philip.molloy@analog.com>
+---
+ arch/arm/mach-sc5xx/config.mk | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/mach-sc5xx/config.mk b/arch/arm/mach-sc5xx/config.mk
+index e7e4c9a1181..266d2e3a777 100644
+--- a/arch/arm/mach-sc5xx/config.mk
++++ b/arch/arm/mach-sc5xx/config.mk
+@@ -12,5 +12,7 @@ ifdef CONFIG_XPL_BUILD
+ INPUTS-y += $(obj)/u-boot-spl.ldr
+ endif
+ 
++INPUTS-y += u-boot.ldr
++
+ LDR_FLAGS += --bcode=$(CONFIG_SC_BOOT_MODE)
+ LDR_FLAGS += --use-vmas
+-- 
+2.49.0
+
