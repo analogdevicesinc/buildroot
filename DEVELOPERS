@@ -2746,6 +2746,8 @@ F:	package/zsh/
 
 N:	Philip Molloy <philip@philipmolloy.com>
 F:	package/adsp-ldr/
+F:	board/adi/
+F:	configs/adi_*
 
 N:	Philipp Richter <richterphilipp.pops@gmail.com>
 F:	package/libtorrent-rasterbar/
