@@ -1,0 +1,15 @@
+#S23udc
+PRODUCT="Sharkbyte"
+USBPID=0xb673
+ENDPOINTS=3
+
+#S40network / S41network
+UDHCPD_CONF=/etc/udhcpd.conf
+CONF=/opt/config.txt
+IFAC=/etc/network/interfaces
+
+#update.sh
+TARGET=sharkbyte
+FIRMWARE=/mnt/msd/sharkbyte.frm
+FRM_MAGIC="ITB Sharkbyte"
+
