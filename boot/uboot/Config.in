@@ -164,8 +164,10 @@ config BR2_TARGET_UBOOT_DEFAULT_ENV_FILE
 	    with lines containing key=value pairs. Blank lines and
 	    lines beginning with '#' are ignored.
 
-	  Based on the USE_DEFAULT_ENV_FILE and DEFAULT_ENV_FILE U-Boot
-	  configuration variables.
+	  Based on the following U-Boot configuration variables:
+	  USE_DEFAULT_ENV_FILE and DEFAULT_ENV_FILE, or
+	  ENV_USE_DEFAULT_ENV_TEXT_FILE and ENV_DEFAULT_ENV_TEXT_FILE
+	  for U-Boot >= v2025.10.
 
 	  For more info see:
 	  https://docs.u-boot.org/en/latest/usage/environment.html#external-environment-file
