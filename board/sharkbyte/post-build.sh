@@ -43,6 +43,7 @@ mkdir -p ${TARGET_DIR}/etc/dropbear
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/update.sh ${TARGET_DIR}/sbin/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/update_frm.sh ${TARGET_DIR}/sbin/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/udc_handle_suspend.sh ${TARGET_DIR}/sbin/
+${INSTALL} -D -m 0755 ${BOARD_DIR}/overtemp_monitor.sh ${TARGET_DIR}/sbin/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S10mdev ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S15watchdog ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S20urandom ${TARGET_DIR}/etc/init.d/
@@ -51,6 +52,7 @@ ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S23udc ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S40network ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S41network ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S45msd ${TARGET_DIR}/etc/init.d/
+${INSTALL} -D -m 0755 ${BOARD_DIR}/S90overtemp ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0755 ${BOARD_DIR}/../pluto/S98autostart ${TARGET_DIR}/etc/init.d/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/../pluto/fw_env.config ${TARGET_DIR}/etc/
 ${INSTALL} -D -m 0644 ${BOARD_DIR}/VERSIONS ${TARGET_DIR}/opt/
