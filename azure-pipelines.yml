@@ -12,6 +12,16 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+- group: Linux_CI
+
+resources:
+  repositories:
+    - repository: wiki-scripts
+      type: github
+      name: analogdevicesinc/wiki-scripts
+      endpoint: analogdevicesinc
+
 stages:
   - stage: Build
     jobs:
@@ -34,3 +44,34 @@ stages:
           inputs:
             targetPath: '$(Build.ArtifactStagingDirectory)'
             artifactName: 'mb_rootfs'
+      - job: publish_to_cloudsmith
+        dependsOn: microblaze_rootfs_build_test
+        condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        timeoutInMinutes: 120
+        steps:
+        - checkout: self
+          fetchDepth: 1
+          clean: true
+        - checkout: wiki-scripts
+          fetchDepth: 1
+          clean: true
+        - task: DownloadPipelineArtifact@2
+          inputs:
+            path: $(Build.SourcesDirectory)/bin
+        - script: |
+            #!/bin/bash
+            python -m pip install cloudsmith-cli
+            MERGE_COMMIT_SHA=$(git -C ${BUILD_SOURCESDIRECTORY}/buildroot rev-parse --short HEAD)
+            GIT_SHA_DATE=$(git -C ${BUILD_SOURCESDIRECTORY}/buildroot show -s --format=%cd --date=format:'%Y-%m-%d %H:%M' ${MERGE_COMMIT_SHA} | sed -e "s/ \|\:/-/g")
+
+            python3 ${BUILD_SOURCESDIRECTORY}/wiki-scripts/utils/cloudsmith_utils/upload_to_cloudsmith.py \
+              --repo="sdg-rootfs" \
+              --version="rootfs/microblaze/latest/" \
+              --local_path="${BUILD_SOURCESDIRECTORY}/bin" \
+              --tags="commit_date-${GIT_SHA_DATE},git_sha-${BUILD_SOURCEVERSION}" \
+              --token="${CLOUDSMITH_API_KEY}" \
+              --no_rel_path
+          env:
+            CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
+          name: PushArtifacts
+          displayName: "Push to Cloudsmith"
