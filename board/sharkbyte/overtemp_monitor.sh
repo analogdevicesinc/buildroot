@@ -66,7 +66,23 @@ while true; do
         echo "OVERTEMP_MONITOR: ${CUR_C} degC >= ${THR_C} degC - Triggering SW shutdown" > $TTY_CONSOLE
         echo "==============================================" > $TTY_CONSOLE
 
+        # unbind all hmcad15xx SPI devices
+        for dev in /sys/bus/spi/drivers/hmcad15xx/spi*; do
+            [ -e "$dev" ] || continue
+            devname=$(basename "$dev")
+            echo "$devname" > /sys/bus/spi/drivers/hmcad15xx/unbind
+            echo "OVERTEMP_MONITOR: unbound $devname" > $TTY_CONSOLE
+        done
+
+        # reset adc to avoid backpowering and shutoff sequencer
+        gpioset gpiochip1 8=0 9=0
+        sleep 0.5
+        gpioset gpiochip1 16=0
+
+        # if we get here, hardware shutoff failed
         # initiate a sw poweroff (does not cut hw power)
+        sleep 2
+        echo "OVERTEMP_MONITOR: hardware shutoff FAILED, proceeding with sw shutoff" > $TTY_CONSOLE
         poweroff
 
         sync
