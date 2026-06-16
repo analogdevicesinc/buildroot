@@ -69,6 +69,7 @@ config BR2_PACKAGE_LIBIIO_IIOD
 	default y
 	depends on BR2_TOOLCHAIN_HAS_THREADS
 	select BR2_PACKAGE_LIBIIO_LOCAL_BACKEND
+	select BR2_PACKAGE_ZSTD
 	help
 	  Install the IIO Daemon.
 
