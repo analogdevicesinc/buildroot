@@ -64,13 +64,12 @@ stages:
             MERGE_COMMIT_SHA=$(git -C ${BUILD_SOURCESDIRECTORY}/buildroot rev-parse --short HEAD)
             GIT_SHA_DATE=$(git -C ${BUILD_SOURCESDIRECTORY}/buildroot show -s --format=%cd --date=format:'%Y-%m-%d %H:%M' ${MERGE_COMMIT_SHA} | sed -e "s/ \|\:/-/g")
 
-            python3 ${BUILD_SOURCESDIRECTORY}/wiki-scripts/utils/cloudsmith_utils/upload_to_cloudsmith.py \
+            python3 ${BUILD_SOURCESDIRECTORY}/wiki-scripts/utils/cloudsmith_utils/cloudsmith_helper.py \
+              --method deploy_to_location \
               --repo="sdg-rootfs" \
-              --version="rootfs/microblaze/latest/" \
-              --local_path="${BUILD_SOURCESDIRECTORY}/bin" \
-              --tags="commit_date-${GIT_SHA_DATE},git_sha-${BUILD_SOURCEVERSION}" \
-              --token="${CLOUDSMITH_API_KEY}" \
-              --no_rel_path
+              --package_version="rootfs/microblaze/latest/" \
+              --local_path="${BUILD_SOURCESDIRECTORY}/bin/mb_rootfs/rootfs.cpio.gz" \
+              --package_tags="commit_date-${GIT_SHA_DATE},git_sha-${BUILD_SOURCEVERSION}"
           env:
             CLOUDSMITH_API_KEY: $(CLOUDSMITH_API_KEY)
           name: PushArtifacts
