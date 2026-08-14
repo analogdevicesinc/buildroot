@@ -53,9 +53,11 @@ JTAG
 Setup the board as follows:
 
 - Connect the EV-SC598-SOM target to a host computer using the USB-C connector
-  (P1)
-- Connect a ICE-1000 or ICE-2000 debugger to the JTAG debug header (P6)
-- Set the rotary switch (S1) to 0
+  (P1) on the SoM
+- Connect a ICE-1000 or ICE-2000 debugger to the JTAG debug header (P6) on the
+  SoM or connect a host computer to the embedded debugger using the micro USB
+  connector (P2) on the carrier board
+- Set the rotary switch (S1) to 0 on the SoM
 
 Build and install the ADI fork of OpenOCD:
 
@@ -65,9 +67,10 @@ Build and install the ADI fork of OpenOCD:
   $ ./configure
   $ make -j$(nproc)
 
-Run openocd with either ice1000.cfg or ice2000.cfg and adspsc59x_a55.cfg.
+Run openocd with either ice1000.cfg, ice2000.cfg or adi-dbgagent.cfg and
+adspsc59x_a55.cfg:
 
-  $ src/openocd -f ice1000.cfg \
+  $ src/openocd -f adi-dbgagent.cfg \
       -f adspsc59x_a55.cfg \
       --search tcl/ \
       --search tcl/interface/ \
@@ -76,10 +79,10 @@ Run openocd with either ice1000.cfg or ice2000.cfg and adspsc59x_a55.cfg.
 In a second terminal start a serial program (e.g. minicom) configured for
 115200 8N1 and flow control disabled.
 
-In a third terminal cd into buildroot/output/images/ and load and run the two
-U-Boot stages with the generated GDB script:
+In a third terminal cd into buildroot/output/images/ and then load and run the
+two U-Boot stages using gdb-multiarch (Debian/Ubuntu) or gdb (RHEL/Fedora):
 
-  $ gdb-multiarch -x u-boot.gdb
+  $ gdb -x u-boot.gdb
 
 In a fourth and final terminal start a web server in buildroot/output/images/
 (e.g. python -m http.server).
