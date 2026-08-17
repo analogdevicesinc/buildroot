@@ -1,0 +1,71 @@
+/dts-v1/;
+
+/ {
+	description = "ADSP-SC598 kernel FIT image";
+	#address-cells = <1>;
+
+	images {
+		kernel {
+			description = "Linux kernel";
+			data = /incbin/("./Image");
+			type = "kernel";
+			arch = "arm64";
+			os = "linux";
+			compression = "none";
+			load = <0x9a200000>;
+			entry = <0x9a200000>;
+			hash-1 {
+				algo = "crc32";
+			};
+		};
+		fdt-sc598-som-ezkit.dtb {
+			description = "sc598-som-ezkit.dtb";
+			data = /incbin/("./sc598-som-ezkit.dtb");
+			type = "flat_dt";
+			arch = "arm64";
+			compression = "none";
+			hash-1 {
+				algo = "crc32";
+			};
+		};
+		fdt-sc598-som-ezlite.dtb {
+			description = "sc598-som-ezlite.dtb";
+			data = /incbin/("./sc598-som-ezlite.dtb");
+			type = "flat_dt";
+			arch = "arm64";
+			compression = "none";
+			hash-1 {
+				algo = "crc32";
+			};
+		};
+		fdt-sc598-htol.dtb {
+			description = "sc598-htol.dtb";
+			data = /incbin/("./sc598-htol.dtb");
+			type = "flat_dt";
+			arch = "arm64";
+			compression = "none";
+			hash-1 {
+				algo = "crc32";
+			};
+		};
+	};
+
+	configurations {
+		default = "conf-@DEFAULT_DTB@";
+		conf-sc598-som-ezkit.dtb {
+			description = "Linux kernel, sc598-som-ezkit.dtb";
+			kernel = "kernel";
+			fdt = "fdt-sc598-som-ezkit.dtb";
+		};
+		conf-sc598-som-ezlite.dtb {
+			description = "Linux kernel, sc598-som-ezlite.dtb";
+			kernel = "kernel";
+			fdt = "fdt-sc598-som-ezlite.dtb";
+		};
+		conf-sc598-htol.dtb {
+			description = "Linux kernel, sc598-htol.dtb";
+			kernel = "kernel";
+			fdt = "fdt-sc598-htol.dtb";
+		};
+	};
+};
