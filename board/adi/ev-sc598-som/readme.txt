@@ -29,10 +29,10 @@ output/images/
 ├── emmc.img
 ├── flash.img
 ├── Image
+├── kernel.itb
 ├── rootfs.ext2
 ├── rootfs.ext4 -> rootfs.ext2
 ├── sc598-som-{ezkit,ezlite}.dtb
-├── flash.dtb -> default device tree
 ├── u-boot
 ├── u-boot.gdb
 ├── u-boot.ldr
