@@ -15,10 +15,11 @@ fi
 sed "s/@DEFAULT_DTB@/$default_dtb/" "$BOARD_DIR/kernel.its" \
   > "$BINARIES_DIR/kernel.its"
 (cd "$BINARIES_DIR" && "$HOST_DIR/bin/mkimage" -f kernel.its kernel.itb)
+ln -sf kernel.itb "$BINARIES_DIR/fitImage"
 
 # Assemble boot partition contents
 install -d "$BINARIES_DIR/boot"
-for f in Image sc598-htol.dtb sc598-som-ezkit.dtb sc598-som-ezlite.dtb; do
+for f in Image sc598-htol.dtb sc598-som-ezkit.dtb sc598-som-ezlite.dtb fitImage; do
   install -m 0644 "$BINARIES_DIR/$f" "$BINARIES_DIR/boot/"
 done
 
