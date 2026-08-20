@@ -3,14 +3,8 @@ set -e
 
 BOARD_DIR="$(dirname "$0")"
 
-# The first adi/ device tree listed becomes the default FIT configuration
-default_dtb="$(sed -n 's/^BR2_LINUX_KERNEL_INTREE_DTS_NAME="adi\/\([^" ]*\).*/\1.dtb/p' \
-  "$BR2_CONFIG")"
-
-if [ -z "$default_dtb" ]; then
-  echo "Could not read a single adi/ device tree name from $BR2_CONFIG" >&2
-  exit 1
-fi
+default_dtb="$(sed -n 's/^fdtfile="\?\([^"]*\)"\?/\1/p' \
+  "$TARGET_DIR/etc/u-boot-initial-env")"
 
 sed "s/@DEFAULT_DTB@/$default_dtb/" "$BOARD_DIR/kernel.its" \
   > "$BINARIES_DIR/kernel.its"
