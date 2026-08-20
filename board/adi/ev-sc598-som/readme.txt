@@ -25,14 +25,26 @@ Output artifacts
 ----------------
 
 output/images/
-├── boot.vfat
+├── boot
+│   ├── fitImage
+│   ├── Image
+│   ├── sc598-htol.dtb
+│   ├── sc598-som-ezkit.dtb
+│   └── sc598-som-ezlite.dtb
+├── boot.ext4
 ├── emmc.img
+├── fitImage -> kernel.itb
 ├── flash.img
 ├── Image
 ├── kernel.itb
+├── kernel.its
 ├── rootfs.ext2
 ├── rootfs.ext4 -> rootfs.ext2
-├── sc598-som-{ezkit,ezlite}.dtb
+├── rootfs.ubi
+├── rootfs.ubifs
+├── sc598-htol.dtb
+├── sc598-som-ezkit.dtb
+├── sc598-som-ezlite.dtb
 ├── u-boot
 ├── u-boot.gdb
 ├── u-boot.ldr
