@@ -19,3 +19,6 @@ done
 
 # GDB script to load the two U-Boot stages over JTAG
 install -m 0644 "$BOARD_DIR/../u-boot.gdb" "$BINARIES_DIR/u-boot.gdb"
+
+# TODO(KT): Workaround for https://github.com/analogdevicesinc/linux/issues/3400
+gzip -f -k "${BINARIES_DIR}/emmc.img"
