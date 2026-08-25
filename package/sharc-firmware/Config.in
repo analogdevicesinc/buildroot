@@ -1,0 +1,8 @@
+config BR2_PACKAGE_SHARC_FIRMWARE
+	bool "sharc-firmware"
+	help
+	  Pre-built SHARC firmware implementing RPMsg echo examples
+	  for validating communication between Linux and the SHARC
+	  cores on supported ADSP processors.
+
+	  https://github.com/analogdevicesinc/rpmsg-examples
