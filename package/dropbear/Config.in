@@ -74,4 +74,17 @@ config BR2_PACKAGE_DROPBEAR_LOCALOPTIONS_FILE
 	  localoptions.h. It can be used to tweak the Dropbear
 	  configuration.
 
+config BR2_PACKAGE_DROPBEAR_PREGENERATED_KEYS
+	bool "pre-generate SSH host keys"
+	select BR2_PACKAGE_HOST_DROPBEAR
+	help
+	  Generate the SSH host keys at build time and ship them in the
+	  image, instead of letting dropbear generate them on the first
+	  boot. Use this when the root filesystem is not persistent (e.g.
+	  an initramfs) but the host keys must stay the same across
+	  reboots.
+
+	  This replaces the /etc/dropbear -> /var/run/dropbear symlink with
+	  a real directory containing the keys.
+
 endif
