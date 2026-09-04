@@ -142,6 +142,21 @@ define DROPBEAR_INSTALL_TARGET_CMDS
 	ln -snf /var/run/dropbear $(TARGET_DIR)/etc/dropbear
 endef
 
+ifeq ($(BR2_PACKAGE_DROPBEAR_PREGENERATED_KEYS),y)
+DROPBEAR_DEPENDENCIES += host-dropbear
+define DROPBEAR_PREGENERATE_KEYS
+	rm -f $(TARGET_DIR)/etc/dropbear
+	mkdir -p $(TARGET_DIR)/etc/dropbear
+	$(HOST_DIR)/bin/dropbearkey -t rsa \
+		-f $(TARGET_DIR)/etc/dropbear/dropbear_rsa_host_key
+	$(HOST_DIR)/bin/dropbearkey -t ecdsa \
+		-f $(TARGET_DIR)/etc/dropbear/dropbear_ecdsa_host_key
+	$(HOST_DIR)/bin/dropbearkey -t ed25519 \
+		-f $(TARGET_DIR)/etc/dropbear/dropbear_ed25519_host_key
+endef
+DROPBEAR_POST_INSTALL_TARGET_HOOKS += DROPBEAR_PREGENERATE_KEYS
+endif
+
 HOST_DROPBEAR_MAKE = \
 	$(MAKE) \
 	PROGRAMS="dropbearkey"
