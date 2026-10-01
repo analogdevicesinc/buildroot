@@ -7,7 +7,7 @@ On Linux the find_library() function requires ld, gcc, objdump
 or ldconfig on the target, which might not be present on a
 buildroot system. [1]
 We do not actually need this function at all, as we know the iio library
-will be referencable in the system under the name "libiio.so".
+will be referencable in the system under the name "libiio.so.1".
 So instead of kicking of this complicated cross-platform/cross-distro
 compatible machinery, we just pass in the name of the library we already
 know.
@@ -19,23 +19,41 @@ distro setups, so we can just hardcode the lib name, but we cannot
 submit that upstream.
 
 Signed-off-by: Marcus Hoffmann <buildroot@bubu1.eu>
+[updated for libiio v1: file moved to bindings/python/iio/__init__.py]
 ---
- bindings/python/iio.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bindings/python/iio/__init__.py | 22 +---------------------
+ 1 file changed, 1 insertion(+), 21 deletions(-)
 
-diff --git a/bindings/python/iio.py b/bindings/python/iio.py
-index b91260cc..bde17694 100644
---- a/bindings/python/iio.py
-+++ b/bindings/python/iio.py
-@@ -224,7 +224,7 @@ else:
-     # Non-windows, possibly Posix system
-     _iiolib = "iio"
+diff --git a/bindings/python/iio/__init__.py b/bindings/python/iio/__init__.py
+--- a/bindings/python/iio/__init__.py
++++ b/bindings/python/iio/__init__.py
+@@ -321,26 +321,7 @@
+ _StreamPtr = _POINTER(_Stream)
+ _AttrPtr = _POINTER(_Attr)
  
--_lib = _cdll(find_library(_iiolib), use_errno=True, use_last_error=True)
-+_lib = _cdll("libiio.so", use_errno=True, use_last_error=True)
+-if "Windows" in _system():
+-    _lib_loc = find_library("libiio1.dll")
+-else:
+-    # Non-windows, possibly Posix system
+-    _lib_loc = find_library("iio")
+-    if _lib_loc is not None:
+-        if _path.islink(_lib_loc):
+-            _lib_loc = _path.realpath(_lib_loc)
+-        filename = _path.basename(_lib_loc)
+-        if ".so." in filename:
+-            version = filename.split(".so.")[1]
+-        elif "/Versions/" in _lib_loc:
+-            version = _lib_loc.split("/Versions/")[1].split("/")[0]
+-        else:
+-            version = None
+-        if version is not None and not version.startswith("1"):
+-            raise OSError(2, f"libiio version 1.x required, found version {version}")
+-
+-if _lib_loc is None:
+-    raise OSError(2, "Could not find libiio C library")
++_lib_loc = "libiio.so.1"
+ _lib = _cdll(_lib_loc, use_errno=True, use_last_error=True)
+ _libc = _cdll(find_library("c"))
  
- _get_backends_count = _lib.iio_get_backends_count
- _get_backends_count.restype = c_uint
 -- 
 2.25.1
-
