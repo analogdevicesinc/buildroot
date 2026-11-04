@@ -26,6 +26,10 @@
 #   infrastructure, and will be CC'ed on all patches that add or
 #   modify packages that use this infrastructure.
 
+N:	ADI Linux Factory <linux@analog.com>
+F:	board/alif/
+F:	configs/alif_*
+
 N:	Adam Duskett <adam.duskett@amarulasolutions.com>
 F:	package/depot-tools/
 F:	package/flutter-engine/
@@ -2616,6 +2620,10 @@ F:	package/openjpeg/
 
 N:	Olivier Singla <olivier.singla@gmail.com>
 F:	package/shellinabox/
+
+N:	Ozan Durgut <ozan@ozandurgut.com>
+F:	board/alif/
+F:	configs/alif_*
 
 N:	Parnell Springmeyer <parnell@digitalmentat.com>
 F:	package/scrypt/
