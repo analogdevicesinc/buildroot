@@ -19,3 +19,5 @@ done
 
 # GDB script to load the two U-Boot stages over JTAG
 install -m 0644 "$BOARD_DIR/../u-boot.gdb" "$BINARIES_DIR/u-boot.gdb"
+
+support/scripts/genimage.sh -c "$BOARD_DIR/genimage-nand.cfg"
