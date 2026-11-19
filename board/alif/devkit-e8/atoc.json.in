@@ -1,0 +1,34 @@
+{
+    "DEVICE": {
+        "disabled": false,
+        "binary": "se-device-config.json",
+        "version": "0.5.00",
+        "signed": true
+    },
+    "BL32": {
+        "binary": "bl32.bin",
+        "version": "2.3.0",
+        "signed": false,
+        "cpu_id": "A32_0",
+        "mramAddress": "0x80002000",
+        "flags": ["boot"]
+    },
+    "DTB": {
+        "binary": "@DTB@",
+        "version": "1.0.0",
+        "signed": false,
+        "mramAddress": "0x80010000"
+    },
+    "XIPIMAGE": {
+        "binary": "xipImage",
+        "version": "6.12.6",
+        "signed": false,
+        "mramAddress": "0x80020000"
+    },
+    "ROOTFS": {
+        "binary": "rootfs.cramfs",
+        "version": "1.0.0",
+        "signed": false,
+        "mramAddress": "0x80380000"
+    }
+}
