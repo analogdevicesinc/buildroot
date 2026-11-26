@@ -258,6 +258,7 @@ endif
 ifeq ($(BR2_TARGET_UBOOT_FORMAT_ADSP_LDR),y)
 UBOOT_BINS += u-boot.ldr
 UBOOT_DEPENDENCIES += host-adsp-ldr
+UBOOT_MAKE_OPTS += LDR=$(HOST_DIR)/bin/ldr
 endif
 
 ifeq ($(BR2_TARGET_UBOOT_NEEDS_DTC),y)
